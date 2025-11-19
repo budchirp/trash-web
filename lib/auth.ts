@@ -1,34 +1,35 @@
-import { InvalidSessionError } from '@/lib/error/invalild-session'
-import { UserNotFoundError } from '@/lib/error/user-not-found'
-import { SessionService } from '@/lib/api/session'
 import { redirect, unauthorized } from 'next/navigation'
-import { UserService } from '@/lib/api/user'
-import { CONSTANTS } from '@/lib/constants'
+import { trash } from '@/lib/trash'
 
-import type { Cookies } from 'next-client-cookies'
-import type { User } from '@/types/user'
+import { type User, SessionService, UserService } from '@trash-kit/auth'
+import { getCookies } from 'next-client-cookies/server'
+import { CONSTANTS } from './constants'
 
-export const authenticate = async (cookies: Cookies): Promise<User> => {
-  const token = cookies.get(CONSTANTS.COOKIES.TOKEN)
+export const authenticatedRoute = async (token?: string | null): Promise<User> => {
+  const cookies = await getCookies()
+
   if (!token) {
     return unauthorized()
   }
 
-  const verify = await SessionService.verify({ token })
+  const verify = await SessionService.verify(trash, { token })
   if (verify.error) {
-    throw new InvalidSessionError()
+    cookies.remove(CONSTANTS.COOKIES.TOKEN)
+
+    return redirect('/auth/signin')
   }
 
-  const user = await UserService.get({ token })
+  const user = await UserService.get(trash, { token })
   if (user.error) {
-    throw new UserNotFoundError()
+    cookies.remove(CONSTANTS.COOKIES.TOKEN)
+
+    return redirect('/auth/signin')
   }
 
   return user.data
 }
 
-export const unauthenticate = async (cookies: Cookies): Promise<void> => {
-  const token = cookies.get(CONSTANTS.COOKIES.TOKEN)
+export const publicRoute = async (token?: string | null): Promise<void> => {
   if (token) {
     return redirect('/')
   }

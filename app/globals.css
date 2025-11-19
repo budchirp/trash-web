@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "../node_modules/@trash-ui/components";
+@source "../node_modules/@trash-kit/ui";
 
 @theme {
   --color-accent-50: oklch(0.969 0.015 12.422);

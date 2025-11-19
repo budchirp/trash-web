@@ -1,13 +1,14 @@
 'use client'
 
 import type React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { createPortal } from 'react-dom'
 
 import { Transition, Menu, MenuItems, MenuItem, MenuButton } from '@headlessui/react'
 import { Menu as MenuIcon, X } from 'lucide-react'
-import { Backdrop } from '@/components/backdrop'
+import { useLogout } from '@/lib/hooks/use-logout'
 import { usePathname } from 'next/navigation'
+import { UserContext } from '@trash-kit/auth'
 import { useTranslations } from 'next-intl'
 import { Logo } from '@/components/logo'
 import Link from 'next/link'
@@ -17,15 +18,15 @@ import {
   Box,
   BoxContent,
   Button,
+  Backdrop,
   Center,
   Column,
   Container,
   Heading,
   Row
-} from '@trash-ui/components'
+} from '@trash-kit/ui'
 
 import type { LinkProps } from '@/types/link'
-import { useLogout } from '@/lib/hooks/use-logout'
 
 type HeaderLinkProps = {
   pathname: string
@@ -70,6 +71,8 @@ export const Header: React.FC = (): React.ReactNode => {
     setMounted(true)
   }, [])
 
+  const { user } = use(UserContext)
+
   const logout = useLogout()
 
   return (
@@ -111,7 +114,7 @@ export const Header: React.FC = (): React.ReactNode => {
                       {open ? <X /> : <MenuIcon />}
                     </MenuButton>
 
-                    <Button onClick={() => logout()}>{t('logout')}</Button>
+                    {user && <Button onClick={() => logout()}>{t('logout')}</Button>}
                   </Row>
                 </Row>
               </Container>

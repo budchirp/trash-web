@@ -1,9 +1,10 @@
 import type React from 'react'
 
-import { cn, Column, Container, ToastProvider } from '@trash-ui/components'
 import { CookiesProvider } from 'next-client-cookies/server'
 import { NextIntlClientProvider } from 'next-intl'
 import { Lexend } from 'next/font/google'
+
+import { cn, Container, ToastProvider } from '@trash-kit/ui'
 
 import type { Metadata } from 'next'
 import type { LayoutProps } from '@/types/layout'
@@ -20,8 +21,6 @@ const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNo
     <html lang='en'>
       <body className={cn('size-full relative', lexend.variable)}>
         <CookiesProvider>
-          <ToastProvider />
-
           <div className='absolute z-0 inset-0 overflow-hidden'>
             <Container className='absolute inset-0'>
               <div className='absolute top-[10%] left-[15%] size-96 opacity-25 bg-accent-500 rounded-full blur-[128px]' />
@@ -31,9 +30,11 @@ const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNo
             </Container>
           </div>
 
-          <Column className='relative z-10 size-full'>
+          <ToastProvider />
+
+          <div className='relative z-10 size-full'>
             <NextIntlClientProvider>{children}</NextIntlClientProvider>
-          </Column>
+          </div>
         </CookiesProvider>
       </body>
     </html>

@@ -2,23 +2,14 @@
 
 import type React from 'react'
 
-import { type SignUpFormValues, signUpSchema } from '@/lib/api/user/schemas'
+import { type NewUserValues, newUserSchema, UserService } from '@trash-kit/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLocale, useTranslations } from 'use-intl'
-import { UserService } from '@/lib/api/user'
 import { useForm } from 'react-hook-form'
 import { Link } from '@/i18n/routing'
+import { trash } from '@/lib/trash'
 
-import {
-  Button,
-  Column,
-  Container,
-  Field,
-  Heading,
-  Input,
-  Section,
-  toast
-} from '@trash-ui/components'
+import { Button, Column, Container, Field, Heading, Input, Section, toast } from '@trash-kit/ui'
 
 export const SignUpClientPage: React.FC = (): React.ReactNode => {
   const locale = useLocale()
@@ -28,22 +19,21 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting }
-  } = useForm<SignUpFormValues>({
-    resolver: zodResolver(signUpSchema)
+  } = useForm<NewUserValues>({
+    resolver: zodResolver(newUserSchema)
   })
 
-  const onSubmit = async (values: SignUpFormValues) => {
-    const response = await UserService.create({ locale }, values)
+  const onSubmit = async (values: NewUserValues) => {
+    const response = await UserService.create(trash, values, { locale })
     if (response.error) {
-      toast(response.message ?? t('error'))
-      return
+      toast(response.message)
+    } else {
+      window.location.replace('/auth/signin')
     }
-
-    window.location.replace('/auth/signin')
   }
 
   return (
-    <Container className='!max-w-128'>
+    <Container className='max-w-lg!'>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Section
           title='Sign up'

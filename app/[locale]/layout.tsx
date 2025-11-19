@@ -1,13 +1,16 @@
 import type React from 'react'
 
-import { UserContextProvider } from '@/providers/user-provider'
+import { CenteredPage } from '@/components/vertical-page'
 import { getCookies } from 'next-client-cookies/server'
 import { setRequestLocale } from 'next-intl/server'
+import { Header } from '@/components/ui/header'
+import { Footer } from '@/components/ui/footer'
+import { AuthProvider } from '@trash-kit/auth'
 import { CONSTANTS } from '@/lib/constants'
-import { UserService } from '@/lib/api/user'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import { hasLocale } from 'next-intl'
+import { trash } from '@/lib/trash'
 
 import type { Metadata } from 'next'
 import type { DynamicLayoutProps } from '@/types/layout'
@@ -24,22 +27,26 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
   setRequestLocale(locale)
 
   const cookies = await getCookies()
-
   const token = cookies.get(CONSTANTS.COOKIES.TOKEN)
-  if (token) {
-    const user = await UserService.get({ token, locale })
-    if (user.error) {
-      return children
-    }
 
-    return (
-      <UserContextProvider token={token} initialUser={user.data}>
+  return (
+    <AuthProvider
+      trash={trash}
+      token={token}
+      locale={locale}
+      ErrorComponent={({ error }) => (
+        <CenteredPage title={error.status.toString()} items={error.message.split(' ')} />
+      )}
+    >
+      <Header />
+
+      <main id='main' className='min-h-screen_'>
         {children}
-      </UserContextProvider>
-    )
-  }
+      </main>
 
-  return children
+      <Footer />
+    </AuthProvider>
+  )
 }
 
 export const metadata: Metadata = {

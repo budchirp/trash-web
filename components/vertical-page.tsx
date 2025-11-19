@@ -1,7 +1,7 @@
 import type React from 'react'
 import type { ComponentProps } from 'react'
 
-import { Column, Container, Heading, cn } from '@trash-ui/components'
+import { Column, Container, Heading, cn } from '@trash-kit/ui'
 
 export type VerticalPageProps = Omit<ComponentProps<'div'>, 'title'> & {
   title: React.ReactNode

@@ -2,7 +2,7 @@ import type React from 'react'
 
 import { Logo } from '@/components/logo'
 
-import { BoxContent, Container, Divider, Row, Text } from '@trash-ui/components'
+import { BoxContent, Container, Divider, Row, Text } from '@trash-kit/ui'
 
 export const Footer: React.FC = (): React.ReactNode => (
   <footer className='bg-surface-primary/50 backdrop-blur-xs border-t border-outline w-full'>

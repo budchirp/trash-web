@@ -4,7 +4,7 @@ import { CenteredPage } from '@/components/vertical-page'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Link } from '@/i18n/routing'
 
-import { Button } from '@trash-ui/components'
+import { Button } from '@trash-kit/ui'
 
 import type { ErrorProps } from '@/types/error'
 import type { Metadata } from 'next'
