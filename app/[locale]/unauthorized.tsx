@@ -2,7 +2,7 @@ import type React from 'react'
 
 import { CenteredPage } from '@/components/vertical-page'
 import { MetadataManager } from '@/lib/metadata-manager'
-import { Link } from '@/i18n/routing'
+import { Link } from '@/lib/i18n/routing'
 
 import { Button } from '@trash-kit/ui'
 

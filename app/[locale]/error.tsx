@@ -15,8 +15,8 @@ const ErrorPage: React.FC<ErrorProps> = ({ error, reset }: ErrorProps): React.Re
   const t = useTranslations()
 
   return (
-    <CenteredPage items={[t('error')]} title={'500'}>
-      <Button onClick={() => reset()}>{t('retry')}</Button>
+    <CenteredPage items={[t('common.error')]} title={'500'}>
+      <Button onClick={() => reset()}>{t('common.retry')}</Button>
     </CenteredPage>
   )
 }

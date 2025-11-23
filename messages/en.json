@@ -1,18 +1,55 @@
 {
-  "email": "Email",
-  "enter": "Enter {field}",
-  "submit": "Submit",
-  "loading": "Loading...",
-  "error": "An error occurred",
-  "username": "Username",
-  "password": "Password",
-  "sign_in": "Sign in",
-  "sign_up": "Sign up",
-  "sign_out": "Sign out",
-  "dont_have_an_account": "Don't have an account? Sign up",
-  "already_have_an_account": "Already have an account? Sign in",
-  "invalid_session": "Invalid session",
-  "user_not_found": "User not found",
-  "logout": "Logout",
-  "retry": "Retry"
+  "common": {
+    "errors": {
+      "invalid_session": "Invalid session",
+      "user_not_found": "User not found"
+    },
+    "enter_field": "Enter {field}",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry"
+  },
+  "auth": {
+    "logout": "Logout",
+    "sign_in": {
+      "title": "Sign in",
+      "description": "Sign in to your account",
+      "sign_up_link": "Don't have an account? Sign up"
+    },
+    "sign_up": {
+      "title": "Sign up",
+      "description": "Create a new account",
+      "sign_in_link": "Already have an account? Sign in",
+      "form": {
+        "email": "Email"
+      }
+    },
+    "form": {
+      "username": "Username",
+      "password": "Password"
+    }
+  },
+  "home": {
+    "services": {
+      "title": "Apps",
+      "description": "Apps available to you",
+      "app": {
+        "account": {
+          "name": "Account",
+          "description": "Account settings"
+        }
+      }
+    },
+    "welcome": {
+      "title": "Welcome to Trash",
+      "description": "Unified ecosystem of apps"
+    }
+  },
+  "settings": {
+    "account": {
+      "title": "Account",
+      "description": "Account settings"
+    }
+  }
 }

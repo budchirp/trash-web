@@ -10,8 +10,8 @@ import { useLogout } from '@/lib/hooks/use-logout'
 import { usePathname } from 'next/navigation'
 import { UserContext } from '@trash-kit/auth'
 import { useTranslations } from 'next-intl'
+import { Link } from '@/lib/i18n/routing'
 import { Logo } from '@/components/logo'
-import Link from 'next/link'
 
 import {
   cn,
@@ -114,7 +114,7 @@ export const Header: React.FC = (): React.ReactNode => {
                       {open ? <X /> : <MenuIcon />}
                     </MenuButton>
 
-                    {user && <Button onClick={() => logout()}>{t('logout')}</Button>}
+                    {user && <Button onClick={() => logout()}>{t('auth.logout')}</Button>}
                   </Row>
                 </Row>
               </Container>

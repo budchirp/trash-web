@@ -9,14 +9,15 @@ import { useLocale, useTranslations } from 'use-intl'
 import { useCookies } from 'next-client-cookies'
 import { CONSTANTS } from '@/lib/constants'
 import { useForm } from 'react-hook-form'
-import { Link } from '@/i18n/routing'
+import { Link } from '@/lib/i18n/routing'
 import { trash } from '@/lib/trash'
 
 import { Button, Column, Container, Field, Heading, Input, Section, toast } from '@trash-kit/ui'
 
 export const SignInClientPage: React.FC = (): React.ReactNode => {
   const locale = useLocale()
-  const t = useTranslations()
+  const t = useTranslations('auth')
+  const t_common = useTranslations('common')
 
   const {
     register,
@@ -29,11 +30,11 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
   const cookies = useCookies()
 
   const onSubmit = async (values: NewSessionValues) => {
-    const response = await SessionService.create(trash, values, { locale })
-    if (response.error) {
-      toast(response.message)
+    const { error, message, data: token } = await SessionService.create(trash, values, { locale })
+    if (error) {
+      toast(message)
     } else {
-      cookies.set(CONSTANTS.COOKIES.TOKEN, response.data)
+      cookies.set(CONSTANTS.COOKIES.TOKEN, token)
       window.location.replace('/')
     }
   }
@@ -42,27 +43,27 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
     <Container className='max-w-lg!'>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Section
-          title={t('sign_in')}
+          title={t('sign_in.title')}
           description={
             <Link href='/auth/signup'>
               <Heading className='text-tertiary' size='h4'>
-                {t('dont_have_an_account')}
+                {t('sign_in.sign_up_link')}
               </Heading>
             </Link>
           }
         >
           <Column className='gap-2'>
-            <Field label={`${t('username')}:`} error={errors.username?.message}>
+            <Field label={`${t('form.username')}:`} error={errors.username?.message}>
               <Input
-                placeholder={t('enter', { field: t('username') })}
+                placeholder={t_common('enter_field', { field: t('form.username') })}
                 type='text'
                 {...register('username')}
               />
             </Field>
 
-            <Field label={`${t('password')}:`} error={errors.password?.message}>
+            <Field label={`${t('form.password')}:`} error={errors.password?.message}>
               <Input
-                placeholder={t('enter', { field: t('password') })}
+                placeholder={t_common('enter_field', { field: t('form.password') })}
                 type='password'
                 {...register('password')}
               />
@@ -70,7 +71,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
           </Column>
 
           <Button type='submit' loading={isSubmitting}>
-            {isSubmitting ? t('loading') : t('sign_in')}
+            {isSubmitting ? t_common('loading') : t('sign_in.title')}
           </Button>
         </Section>
       </form>
