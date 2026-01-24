@@ -2,12 +2,12 @@
 
 import type React from 'react'
 
-import { type NewUserValues, newUserSchema, UserService } from '@trash-kit/auth'
+import { newUserSchema, type NewUserValues } from '@/service/user/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLocale, useTranslations } from 'use-intl'
+import { UserService } from '@/service/user'
 import { useForm } from 'react-hook-form'
 import { Link } from '@/lib/i18n/routing'
-import { trash } from '@/lib/trash'
 
 import { Button, Column, Container, Field, Heading, Input, Section, toast } from '@trash-kit/ui'
 
@@ -25,7 +25,7 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
   })
 
   const onSubmit = async (values: NewUserValues) => {
-    const { error, message } = await UserService.create(trash, values, { locale })
+    const { error, message } = await UserService.create(values, { locale })
     if (error) {
       toast(message)
     } else {
@@ -46,35 +46,37 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
             </Link>
           }
         >
-          <Column className='gap-2'>
-            <Field label={`${t('sign_up.form.email')}:`} error={errors.email?.message}>
-              <Input
-                placeholder={t_common('enter_field', { field: t('sign_up.form.email') })}
-                type='email'
-                {...register('email')}
-              />
-            </Field>
+          <Column className='gap-4'>
+            <Column className='gap-2'>
+              <Field label={`${t('form.email')}:`} error={errors.email?.message}>
+                <Input
+                  placeholder={t_common('enter_field', { field: t('form.email') })}
+                  type='email'
+                  {...register('email')}
+                />
+              </Field>
 
-            <Field label={`${t('form.username')}:`} error={errors.username?.message}>
-              <Input
-                placeholder={t_common('enter_field', { field: t('form.username') })}
-                type='text'
-                {...register('username')}
-              />
-            </Field>
+              <Field label={`${t('sign_up.form.username')}:`} error={errors.username?.message}>
+                <Input
+                  placeholder={t_common('enter_field', { field: t('sign_up.form.username') })}
+                  type='text'
+                  {...register('username')}
+                />
+              </Field>
 
-            <Field label={`${t('form.password')}:`} error={errors.password?.message}>
-              <Input
-                placeholder={t_common('enter_field', { field: t('form.password') })}
-                type='password'
-                {...register('password')}
-              />
-            </Field>
+              <Field label={`${t('form.password')}:`} error={errors.password?.message}>
+                <Input
+                  placeholder={t_common('enter_field', { field: t('form.password') })}
+                  type='password'
+                  {...register('password')}
+                />
+              </Field>
+            </Column>
+
+            <Button type='submit' loading={isSubmitting}>
+              {isSubmitting ? t_common('loading') : t('sign_up.title')}
+            </Button>
           </Column>
-
-          <Button type='submit' loading={isSubmitting}>
-            {isSubmitting ? t_common('loading') : t('sign_up.title')}
-          </Button>
         </Section>
       </form>
     </Container>

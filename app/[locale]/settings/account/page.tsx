@@ -1,21 +1,17 @@
 import type React from 'react'
 
-import { getCookies } from 'next-client-cookies/server'
 import { getTranslations } from 'next-intl/server'
-import { authenticatedRoute } from '@/lib/auth'
-import { CONSTANTS } from '@/lib/constants'
+import { _authtenticated } from '@/lib/auth'
 
-import { Box, BoxContent, Column, Container, Section, Text } from '@trash-kit/ui'
+import { Box, BoxContent, Column, Section, Text } from '@trash-kit/ui'
 
-import type { DynamicPageProps } from '@/types/page'
+import type { DynamicPageProps } from '@/types/app/page'
+import { UserService } from '@/service/user'
 
 const Page: React.FC<DynamicPageProps> = async ({
   params
 }: DynamicPageProps): Promise<React.ReactNode> => {
-  const cookies = await getCookies()
-  const token = cookies.get(CONSTANTS.COOKIES.TOKEN)
-
-  const user = await authenticatedRoute(token)
+  const jwt = await _authtenticated()
 
   const { locale } = await params
   const t = await getTranslations({
@@ -23,17 +19,17 @@ const Page: React.FC<DynamicPageProps> = async ({
     locale
   })
 
+  const { data: user } = await UserService.get({ jwt })
+
   return (
-    <Column padding='md'>
-      <Container>
-        <Section title={t('title')} description={t('description')}>
-          <Box>
-            <BoxContent>
-              <Text>{JSON.stringify(user)}</Text>
-            </BoxContent>
-          </Box>
-        </Section>
-      </Container>
+    <Column>
+      <Section title={t('title')} description={t('description')}>
+        <Box>
+          <BoxContent>
+            <Text>{JSON.stringify(user)}</Text>
+          </BoxContent>
+        </Box>
+      </Section>
     </Column>
   )
 }

@@ -8,7 +8,6 @@ import { Transition, Menu, MenuItems, MenuItem, MenuButton } from '@headlessui/r
 import { Menu as MenuIcon, X } from 'lucide-react'
 import { useLogout } from '@/lib/hooks/use-logout'
 import { usePathname } from 'next/navigation'
-import { UserContext } from '@trash-kit/auth'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/routing'
 import { Logo } from '@/components/logo'
@@ -22,11 +21,11 @@ import {
   Center,
   Column,
   Container,
+  Text,
   Heading,
   Row
 } from '@trash-kit/ui'
-
-import type { LinkProps } from '@/types/link'
+import { UserContext } from '@/context/user'
 
 type HeaderLinkProps = {
   pathname: string
@@ -54,26 +53,49 @@ const HeaderLink: React.FC<HeaderLinkProps> = ({
   )
 }
 
-const links: LinkProps[] = [
-  {
-    label: 'Home',
-    url: '/'
-  }
-]
-
 export const Header: React.FC = (): React.ReactNode => {
-  const t = useTranslations()
-
-  const pathname = usePathname()
-
   const [mounted, setMounted] = useState<boolean>(false)
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  const { user } = use(UserContext)
+  const t = useTranslations()
+
+  const pathname = usePathname()
 
   const logout = useLogout()
+
+  const { user } = use(UserContext)
+
+  const links: {
+    [key in 'true' | 'false']: {
+      label: string
+      url: string
+      onClick?: () => Promise<void>
+    }[]
+  } = {
+    true: [
+      {
+        label: t('auth.logout'),
+        url: '',
+        onClick: async () => await logout()
+      },
+      {
+        label: t('dashboard.title'),
+        url: '/dashboard'
+      },
+      {
+        label: t('settings.title'),
+        url: '/settings'
+      }
+    ],
+    false: [
+      {
+        label: 'Home',
+        url: '/'
+      }
+    ]
+  }
 
   return (
     <Menu>
@@ -93,13 +115,23 @@ export const Header: React.FC = (): React.ReactNode => {
 
                   <Row className='gap-3'>
                     <Row className='hidden flex-row-reverse gap-2 md:flex'>
-                      {links.map((link, index) => (
-                        <HeaderLink
-                          pathname={pathname}
-                          label={link.label}
-                          url={link.url}
+                      {links[user ? 'true' : 'false'].map((link, index) => (
+                        <Text
                           key={index}
-                        />
+                          className={cn(
+                            'hover:text-primary text-lg leading-6 transition-all duration-300 hover:font-bold',
+                            (
+                              link.url.length > 1
+                                ? pathname.includes(link.url)
+                                : pathname === link.url
+                            )
+                              ? 'text-primary font-bold'
+                              : 'text-tertiary font-medium'
+                          )}
+                          onClick={link.onClick}
+                        >
+                          {link.onClick ? link.label : <Link href={link.url}>{link.label}</Link>}
+                        </Text>
                       ))}
                     </Row>
 
@@ -113,8 +145,6 @@ export const Header: React.FC = (): React.ReactNode => {
                     >
                       {open ? <X /> : <MenuIcon />}
                     </MenuButton>
-
-                    {user && <Button onClick={() => logout()}>{t('auth.logout')}</Button>}
                   </Row>
                 </Row>
               </Container>
@@ -144,7 +174,7 @@ export const Header: React.FC = (): React.ReactNode => {
                       <Heading size='h2'>Links</Heading>
 
                       <Column padding='none' className='gap-1'>
-                        {links.map((link, index) => (
+                        {links[user ? 'true' : 'false'].map((link, index) => (
                           <MenuItem
                             as={HeaderLink}
                             pathname={pathname}

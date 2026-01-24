@@ -2,16 +2,16 @@ import type React from 'react'
 
 import { CookiesProvider } from 'next-client-cookies/server'
 import { NextIntlClientProvider } from 'next-intl'
-import { Lexend } from 'next/font/google'
+import { Google_Sans } from 'next/font/google'
 
 import { cn, Container, ToastProvider } from '@trash-kit/ui'
 
 import type { Metadata } from 'next'
-import type { LayoutProps } from '@/types/layout'
+import type { LayoutProps } from '@/types/app/layout'
 
 import '@/app/globals.css'
 
-const lexend = Lexend({
+const googleSans = Google_Sans({
   subsets: ['latin'],
   variable: '--font-main'
 })
@@ -19,7 +19,7 @@ const lexend = Lexend({
 const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNode => {
   return (
     <html lang='en'>
-      <body className={cn('size-full relative', lexend.variable)}>
+      <body className={cn('size-full relative', googleSans.variable)}>
         <CookiesProvider>
           <div className='absolute z-0 inset-0 overflow-hidden'>
             <Container className='absolute inset-0'>

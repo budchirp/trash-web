@@ -8,10 +8,10 @@ import { useTranslations } from 'next-intl'
 
 import { Button } from '@trash-kit/ui'
 
-import type { ErrorProps } from '@/types/error'
+import type { ErrorProps } from '@/types/app/error'
 import type { Metadata } from 'next'
 
-const ErrorPage: React.FC<ErrorProps> = ({ error, reset }: ErrorProps): React.ReactNode => {
+const ErrorPage: React.FC<ErrorProps> = ({ reset }: ErrorProps): React.ReactNode => {
   const t = useTranslations()
 
   return (

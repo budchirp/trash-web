@@ -6,7 +6,7 @@ import { Link } from '@/lib/i18n/routing'
 
 import { Button } from '@trash-kit/ui'
 
-import type { ErrorProps } from '@/types/error'
+import type { ErrorProps } from '@/types/app/error'
 import type { Metadata } from 'next'
 
 const UnauthorizedPage: React.FC<ErrorProps> = (): React.ReactNode => {

@@ -12,9 +12,7 @@
 ## TODO
 
 - [ ] Dashboard page
-- [ ] Extract auth code to a library
 - [ ] Profile page
 - [ ] Settings page
 - [ ] Email verification
 - [ ] Password reset
-- [ ] Allow third party services to use Trash Auth with permissions

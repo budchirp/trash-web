@@ -1,30 +1,29 @@
 'use client'
 
-import { use } from 'react'
-
 import { useCookies } from 'next-client-cookies'
-import { UserContext } from '@trash-kit/auth'
 import { CONSTANTS } from '@/lib/constants'
-import { trash } from '@/lib/trash'
+import { SessionService } from '@/service/session'
 
 export const useLogout = (): ((session?: string) => Promise<void>) => {
-  const { logout } = use(UserContext)
-
   const cookies = useCookies()
 
   try {
-    const token = cookies.get(CONSTANTS.COOKIES.TOKEN)
+    const jwt = cookies.get(CONSTANTS.COOKIES.TOKEN)
 
-    return async (session?: string) => {
-      cookies.remove(CONSTANTS.COOKIES.TOKEN)
+    return async (token: string | null = null) => {
+      if (jwt) {
+        await SessionService.delete(token, { jwt })
+      }
 
-      if (token) {
-        await logout(trash, token, session)
+      if (!token) {
+        cookies.remove(CONSTANTS.COOKIES.TOKEN)
 
         window.location.replace('/')
       }
     }
   } catch {
-    return async () => {}
+    return async () => {
+      window.location.replace('/')
+    }
   }
 }

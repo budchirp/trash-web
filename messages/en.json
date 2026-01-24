@@ -8,7 +8,28 @@
     "submit": "Submit",
     "loading": "Loading...",
     "error": "An error occurred",
-    "retry": "Retry"
+    "retry": "Retry",
+    "success": "Success"
+  },
+  "permissions": {
+    "title": "Permissions",
+
+    "user:read": "Read user info (username, email)",
+    "user:delete": "Delete user",
+    "profile:update": "Update profile",
+
+    "session:read": "Read session info",
+    "session:delete": "Delete sessions",
+
+    "application:read": "Read application info",
+    "application:create": "Create applications",
+    "application:delete": "Delete applications",
+
+    "connection:read": "Read connection info",
+    "connection:create": "Create connections with applications",
+    "connection:delete": "Delete connections",
+
+    "*": "All"
   },
   "auth": {
     "logout": "Logout",
@@ -22,34 +43,48 @@
       "description": "Create a new account",
       "sign_in_link": "Already have an account? Sign in",
       "form": {
-        "email": "Email"
+        "username": "Username"
       }
     },
     "form": {
-      "username": "Username",
+      "email": "Email",
       "password": "Password"
     }
   },
   "home": {
-    "services": {
-      "title": "Apps",
-      "description": "Apps available to you",
-      "app": {
-        "account": {
-          "name": "Account",
-          "description": "Account settings"
-        }
-      }
-    },
-    "welcome": {
-      "title": "Welcome to Trash",
-      "description": "Unified ecosystem of apps"
-    }
+    "title": "Welcome to Trash",
+    "description": "Unified ecosystem of apps"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Dashboard"
   },
   "settings": {
+    "title": "Settings",
+    "description": "Settings for your account",
     "account": {
       "title": "Account",
       "description": "Account settings"
+    },
+    "security": {
+      "title": "Security",
+      "description": "Security settings",
+      "revoke": "Revoke",
+      "revoked": "Revoked",
+      "expires_at": "Expires at"
+    },
+    "session": {
+      "title": "Sessions",
+      "description": "Manage and see your active sessions. Revoke any session you don't recognize.",
+      "current_session": "Current session"
+    },
+    "connection": {
+      "title": "Connections",
+      "description": "Apps you are connected to"
+    },
+    "application": {
+      "title": "Apps",
+      "description": "Your applications"
     }
   }
 }

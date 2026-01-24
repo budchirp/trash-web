@@ -1,36 +1,32 @@
 import { redirect, unauthorized } from 'next/navigation'
-import { trash } from '@/lib/trash'
 
-import { type User, SessionService, UserService } from '@trash-kit/auth'
 import { getCookies } from 'next-client-cookies/server'
 import { CONSTANTS } from './constants'
+import { SessionService } from '@/service/session'
 
-export const authenticatedRoute = async (token?: string | null): Promise<User> => {
+export const _authtenticated = async (): Promise<string> => {
   const cookies = await getCookies()
 
-  if (!token) {
+  const jwt = cookies.get(CONSTANTS.COOKIES.TOKEN)
+  if (!jwt) {
     return unauthorized()
   }
 
-  const verify = await SessionService.verify(trash, { token })
-  if (verify.error) {
+  const session = await SessionService.get(null, { jwt })
+  if (session.error) {
     cookies.remove(CONSTANTS.COOKIES.TOKEN)
 
     return redirect('/auth/signin')
   }
 
-  const user = await UserService.get(trash, { token })
-  if (user.error) {
-    cookies.remove(CONSTANTS.COOKIES.TOKEN)
-
-    return redirect('/auth/signin')
-  }
-
-  return user.data
+  return jwt
 }
 
-export const publicRoute = async (token?: string | null): Promise<void> => {
-  if (token) {
-    return redirect('/')
+export const _public = async (): Promise<void> => {
+  const cookies = await getCookies()
+
+  const jwt = cookies.get(CONSTANTS.COOKIES.TOKEN)
+  if (jwt) {
+    return redirect('/dashboard')
   }
 }
