@@ -45,7 +45,7 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
         <Column className='gap-4'>
           <ApplicationSection application={application} />
 
-          <Box>
+          <Box color='secondary'>
             <BoxContent>
               <PermissionsSection permissions={permissions} />
             </BoxContent>

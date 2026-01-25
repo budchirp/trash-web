@@ -25,7 +25,7 @@ export const ConnectionBox: React.FC<ConnectionBoxProps> = ({
   const t = useTranslations('settings')
 
   return (
-    <Box>
+    <Box color='secondary'>
       <BoxContent>
         <ApplicationSection application={connection.application}>
           <Button onClick={() => onRevoke(connection)}>{t('security.revoke')}</Button>

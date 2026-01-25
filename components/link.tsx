@@ -24,11 +24,12 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
   return (
     <Link href={url}>
       <Box
+        clickable
         className={cn(
-          'bg-transparent group border-transparent',
+          'group bg-transparent border-transparent',
           !box && 'border-0',
-          box && !isSelected && 'hover:bg-surface-primary hover:border-outline-hover',
-          box && isSelected && 'bg-surface-primary border-outline'
+          box && 'hover:border-outline!',
+          box && isSelected && 'bg-surface-secondary border-outline'
         )}
       >
         <BoxContent

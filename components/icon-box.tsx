@@ -15,10 +15,10 @@ export const IconBox: React.FC<IconBoxProps> = ({
   return (
     <Center
       className={cn(
-        'rounded-full overflow-hidden shrink-0 border border-outline aspect-square p-2',
-        color === 'accent' && 'bg-surface-accent',
-        color === 'primary' && 'bg-surface-primary',
-        color === 'secondary' && 'bg-surface-secondary',
+        'rounded-full overflow-hidden shrink-0 border aspect-square p-2',
+        color === 'accent' && 'bg-surface-accent border-outline-accent text-accent',
+        color === 'primary' && 'bg-surface-primary border-outline',
+        color === 'secondary' && 'bg-surface-secondary border-outline',
         className
       )}
     >

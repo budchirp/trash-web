@@ -16,15 +16,13 @@ export const PermissionsSection: React.FC<PermissionsSectionProps> = ({
 
   return (
     <Section subsection title={t_permissions('title')}>
-      <Column>
-        <Row className='overflow-x-auto w-full gap-2'>
-          {permissions.map((permission, index) => (
-            <Tag color='secondary' className='shrink-0' key={index}>
-              {t_permissions(permission as any)}
-            </Tag>
-          ))}
-        </Row>
-      </Column>
+      <Row className='overflow-x-auto w-full gap-2'>
+        {permissions.map((permission, index) => (
+          <Tag color='primary' className='shrink-0' key={index}>
+            {t_permissions(permission as any)}
+          </Tag>
+        ))}
+      </Row>
     </Section>
   )
 }

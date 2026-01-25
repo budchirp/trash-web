@@ -108,7 +108,7 @@ export const Header: React.FC = (): React.ReactNode => {
 
         return (
           <div>
-            <header className='bg-surface-primary/50 select-none fixed top-0 z-20 h-16 w-full backdrop-blur-sm'>
+            <header className='bg-surface-primary/50 border-b border-outline select-none fixed top-0 z-20 h-16 w-full backdrop-blur-sm'>
               <Container className='h-full'>
                 <Row className='gap-2 h-full justify-between'>
                   <Logo />

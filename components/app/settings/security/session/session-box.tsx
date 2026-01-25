@@ -9,7 +9,17 @@ import { IconBox } from '@/components/icon-box'
 import { DateUtil } from '@/lib/date-util'
 import jsonwebtoken from 'jsonwebtoken'
 
-import { Box, BoxContent, Button, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
+import {
+  Box,
+  BoxContent,
+  Button,
+  Column,
+  Divider,
+  Heading,
+  Row,
+  Section,
+  Text
+} from '@trash-kit/ui'
 
 import type { Session } from '@/types/api/session'
 
@@ -29,7 +39,7 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
   const t = useTranslations('settings')
 
   return (
-    <Box>
+    <Box color='secondary'>
       <BoxContent>
         <Row className='gap-3 w-full'>
           <IconBox
