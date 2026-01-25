@@ -51,6 +51,11 @@
       "password": "Password"
     }
   },
+  "authorize": {
+    "title": "Authorize",
+    "description": "Authorize application",
+    "authorize": "Authorize"
+  },
   "home": {
     "title": "Welcome to Trash",
     "description": "Unified ecosystem of apps"
@@ -71,7 +76,8 @@
       "description": "Security settings",
       "revoke": "Revoke",
       "revoked": "Revoked",
-      "expires_at": "Expires at"
+      "expires_at": "Expires at",
+      "created_at": "Created at"
     },
     "session": {
       "title": "Sessions",
@@ -80,7 +86,8 @@
     },
     "connection": {
       "title": "Connections",
-      "description": "Apps you are connected to"
+      "description": "Apps that you are connected to",
+      "no_connections": "No connections found"
     },
     "application": {
       "title": "Apps",

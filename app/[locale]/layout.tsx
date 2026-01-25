@@ -33,12 +33,12 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
   let user: User | null = null
 
   if (jwt) {
-    const response = await UserService.get({ jwt })
-    if (response.error) {
-      return <CenteredPage title={response.status.toString()} items={response.message.split(' ')} />
+    const { error, message, data, ...response } = await UserService.get({ jwt, locale })
+    if (error) {
+      return <CenteredPage title={(response as any).status.toString()} items={message.split(' ')} />
     }
 
-    user = response.data
+    user = data
   }
 
   return (

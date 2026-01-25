@@ -1,7 +1,7 @@
 import type React from 'react'
 import type { ComponentProps } from 'react'
 
-import { Column, Container, Heading, cn } from '@trash-kit/ui'
+import { Column, Container, Heading, Text, cn } from '@trash-kit/ui'
 
 export type VerticalPageProps = Omit<ComponentProps<'div'>, 'title'> & {
   title: React.ReactNode
@@ -19,15 +19,13 @@ export const CenteredPage: React.FC<VerticalPageProps> = ({
     <Container className='h-screen_'>
       <Column {...props} className={cn('size-full justify-center gap-4', className)}>
         <Column className='gap-2'>
-          <Heading color='accent' size='h1'>
-            {title}
-          </Heading>
+          <Heading size='h1'>{title}</Heading>
 
           <Column className='gap-1'>
             {items.map((item, index) => (
-              <h2 className='text-text-secondary text-2xl font-medium' key={index}>
+              <Text className='text-text-secondary text-2xl font-medium' key={index}>
                 {item}
-              </h2>
+              </Text>
             ))}
           </Column>
         </Column>

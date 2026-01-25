@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl'
 
 import { Column } from '@trash-kit/ui'
 
-export const Links: React.FC = (): React.ReactNode => {
+export const SettingsLinksSection: React.FC = (): React.ReactNode => {
   const t = useTranslations('settings')
 
   const settings: { url: string; label: any }[] = [
@@ -22,9 +22,9 @@ export const Links: React.FC = (): React.ReactNode => {
   ]
 
   return (
-    <Column>
+    <Column className='gap-2'>
       {settings.map((setting, index) => (
-        <SelectableLink label={setting.label} url={setting.url} key={index} />
+        <SelectableLink box key={index} label={setting.label} url={setting.url} />
       ))}
     </Column>
   )

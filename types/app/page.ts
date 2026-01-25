@@ -1,9 +1,18 @@
 import type { Locale } from 'next-intl'
 
+type Params = {
+  [key: string]: string
+}
+
+type SearchParams = {
+  [key: string]: string | undefined
+}
+
 export type DynamicPageProps = {
-  params: Promise<{
-    [key: string]: string
-    locale: Locale
-  }>
-  searchParams: Promise<{ [key: string]: string | null | undefined }>
+  params: Promise<
+    Params & {
+      locale: Locale
+    }
+  >
+  searchParams: Promise<SearchParams>
 }

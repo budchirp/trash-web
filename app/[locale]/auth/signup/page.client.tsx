@@ -9,7 +9,18 @@ import { UserService } from '@/service/user'
 import { useForm } from 'react-hook-form'
 import { Link } from '@/lib/i18n/routing'
 
-import { Button, Column, Container, Field, Heading, Input, Section, toast } from '@trash-kit/ui'
+import {
+  Button,
+  Column,
+  Container,
+  Field,
+  Heading,
+  Input,
+  Label,
+  Row,
+  Section,
+  toast
+} from '@trash-kit/ui'
 
 export const SignUpClientPage: React.FC = (): React.ReactNode => {
   const locale = useLocale()
@@ -48,7 +59,9 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
         >
           <Column className='gap-4'>
             <Column className='gap-2'>
-              <Field label={`${t('form.email')}:`} error={errors.email?.message}>
+              <Field name='email' error={errors.email?.message}>
+                <Label>{t('form.email')}:</Label>
+
                 <Input
                   placeholder={t_common('enter_field', { field: t('form.email') })}
                   type='email'
@@ -56,7 +69,9 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
                 />
               </Field>
 
-              <Field label={`${t('sign_up.form.username')}:`} error={errors.username?.message}>
+              <Field name='username' error={errors.username?.message}>
+                <Label>{t('sign_up.form.username')}:</Label>
+
                 <Input
                   placeholder={t_common('enter_field', { field: t('sign_up.form.username') })}
                   type='text'
@@ -64,7 +79,9 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
                 />
               </Field>
 
-              <Field label={`${t('form.password')}:`} error={errors.password?.message}>
+              <Field name='password' error={errors.password?.message}>
+                <Label>{t('form.password')}:</Label>
+
                 <Input
                   placeholder={t_common('enter_field', { field: t('form.password') })}
                   type='password'
@@ -73,9 +90,11 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
               </Field>
             </Column>
 
-            <Button type='submit' loading={isSubmitting}>
-              {isSubmitting ? t_common('loading') : t('sign_up.title')}
-            </Button>
+            <Row className='w-full justify-end'>
+              <Button type='submit' loading={isSubmitting}>
+                {isSubmitting ? t_common('loading') : t('sign_up.title')}
+              </Button>
+            </Row>
           </Column>
         </Section>
       </form>

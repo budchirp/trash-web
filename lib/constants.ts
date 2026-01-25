@@ -4,6 +4,7 @@ export const CONSTANTS = {
   API_URL: process.env.NEXT_PUBLIC_API_URL!,
 
   COOKIES: {
-    TOKEN: 'token'
+    TOKEN: 'token',
+    TOKEN_DURATION: 60 * 60 * 24 * 30 // 30 days
   }
 }

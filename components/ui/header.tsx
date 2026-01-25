@@ -140,7 +140,7 @@ export const Header: React.FC = (): React.ReactNode => {
                       className='md:hidden'
                       aria-label='Open menu'
                       shape='circle'
-                      color='surface'
+                      color='primary'
                       onClick={close}
                     >
                       {open ? <X /> : <MenuIcon />}

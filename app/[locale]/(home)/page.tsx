@@ -20,7 +20,7 @@ const Page: React.FC<DynamicPageProps> = async ({
 
   return (
     <Container>
-      <Center className='h-screen_ items-center justify-center gap-4'>
+      <Center className='h-screen_ w-full items-center justify-center gap-4'>
         <Column className='text-center gap-1 w-fit'>
           <Heading size='h1'>{t('home.title')}</Heading>
           <Heading size='h3' className='text-tertiary'>
@@ -28,7 +28,7 @@ const Page: React.FC<DynamicPageProps> = async ({
           </Heading>
         </Column>
 
-        <Row className='gap-2'>
+        <Row className='gap-4'>
           <Link href='/auth/signin'>
             <Button>{t('auth.sign_in.title')}</Button>
           </Link>

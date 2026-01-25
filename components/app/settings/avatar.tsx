@@ -28,7 +28,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         )}
       </Center>
 
-      {showUsername && <Heading size='h3'>{user?.username}</Heading>}
+      {showUsername && <Heading size='h3'>{user?.profile?.name || user?.username}</Heading>}
     </Center>
   )
 }

@@ -7,6 +7,51 @@ import type { ApiResponse, ServiceResponse } from '@trash-kit/core'
 import type { Connection } from '@/types/api/connection'
 
 export class ConnectionService {
+  public static async connect<
+    T = {
+      token: string
+    }
+  >(
+    applicationId: string,
+    permissions: string[],
+    headers: AuthenticatedHeaders
+  ): Promise<ServiceResponse<T>> {
+    try {
+      const { json, response } = await Fetch.post<ApiResponse<T>>(
+        `${CONSTANTS.API_URL}/connection/connect`,
+        {
+          applicationId,
+          permissions
+        },
+        headers
+      )
+
+      if (response.ok && !json.error) {
+        return {
+          error: false,
+          message: json.message,
+          data: json.data
+        }
+      }
+
+      return {
+        error: true,
+        message: json.message,
+        status: response.status,
+        data: null
+      }
+    } catch (error) {
+      console.error(error)
+
+      return {
+        error: true,
+        message: 'Internal server error',
+        status: 500,
+        data: null
+      }
+    }
+  }
+
   public static async getAll<T = Connection[]>(
     headers: AuthenticatedHeaders
   ): Promise<ServiceResponse<T>> {

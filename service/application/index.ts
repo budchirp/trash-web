@@ -7,6 +7,42 @@ import type { ApiResponse, ServiceResponse } from '@trash-kit/core'
 import type { Application } from '@/types/api/application'
 
 export class ApplicationService {
+  public static async get<T = Application>(
+    id: string,
+    headers: AuthenticatedHeaders
+  ): Promise<ServiceResponse<T>> {
+    try {
+      const { json, response } = await Fetch.get<ApiResponse<T>>(
+        `${CONSTANTS.API_URL}/application/${id}`,
+        headers
+      )
+
+      if (response.ok && !json.error) {
+        return {
+          error: false,
+          message: json.message,
+          data: json.data
+        }
+      }
+
+      return {
+        error: true,
+        message: json.message,
+        status: response.status,
+        data: null
+      }
+    } catch (error) {
+      console.error(error)
+
+      return {
+        error: true,
+        message: 'Internal server error',
+        status: 500,
+        data: null
+      }
+    }
+  }
+
   public static async getAll<T = Application[]>(
     headers: AuthenticatedHeaders
   ): Promise<ServiceResponse<T>> {
