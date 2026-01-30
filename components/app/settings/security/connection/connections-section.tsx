@@ -4,7 +4,7 @@ import type React from 'react'
 import { useEffect, useState } from 'react'
 
 import { ConnectionService } from '@/service/connection'
-import { Column, Section, toast } from '@trash-kit/ui'
+import { Box, BoxContent, Column, Section, Text, toast } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
 import { ConnectionBox } from './connection-box'
 
@@ -54,6 +54,14 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
             }}
           />
         ))}
+
+        {connections.length === 0 && (
+          <Box color='secondary'>
+            <BoxContent>
+              <Text>{t('connection.no_connections')}</Text>
+            </BoxContent>
+          </Box>
+        )}
       </Column>
     </Section>
   )

@@ -20,7 +20,7 @@ export class ConnectionService {
       const { json, response } = await Fetch.post<ApiResponse<T>>(
         `${CONSTANTS.API_URL}/connection/connect`,
         {
-          applicationId,
+          application_id: applicationId,
           permissions
         },
         headers
