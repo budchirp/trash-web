@@ -14,7 +14,7 @@
     "@trash-kit/ui": "2.4.16",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.563.0",
-    "next": "16.1.4",
+    "next": "16.1.6",
     "next-client-cookies": "^2.1.0",
     "next-intl": "^4.7.0",
     "react": "19.2.3",
