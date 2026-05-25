@@ -26,7 +26,7 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
       <Box
         clickable
         className={cn(
-          'group bg-transparent border-transparent',
+          'group bg-transparent border-outline',
           !box && 'border-0',
           box && 'hover:border-outline!',
           box && isSelected && 'bg-surface-secondary border-outline'

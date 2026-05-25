@@ -23,7 +23,7 @@ const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNo
         <CookiesProvider>
           <ToastProvider />
 
-          <div className='relative z-10 size-full'>
+          <div className='size-full'>
             <NextIntlClientProvider>{children}</NextIntlClientProvider>
           </div>
         </CookiesProvider>
