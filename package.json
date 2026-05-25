@@ -10,8 +10,8 @@
   "dependencies": {
     "@headlessui/react": "^2.2.10",
     "@hookform/resolvers": "^5.4.0",
-    "@trash-kit/core": "1.0.9",
-    "@trash-kit/ui": "2.4.16",
+    "@trash-kit/core": "1.0.10",
+    "@trash-kit/ui": "2.4.17",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.16.0",
     "next": "16.2.6",

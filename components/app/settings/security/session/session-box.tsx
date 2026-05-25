@@ -9,19 +9,13 @@ import { IconBox } from '@/components/icon-box'
 import { DateUtil } from '@/lib/date-util'
 import jsonwebtoken from 'jsonwebtoken'
 
-import {
-  Box,
-  BoxContent,
-  Button,
-  Column,
-  Divider,
-  Heading,
-  Row,
-  Section,
-  Text
-} from '@trash-kit/ui'
+import { Box, BoxContent, Button, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
 
 import type { Session } from '@/types/api/session'
+
+type DecodedToken = {
+  token?: string
+}
 
 type SessionBoxProps = {
   jwt: string
@@ -37,6 +31,9 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
   const locale = useLocale()
 
   const t = useTranslations('settings')
+  const decoded = jsonwebtoken.decode(jwt)
+  const currentTokenId =
+    decoded && typeof decoded === 'object' ? (decoded as DecodedToken).token : undefined
 
   return (
     <Box color='secondary'>
@@ -52,7 +49,7 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
             }
           />
 
-          <Row className='gap-2 w-full grow flex-col md:flex-row items-start md:items-center'>
+          <Row className='gap-2 w-full grow items-start md:items-center'>
             <Column className='grow gap-1'>
               <Column className='gap-1 md:gap-0'>
                 <Heading size='h3'>{session.device.name}</Heading>
@@ -72,7 +69,7 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
             </Column>
 
             <div className='shrink-0'>
-              {session.token.id === (jsonwebtoken.decode(jwt) as any).token ? (
+              {session.token.id === currentTokenId ? (
                 <Text className='text-tertiary'>{t('session.current_session')}</Text>
               ) : (
                 <Button onClick={() => onRevoke(session)}>{t('security.revoke')}</Button>

@@ -11,7 +11,7 @@ import type { Metadata } from 'next'
 
 const UnauthorizedPage: React.FC<ErrorProps> = (): React.ReactNode => {
   return (
-    <CenteredPage items={['Unauthorized']} title={'401'}>
+    <CenteredPage items={["You don't have permission to view this page."]} title={'401'}>
       <Link href='/auth/signin'>
         <Button>Sign in</Button>
       </Link>

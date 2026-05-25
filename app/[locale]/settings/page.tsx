@@ -2,10 +2,14 @@ import type React from 'react'
 
 import { redirect } from 'next/navigation'
 
-const Page: React.FC = (): React.ReactNode => {
-  redirect('/settings/account')
+import type { DynamicPageProps } from '@/types/app/page'
 
-  return <></>
+const Page: React.FC<DynamicPageProps> = async ({
+  params
+}: DynamicPageProps): Promise<React.ReactNode> => {
+  const { locale } = await params
+
+  redirect(`/${locale}/settings/account`)
 }
 
 export default Page

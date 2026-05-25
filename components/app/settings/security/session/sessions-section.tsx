@@ -4,7 +4,7 @@ import type React from 'react'
 import { useEffect, useState } from 'react'
 
 import { SessionService } from '@/service/session'
-import { Column, Section, toast } from '@trash-kit/ui'
+import { Column, Section, Text, toast } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
 import { SessionBox } from './session-box'
 
@@ -23,8 +23,11 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
   const [sessions, setSessions] = useState(initialSessions)
 
   const fetchSessions = async () => {
-    const { data } = await SessionService.getAll({ jwt })
-    if (!data) return
+    const { error, message, data } = await SessionService.getAll({ jwt })
+    if (error) {
+      toast(message)
+      return
+    }
 
     setSessions(data)
   }
@@ -44,15 +47,19 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
             jwt={jwt}
             session={session}
             onRevoke={async (session) => {
-              const { error } = await SessionService.delete(session.token.id, { jwt })
+              const { error, message } = await SessionService.delete(session.token.id, { jwt })
               if (!error) {
                 toast(t('security.revoked'))
 
                 setSessions((previous) => previous.filter((s) => s.token.id !== session.token.id))
+              } else {
+                toast(message)
               }
             }}
           />
         ))}
+
+        {sessions.length === 0 && <Text>{t('session.no_sessions')}</Text>}
       </Column>
     </Section>
   )

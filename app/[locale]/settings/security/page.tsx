@@ -13,18 +13,20 @@ import type { DynamicPageProps } from '@/types/app/page'
 const Page: React.FC<DynamicPageProps> = async ({
   params
 }: DynamicPageProps): Promise<React.ReactNode> => {
-  const jwt = await _authtenticated()
-
   const { locale } = await params
+  const jwt = await _authtenticated(locale, `/${locale}/settings/security`)
 
-  const { data: sessions } = await SessionService.getAll({ jwt, locale })
-  const { data: connections } = await ConnectionService.getAll({ jwt, locale })
+  const sessions = await SessionService.getAll({ jwt, locale })
+  if (sessions.error) throw new Error(sessions.message)
+
+  const connections = await ConnectionService.getAll({ jwt, locale })
+  if (connections.error) throw new Error(connections.message)
 
   return (
     <Column className='gap-4'>
-      <SessionsSection initialSessions={sessions || []} jwt={jwt} />
+      <SessionsSection initialSessions={sessions.data || []} jwt={jwt} />
 
-      <ConnectionsSection initialConnections={connections || []} jwt={jwt} />
+      <ConnectionsSection initialConnections={connections.data || []} jwt={jwt} />
     </Column>
   )
 }

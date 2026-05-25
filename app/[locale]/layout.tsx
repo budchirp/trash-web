@@ -1,6 +1,5 @@
 import type React from 'react'
 
-import { CenteredPage } from '@/components/vertical-page'
 import { getCookies } from 'next-client-cookies/server'
 import { UserContextProvider } from '@/context/user'
 import { setRequestLocale } from 'next-intl/server'
@@ -33,12 +32,16 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
   let user: User | null = null
 
   if (jwt) {
-    const { error, message, data, ...response } = await UserService.get({ jwt, locale })
-    if (error) {
-      return <CenteredPage title={(response as any).status.toString()} items={message.split(' ')} />
+    const response = await UserService.get({ jwt, locale })
+    if (response.error) {
+      if (response.status === 401) {
+        cookies.remove(CONSTANTS.COOKIES.TOKEN)
+      } else {
+        throw new Error(response.message)
+      }
+    } else {
+      user = response.data
     }
-
-    user = data
   }
 
   return (

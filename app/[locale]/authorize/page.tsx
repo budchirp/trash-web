@@ -7,25 +7,39 @@ import { _authtenticated } from '@/lib/auth'
 import { Section } from '@trash-kit/ui'
 
 import type { DynamicPageProps } from '@/types/app/page'
-import type { Application } from '@/types/api/application'
 
 const Page: React.FC<DynamicPageProps> = async ({
   params,
-  searchParams
+  searchParams: _searchParams
 }: DynamicPageProps): Promise<React.ReactNode> => {
-  const jwt = await _authtenticated()
-
   const { locale } = await params
-  const { callback, id, permissions } = await searchParams
 
-  const { data } = await ApplicationService.get(id as string, { jwt, locale })
+  const searchParams = await _searchParams
+  const redirectTo = `/${locale}/authorize?${new URLSearchParams(
+    Object.entries(searchParams).filter((entry): entry is [string, string] => Boolean(entry[1]))
+  ).toString()}`
+
+  const jwt = await _authtenticated(locale, redirectTo)
+
+  const { callback, id, permissions } = searchParams
+
+  if (!id || !callback || !permissions) {
+    throw new Error('Invalid authorization request')
+  }
+
+  if (!callback.startsWith('/') || callback.startsWith('//') || callback.includes('\\')) {
+    throw new Error('Invalid authorization callback')
+  }
+
+  const application = await ApplicationService.get(id, { jwt, locale })
+  if (application.error) throw new Error(application.message)
 
   return (
     <Section>
       <AuthorizeClientPage
         jwt={jwt}
-        callback={callback as string}
-        application={data as Application}
+        callback={callback}
+        application={application.data}
         permissions={permissions?.split(',') || []}
       />
     </Section>

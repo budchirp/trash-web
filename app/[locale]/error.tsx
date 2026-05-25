@@ -11,11 +11,11 @@ import { Button } from '@trash-kit/ui'
 import type { ErrorProps } from '@/types/app/error'
 import type { Metadata } from 'next'
 
-const ErrorPage: React.FC<ErrorProps> = ({ reset }: ErrorProps): React.ReactNode => {
+const ErrorPage: React.FC<ErrorProps> = ({ error, reset }: ErrorProps): React.ReactNode => {
   const t = useTranslations()
 
   return (
-    <CenteredPage items={[t('common.error')]} title={'500'}>
+    <CenteredPage items={[error.message || t('common.error')]} title={'Error'}>
       <Button onClick={() => reset()}>{t('common.retry')}</Button>
     </CenteredPage>
   )

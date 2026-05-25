@@ -36,7 +36,10 @@
     "sign_in": {
       "title": "Sign in",
       "description": "Sign in to your account",
-      "sign_up_link": "Don't have an account? Sign up"
+      "sign_up_link": "Don't have an account? Sign up",
+      "choose_account": "Choose an account",
+      "continue": "Continue",
+      "use_another": "Use another account"
     },
     "sign_up": {
       "title": "Sign up",
@@ -54,7 +57,30 @@
   "authorize": {
     "title": "Authorize",
     "description": "Authorize application",
-    "authorize": "Authorize"
+    "authorize": "Authorize",
+    "authorizing": "Authorizing..."
+  },
+  "onboarding": {
+    "title": "Finish setting up your account",
+    "description": "Create a simple profile so connected apps know who you are.",
+    "identity": "One profile",
+    "identity_description": "Use the same name and profile details across Trash apps.",
+    "security": "You stay in control",
+    "security_description": "Review sessions and app connections from your settings.",
+    "continue": "Create profile",
+    "profile": {
+      "title": "Create your profile",
+      "description": "You can update these details later.",
+      "name": "Name",
+      "gender": "Gender",
+      "gender_empty": "Prefer not to say",
+      "male": "Male",
+      "female": "Female",
+      "picture": "Profile picture",
+      "no_picture": "No picture selected",
+      "picture_stub": "Upload is not connected yet. This preview is local only.",
+      "submit": "Save profile"
+    }
   },
   "home": {
     "title": "Welcome to Trash",
@@ -64,12 +90,40 @@
     "title": "Dashboard",
     "description": "Dashboard"
   },
+  "profile": {
+    "title": "Profile",
+    "description": "Manage the profile details connected apps see.",
+    "setup_title": "Set up your profile",
+    "setup_description": "Add the public details apps will use to recognize you.",
+    "identity_step": "Identity",
+    "picture_step": "Picture",
+    "username": "Username",
+    "email": "Email",
+    "name": "Name",
+    "gender": "Gender",
+    "gender_empty": "Prefer not to say",
+    "male": "Male",
+    "female": "Female",
+    "picture": "Profile picture",
+    "no_picture": "No picture selected",
+    "picture_stub": "Upload is not connected yet. This preview is local only.",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Save profile"
+  },
   "settings": {
     "title": "Settings",
     "description": "Settings for your account",
     "account": {
       "title": "Account",
-      "description": "Account settings"
+      "description": "Your account identifiers. These fields cannot be edited here.",
+      "username": "Username",
+      "email": "Email",
+      "edit_profile": "Edit profile"
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "Update the profile details connected apps can see."
     },
     "security": {
       "title": "Security",
@@ -82,7 +136,8 @@
     "session": {
       "title": "Sessions",
       "description": "Manage and see your active sessions. Revoke any session you don't recognize.",
-      "current_session": "Current session"
+      "current_session": "Current session",
+      "no_sessions": "No sessions found"
     },
     "connection": {
       "title": "Connections",

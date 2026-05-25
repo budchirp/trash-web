@@ -1,6 +1,6 @@
 import type React from 'react'
 
-import { AccountClientPage } from './page.client'
+import { ProfileSettingsClientPage } from './page.client'
 import { _authtenticated } from '@/lib/auth'
 import { UserService } from '@/service/user'
 import { getTranslations } from 'next-intl/server'
@@ -14,9 +14,9 @@ const Page: React.FC<DynamicPageProps> = async ({
 }: DynamicPageProps): Promise<React.ReactNode> => {
   const { locale } = await params
 
-  const t = await getTranslations({ namespace: 'settings.account', locale })
+  const t = await getTranslations({ namespace: 'settings.profile', locale })
 
-  const jwt = await _authtenticated(locale, `/${locale}/settings/account`)
+  const jwt = await _authtenticated(locale, `/${locale}/settings/profile`)
   const user = await UserService.get({ jwt, locale })
 
   if (user.error) throw new Error(user.message)
@@ -24,9 +24,7 @@ const Page: React.FC<DynamicPageProps> = async ({
   return (
     <Column>
       <Section title={t('title')} description={t('description')}>
-        <form>
-          <AccountClientPage email={user.data.email} username={user.data.username} />
-        </form>
+        <ProfileSettingsClientPage jwt={jwt} locale={locale} user={user.data} />
       </Section>
     </Column>
   )

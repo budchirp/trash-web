@@ -11,9 +11,9 @@ import type { DynamicPageProps } from '@/types/app/page'
 const Page: React.FC<DynamicPageProps> = async ({
   params
 }: DynamicPageProps): Promise<React.ReactNode> => {
-  await _public()
-
   const { locale } = await params
+  await _public(locale)
+
   const t = await getTranslations({
     locale
   })

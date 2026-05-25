@@ -10,10 +10,14 @@ import { Column } from '@trash-kit/ui'
 export const SettingsLinksSection: React.FC = (): React.ReactNode => {
   const t = useTranslations('settings')
 
-  const settings: { url: string; label: any }[] = [
+  const settings: { url: string; label: string }[] = [
     {
       url: '/settings/account',
       label: t('account.title')
+    },
+    {
+      url: '/settings/profile',
+      label: t('profile.title')
     },
     {
       url: '/settings/security',

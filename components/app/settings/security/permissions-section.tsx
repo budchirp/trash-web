@@ -2,7 +2,7 @@
 
 import type React from 'react'
 
-import { Column, Row, Section, Tag } from '@trash-kit/ui'
+import { Row, Section, Tag } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
 
 type PermissionsSectionProps = {
@@ -19,7 +19,9 @@ export const PermissionsSection: React.FC<PermissionsSectionProps> = ({
       <Row className='overflow-x-auto w-full gap-2'>
         {permissions.map((permission, index) => (
           <Tag color='primary' className='shrink-0' key={index}>
-            {t_permissions(permission as any)}
+            {t_permissions.has(permission as never)
+              ? t_permissions(permission as never)
+              : permission}
           </Tag>
         ))}
       </Row>

@@ -7,6 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useLocale, useTranslations } from 'use-intl'
 import { UserService } from '@/service/user'
 import { useForm } from 'react-hook-form'
+import { SessionService } from '@/service/session'
+import { useCookies } from 'next-client-cookies'
+import { CONSTANTS } from '@/lib/constants'
 import { Link } from '@/lib/i18n/routing'
 
 import {
@@ -22,8 +25,15 @@ import {
   toast
 } from '@trash-kit/ui'
 
-export const SignUpClientPage: React.FC = (): React.ReactNode => {
+type SignUpClientPageProps = {
+  redirectTo: string | null
+}
+
+export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
+  redirectTo
+}: SignUpClientPageProps): React.ReactNode => {
   const locale = useLocale()
+
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
@@ -35,22 +45,46 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
     resolver: zodResolver(newUserSchema)
   })
 
+  const cookies = useCookies()
+
   const onSubmit = async (values: NewUserValues) => {
-    const { error, message } = await UserService.create(values, { locale })
-    if (error) {
-      toast(message)
-    } else {
-      window.location.replace('/auth/signin')
+    const user = await UserService.create(values, { locale })
+    if (user.error) {
+      toast(user.message)
+      return
     }
+
+    const session = await SessionService.create(
+      { email: values.email, password: values.password },
+      { locale }
+    )
+
+    if (session.error) {
+      toast(session.message)
+      return
+    }
+
+    cookies.set(CONSTANTS.COOKIES.TOKEN, session.data.token, {
+      path: '/',
+      sameSite: 'lax',
+      expires: CONSTANTS.COOKIES.TOKEN_DURATION
+    })
+
+    const query = redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''
+    window.location.replace(`/${locale}/onboarding${query}`)
   }
+
+  const signInHref = redirectTo
+    ? `/auth/signin?redirectTo=${encodeURIComponent(redirectTo)}`
+    : '/auth/signin'
 
   return (
     <Container className='max-w-lg!'>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Section
-          title='Sign up'
+          title={t('sign_up.title')}
           description={
-            <Link href='/auth/signin'>
+            <Link href={signInHref}>
               <Heading className='text-tertiary' size='h4'>
                 {t('sign_up.sign_in_link')}
               </Heading>
@@ -91,7 +125,7 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
             </Column>
 
             <Row className='w-full justify-end'>
-              <Button type='submit' loading={isSubmitting}>
+              <Button disabled={isSubmitting} type='submit' loading={isSubmitting}>
                 {isSubmitting ? t_common('loading') : t('sign_up.title')}
               </Button>
             </Row>

@@ -23,8 +23,11 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
   const [connections, setConnections] = useState(initialConnections)
 
   const fetchConnections = async () => {
-    const { data } = await ConnectionService.getAll({ jwt })
-    if (!data) return
+    const { error, message, data } = await ConnectionService.getAll({ jwt })
+    if (error) {
+      toast(message)
+      return
+    }
 
     setConnections(data)
   }
@@ -43,13 +46,17 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
             key={index}
             connection={connection}
             onRevoke={async (connection) => {
-              const { error } = await ConnectionService.delete(connection.token.id, { jwt })
+              const { error, message } = await ConnectionService.delete(connection.token.id, {
+                jwt
+              })
               if (!error) {
                 toast(t('security.revoked'))
 
                 setConnections((previous) =>
                   previous.filter((s) => s.token.id !== connection.token.id)
                 )
+              } else {
+                toast(message)
               }
             }}
           />
