@@ -27,10 +27,6 @@ const Page: React.FC<DynamicPageProps> = async ({
     throw new Error('Invalid authorization request')
   }
 
-  if (!callback.startsWith('/') || callback.startsWith('//') || callback.includes('\\')) {
-    throw new Error('Invalid authorization callback')
-  }
-
   const application = await ApplicationService.get(id, { jwt, locale })
   if (application.error) throw new Error(application.message)
 

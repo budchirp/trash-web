@@ -28,7 +28,7 @@ export const ProfileSettingsClientPage: React.FC<ProfileSettingsClientPageProps>
 }: ProfileSettingsClientPageProps): React.ReactNode => {
   const t = useTranslations('profile')
   const t_common = useTranslations('common')
-  
+
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
 
@@ -74,10 +74,9 @@ export const ProfileSettingsClientPage: React.FC<ProfileSettingsClientPageProps>
           <ProfileFields register={register} errors={errors} />
 
           <ProfilePictureField
-            file={file}
             src={preview}
-            fallbackSrc={user.profile?.picture}
             alt={file?.name ?? user.profile?.name ?? user.username}
+            file={file}
             onFileChange={setFile}
           />
         </Column>
