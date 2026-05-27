@@ -8,6 +8,7 @@ import { Footer } from '@/components/ui/footer'
 import { routing } from '@/lib/i18n/routing'
 import { UserService } from '@/service/user'
 import { CONSTANTS } from '@/lib/constants'
+import { AccountSession } from '@/lib/account-session'
 import { notFound } from 'next/navigation'
 import { hasLocale } from 'next-intl'
 
@@ -27,7 +28,8 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
   setRequestLocale(locale)
 
   const cookies = await getCookies()
-  const jwt = cookies.get(CONSTANTS.COOKIES.TOKEN)
+  const accountSession = new AccountSession(cookies)
+  const jwt = accountSession.get()
 
   let user: User | null = null
 
@@ -35,7 +37,7 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
     const response = await UserService.get({ jwt, locale })
     if (response.error) {
       if (response.status === 401) {
-        cookies.remove(CONSTANTS.COOKIES.TOKEN)
+        accountSession.remove(jwt)
       } else {
         throw new Error(response.message)
       }

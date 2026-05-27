@@ -5,6 +5,7 @@ export const CONSTANTS = {
 
   COOKIES: {
     TOKEN: 'token',
+    TOKENS: 'tokens',
     TOKEN_DURATION: 30 // days
   }
 }

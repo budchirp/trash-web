@@ -15,7 +15,7 @@ export const PermissionsSection: React.FC<PermissionsSectionProps> = ({
   const t_permissions = useTranslations('permissions')
 
   return (
-    <Section subsection title={t_permissions('title')}>
+    <Section subsection description={t_permissions('title')}>
       <Row className='overflow-x-auto w-full gap-2'>
         {permissions.map((permission, index) => (
           <Tag color='primary' className='shrink-0' key={index}>

@@ -2,7 +2,7 @@
 
 import type React from 'react'
 
-import { ProfileFields } from '@/components/app/profile/profile-fields'
+import { ProfileFields } from '@/components/app/settings/profile/profile-fields'
 
 import { Button, Column, Heading, Row, Section } from '@trash-kit/ui'
 
@@ -21,10 +21,10 @@ export const IdentityStep: React.FC<IdentityStepProps> = ({
   errors,
   onNext
 }: IdentityStepProps): React.ReactNode => {
-  const t = useTranslations('profile')
+  const t = useTranslations()
 
   return (
-    <Section title={t('identity_step')}>
+    <Section title={t('profile.identity_step')}>
       <Column className='gap-4'>
         <Column>
           <ProfileFields register={register} errors={errors} />
@@ -32,7 +32,7 @@ export const IdentityStep: React.FC<IdentityStepProps> = ({
 
         <Row className='w-full justify-end'>
           <Button type='button' onClick={onNext}>
-            {t("next")}
+            {t('common.next')}
           </Button>
         </Row>
       </Column>

@@ -2,7 +2,7 @@
 
 import type React from 'react'
 
-import { ProfilePictureField } from '@/components/app/profile/profile-picture-field'
+import { ProfilePictureField } from '@/components/app/settings/profile/profile-picture-field'
 
 import { Button, Column, Heading, Row, Section } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
@@ -24,11 +24,10 @@ export const PictureStep: React.FC<PictureStepProps> = ({
   isSubmitting,
   onFileChange
 }: PictureStepProps): React.ReactNode => {
-  const t = useTranslations('profile')
-  const t_common = useTranslations('common')
+  const t = useTranslations()
 
   return (
-    <Section title={t('picture_step')}>
+    <Section title={t('profile.picture_step')}>
       <Column className='gap-4'>
         <Column>
           <ProfilePictureField src={src} file={file} alt={alt} onFileChange={onFileChange} />
@@ -36,11 +35,11 @@ export const PictureStep: React.FC<PictureStepProps> = ({
 
         <Row className='w-full justify-between'>
           <Button type='button' onClick={onBack}>
-            {t('back')}
+            {t('common.back')}
           </Button>
 
           <Button disabled={isSubmitting} type='submit' loading={isSubmitting}>
-            {isSubmitting ? t_common('loading') : t('submit')}
+            {isSubmitting ? t('common.loading') : t('common.submit')}
           </Button>
         </Row>
       </Column>

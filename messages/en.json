@@ -9,7 +9,10 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "retry": "Retry",
-    "success": "Success"
+    "success": "Success",
+    "next": "Next",
+    "back": "Back",
+    "continue": "Continue"
   },
   "permissions": {
     "title": "Permissions",
@@ -33,32 +36,96 @@
   },
   "auth": {
     "logout": "Logout",
+    "form": {
+      "email": "Email",
+      "name": "Name",
+      "username": "Username",
+      "password": "Password"
+    },
     "sign_in": {
       "title": "Sign in",
       "description": "Sign in to your account",
-      "sign_up_link": "Don't have an account? Sign up",
-      "choose_account": "Choose an account",
-      "continue": "Continue",
-      "use_another": "Use another account"
+      "sign_up_link": "Don't have an account? Sign up"
     },
     "sign_up": {
       "title": "Sign up",
       "description": "Create a new account",
-      "sign_in_link": "Already have an account? Sign in",
-      "form": {
-        "username": "Username"
-      }
+      "sign_in_link": "Already have an account? Sign in"
     },
-    "form": {
-      "email": "Email",
-      "password": "Password"
+    "authorize": {
+      "title": "Authorize",
+      "description": "Authorize application",
+      "authorize": "Authorize",
+      "authorizing": "Authorizing..."
+    },
+    "account": {
+      "title": "Account",
+      "this_account": "This account will be used",
+      "choose_account": "Choose an account to continue or sign in bellow",
+      "current_account": "Current account",
+      "switch_account": "Switch",
+      "use_another_account": "Use another account"
     }
   },
-  "authorize": {
-    "title": "Authorize",
-    "description": "Authorize application",
-    "authorize": "Authorize",
-    "authorizing": "Authorizing..."
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Dashboard"
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Manage the profile details connected apps see.",
+    "setup_title": "Set up your profile",
+    "setup_description": "Add the public details apps will use to recognize you.",
+    "identity_step": "Identity",
+    "picture_step": "Picture",
+    "picture": "Profile picture",
+    "no_picture": "No picture selected",
+    "picture_stub": "Upload is not connected yet. This preview is local only.",
+    "submit": "Save profile",
+    "gender": {
+      "title": "Gender",
+      "empty": "Prefer not to say",
+      "male": "Male",
+      "female": "Female"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Settings for your account",
+    "account": {
+      "title": "Account",
+      "description": "Your account identifiers. These fields cannot be edited here.",
+      "username": "Username",
+      "email": "Email",
+      "edit_profile": "Edit profile"
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "Update the profile details connected apps can see."
+    },
+    "security": {
+      "title": "Security",
+      "description": "Security settings",
+      "revoke": "Revoke",
+      "revoked": "Revoked",
+      "expires_at": "Expires at",
+      "created_at": "Created at"
+    },
+    "session": {
+      "title": "Sessions",
+      "description": "Manage and see your active sessions. Revoke any session you don't recognize.",
+      "current_session": "Current session",
+      "no_sessions": "No sessions found"
+    },
+    "connection": {
+      "title": "Connections",
+      "description": "Apps that you are connected to",
+      "no_connections": "No connections found"
+    },
+    "application": {
+      "title": "Apps",
+      "description": "Your applications"
+    }
   },
   "onboarding": {
     "title": "Finish setting up your account",
@@ -187,69 +254,6 @@
     "cta": {
       "title": "Start with a clean account foundation.",
       "description": "Create your Trash account, set up your profile, and connect apps with permission prompts that make sense."
-    }
-  },
-  "dashboard": {
-    "title": "Dashboard",
-    "description": "Dashboard"
-  },
-  "profile": {
-    "title": "Profile",
-    "description": "Manage the profile details connected apps see.",
-    "setup_title": "Set up your profile",
-    "setup_description": "Add the public details apps will use to recognize you.",
-    "identity_step": "Identity",
-    "picture_step": "Picture",
-    "username": "Username",
-    "email": "Email",
-    "name": "Name",
-    "gender": "Gender",
-    "gender_empty": "Prefer not to say",
-    "male": "Male",
-    "female": "Female",
-    "picture": "Profile picture",
-    "no_picture": "No picture selected",
-    "picture_stub": "Upload is not connected yet. This preview is local only.",
-    "next": "Next",
-    "back": "Back",
-    "submit": "Save profile"
-  },
-  "settings": {
-    "title": "Settings",
-    "description": "Settings for your account",
-    "account": {
-      "title": "Account",
-      "description": "Your account identifiers. These fields cannot be edited here.",
-      "username": "Username",
-      "email": "Email",
-      "edit_profile": "Edit profile"
-    },
-    "profile": {
-      "title": "Profile",
-      "description": "Update the profile details connected apps can see."
-    },
-    "security": {
-      "title": "Security",
-      "description": "Security settings",
-      "revoke": "Revoke",
-      "revoked": "Revoked",
-      "expires_at": "Expires at",
-      "created_at": "Created at"
-    },
-    "session": {
-      "title": "Sessions",
-      "description": "Manage and see your active sessions. Revoke any session you don't recognize.",
-      "current_session": "Current session",
-      "no_sessions": "No sessions found"
-    },
-    "connection": {
-      "title": "Connections",
-      "description": "Apps that you are connected to",
-      "no_connections": "No connections found"
-    },
-    "application": {
-      "title": "Apps",
-      "description": "Your applications"
     }
   }
 }

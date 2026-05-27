@@ -5,7 +5,7 @@ import type React from 'react'
 import { Avatar } from '@/components/app/settings/avatar'
 import { useTranslations } from 'next-intl'
 
-import { Column, Divider, Field, Heading, Input, Label, Row, Text } from '@trash-kit/ui'
+import { Column, Field, Heading, Input, Label, Row } from '@trash-kit/ui'
 
 type ProfilePictureFieldProps = {
   src: string | null

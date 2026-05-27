@@ -9,8 +9,8 @@ import { UserService } from '@/service/user'
 import { useForm } from 'react-hook-form'
 import { SessionService } from '@/service/session'
 import { useCookies } from 'next-client-cookies'
-import { CONSTANTS } from '@/lib/constants'
 import { Link } from '@/lib/i18n/routing'
+import { AccountSession } from '@/lib/account-session'
 
 import {
   Button,
@@ -46,6 +46,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
   })
 
   const cookies = useCookies()
+  const accountSession = new AccountSession(cookies)
 
   const onSubmit = async (values: NewUserValues) => {
     const user = await UserService.create(values, { locale })
@@ -64,11 +65,8 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
       return
     }
 
-    cookies.set(CONSTANTS.COOKIES.TOKEN, session.data.token, {
-      path: '/',
-      sameSite: 'lax',
-      expires: CONSTANTS.COOKIES.TOKEN_DURATION
-    })
+    accountSession.set(session.data.token)
+    accountSession.add(session.data.token)
 
     const query = redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''
     window.location.replace(`/${locale}/onboarding${query}`)
@@ -104,10 +102,10 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
               </Field>
 
               <Field name='username' error={errors.username?.message}>
-                <Label>{t('sign_up.form.username')}:</Label>
+                <Label>{t('form.username')}:</Label>
 
                 <Input
-                  placeholder={t_common('enter_field', { field: t('sign_up.form.username') })}
+                  placeholder={t_common('enter_field', { field: t('form.username') })}
                   type='text'
                   {...register('username')}
                 />

@@ -8,6 +8,7 @@ import { UserContext } from '@/context/user'
 import { User } from 'lucide-react'
 
 import { Center, Heading, cn } from '@trash-kit/ui'
+import { IconBox } from '@/components/icon-box'
 
 type AvatarProps = {
   showUsername?: boolean
@@ -34,19 +35,18 @@ export const Avatar: React.FC<AvatarProps> = ({
 
   return (
     <Center className={cn('gap-2', showUsername && 'w-full')}>
-      <Center
-        className={cn(
-          'rounded-full border border-outline bg-surface-secondary p-1 overflow-hidden',
-          className
-        )}
-      >
-        {picture ? (
-          // biome-ignore lint/performance/noImgElement: profile images can be API URLs or local previews.
-          <img className='size-full object-cover rounded-full' src={picture} alt={imageAlt} />
-        ) : (
-          <User className='size-1/2' />
-        )}
-      </Center>
+      <IconBox
+        className={cn('p-1', className)}
+        color='secondary'
+        icon={
+          picture ? (
+            // biome-ignore lint/performance/noImgElement: profile images can be API URLs or local previews.
+            <img className='size-full object-cover rounded-full' src={picture} alt={imageAlt} />
+          ) : (
+            <User className='size-1/2' />
+          )
+        }
+      />
 
       {showUsername && <Heading size='h3'>{displayName}</Heading>}
     </Center>

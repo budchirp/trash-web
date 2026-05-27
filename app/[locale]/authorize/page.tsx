@@ -2,7 +2,7 @@ import type React from 'react'
 
 import { AuthorizeClientPage } from './page.client'
 import { ApplicationService } from '@/service/application'
-import { _authtenticated } from '@/lib/auth'
+import { getAuthenticatedSession } from '@/lib/auth'
 
 import { Section } from '@trash-kit/ui'
 
@@ -19,7 +19,7 @@ const Page: React.FC<DynamicPageProps> = async ({
     Object.entries(searchParams).filter((entry): entry is [string, string] => Boolean(entry[1]))
   ).toString()}`
 
-  const jwt = await _authtenticated(locale, redirectTo)
+  const { jwt, user } = await getAuthenticatedSession(locale, redirectTo)
 
   const { callback, id, permissions } = searchParams
 
@@ -34,6 +34,7 @@ const Page: React.FC<DynamicPageProps> = async ({
     <Section>
       <AuthorizeClientPage
         jwt={jwt}
+        user={user}
         callback={callback}
         application={application.data}
         permissions={permissions?.split(',') || []}

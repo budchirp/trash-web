@@ -1,17 +1,16 @@
 'use client'
 
 import type React from 'react'
-import { useState } from 'react'
 
 import { newSessionSchema, type NewSessionValues } from '@/service/session/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLocale, useTranslations } from 'use-intl'
 import { SessionService } from '@/service/session'
 import { useCookies } from 'next-client-cookies'
-import { CONSTANTS } from '@/lib/constants'
 import { useForm } from 'react-hook-form'
 import { Link } from '@/lib/i18n/routing'
 import { UserService } from '@/service/user'
+import { AccountSession } from '@/lib/account-session'
 
 import {
   Button,
@@ -26,23 +25,25 @@ import {
   toast
 } from '@trash-kit/ui'
 
-import type { User } from '@/types/api/user'
+import { AccountSwitcher } from '@/components/app/settings/account/account-switcher'
+
+import type { SavedAccount } from '@/types/app/account'
 
 type SignInClientPageProps = {
   redirectTo: string | null
-  currentUser: User | null
+  accounts: SavedAccount[]
+  token: string | null
 }
 
 export const SignInClientPage: React.FC<SignInClientPageProps> = ({
   redirectTo,
-  currentUser
+  accounts,
+  token
 }: SignInClientPageProps): React.ReactNode => {
   const locale = useLocale()
 
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
-
-  const [useAnotherAccount, setUseAnotherAccount] = useState(false)
 
   const {
     register,
@@ -53,6 +54,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
   })
 
   const cookies = useCookies()
+  const accountSession = new AccountSession(cookies)
 
   const onSubmit = async (values: NewSessionValues) => {
     const session = await SessionService.create(values, { locale })
@@ -61,17 +63,16 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
       return
     }
 
-    cookies.set(CONSTANTS.COOKIES.TOKEN, session.data.token, {
-      path: '/',
-      sameSite: 'lax',
-      expires: CONSTANTS.COOKIES.TOKEN_DURATION
-    })
+    const jwt = session.data.token
 
-    const user = await UserService.get({ jwt: session.data.token, locale })
+    const user = await UserService.get({ jwt, locale })
     if (user.error) {
       toast(user.message)
       return
     }
+
+    accountSession.set(jwt)
+    accountSession.add(jwt)
 
     if (!user.data?.profile?.name?.trim()) {
       const query = redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''
@@ -82,67 +83,28 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     window.location.replace(redirectTo ?? `/${locale}/dashboard`)
   }
 
-  const signUpHref = redirectTo
-    ? `/auth/signup?redirectTo=${encodeURIComponent(redirectTo)}`
-    : '/auth/signup'
-
-  const continueWithCurrentUser = () => {
-    if (!redirectTo || !currentUser) return
-
-    if (!currentUser.profile?.name?.trim()) {
-      window.location.replace(`/${locale}/onboarding?redirectTo=${encodeURIComponent(redirectTo)}`)
-      return
-    }
-
-    window.location.replace(redirectTo)
-  }
-
-  if (redirectTo && currentUser && !useAnotherAccount) {
-    return (
-      <Container className='max-w-lg!'>
-        <Section
-          title={t('sign_in.choose_account')}
-          description={
-            <Link href={signUpHref}>
-              <Heading className='text-tertiary' size='h4'>
-                {t('sign_in.sign_up_link')}
-              </Heading>
-            </Link>
-          }
-        >
-          <Column className='gap-4'>
-            <Column className='gap-1'>
-              <Heading size='h3'>{currentUser.profile?.name || currentUser.username}</Heading>
-              <Heading className='text-tertiary' size='h4'>
-                {currentUser.email}
-              </Heading>
-            </Column>
-
-            <Row className='w-full justify-end gap-2'>
-              <Button onClick={continueWithCurrentUser}>{t('sign_in.continue')}</Button>
-
-              <Button
-                onClick={() => {
-                  cookies.remove(CONSTANTS.COOKIES.TOKEN, { path: '/' })
-                  setUseAnotherAccount(true)
-                }}
-              >
-                {t('sign_in.use_another')}
-              </Button>
-            </Row>
-          </Column>
-        </Section>
-      </Container>
-    )
-  }
-
   return (
     <Container className='max-w-lg!'>
+      {token && accounts.length > 0 && (
+        <AccountSwitcher
+          accounts={accounts}
+          token={token}
+          redirectTo={redirectTo}
+          showUseAnother={false}
+        />
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Section
           title={t('sign_in.title')}
           description={
-            <Link href={signUpHref}>
+            <Link
+              href={
+                redirectTo
+                  ? `/auth/signup?redirectTo=${encodeURIComponent(redirectTo)}`
+                  : '/auth/signup'
+              }
+            >
               <Heading className='text-tertiary' size='h4'>
                 {t('sign_in.sign_up_link')}
               </Heading>

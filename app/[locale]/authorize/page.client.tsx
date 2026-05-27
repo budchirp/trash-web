@@ -5,15 +5,18 @@ import { useState } from 'react'
 
 import { PermissionsSection } from '@/components/app/settings/security/permissions-section'
 import { ApplicationSection } from '@/components/app/authorize/application-section'
+import { AccountSection } from '@/components/app/authorize/account-section'
 import { ConnectionService } from '@/service/connection'
 import { useTranslations } from 'next-intl'
 
 import { Button, Column, Container, Row, Section, toast, BoxContent, Box } from '@trash-kit/ui'
 
 import type { Application } from '@/types/api/application'
+import type { User } from '@/types/api/user'
 
 type AuthorizeClientPageProps = {
   jwt: string
+  user: User
 
   callback: string
   application: Application
@@ -22,11 +25,12 @@ type AuthorizeClientPageProps = {
 
 export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
   jwt,
+  user,
   callback,
   application,
   permissions
 }): React.ReactNode => {
-  const t = useTranslations('authorize')
+  const t = useTranslations('auth.authorize')
 
   const [loading, setLoading] = useState(false)
 
@@ -44,6 +48,8 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
 
       setLoading(false)
     } else {
+      setLoading(false)
+
       const separator = callback.includes('?') ? '&' : '?'
       window.location.replace(`${callback}${separator}token=${encodeURIComponent(data.token)}`)
     }
@@ -55,17 +61,16 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
         <Column className='gap-4'>
           <ApplicationSection application={application} />
 
-          <Box color='secondary'>
-            <BoxContent>
-              <PermissionsSection permissions={permissions} />
-            </BoxContent>
-          </Box>
+          <PermissionsSection permissions={permissions} />
 
-          <Row className='w-full justify-end'>
-            <Button disabled={loading} loading={loading} onClick={authorize}>
-              {loading ? t('authorizing') : t('authorize')}
-            </Button>
-          </Row>
+          <AccountSection
+            user={user}
+            action={
+              <Button disabled={loading} loading={loading} onClick={authorize}>
+                {loading ? t('authorizing') : t('authorize')}
+              </Button>
+            }
+          />
         </Column>
       </Section>
     </Container>

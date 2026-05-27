@@ -1,14 +1,15 @@
 'use client'
 
 import { useCookies } from 'next-client-cookies'
-import { CONSTANTS } from '@/lib/constants'
+import { AccountSession } from '@/lib/account-session'
 import { SessionService } from '@/service/session'
 
 export const useLogout = (): ((session?: string) => Promise<void>) => {
   const cookies = useCookies()
 
   try {
-    const jwt = cookies.get(CONSTANTS.COOKIES.TOKEN)
+    const accountSession = new AccountSession(cookies)
+    const jwt = accountSession.get()
 
     return async (token: string | null = null) => {
       if (jwt) {
@@ -16,7 +17,7 @@ export const useLogout = (): ((session?: string) => Promise<void>) => {
       }
 
       if (!token) {
-        cookies.remove(CONSTANTS.COOKIES.TOKEN)
+        accountSession.remove(jwt)
 
         window.location.replace('/')
       }

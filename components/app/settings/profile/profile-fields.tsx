@@ -18,25 +18,27 @@ export const ProfileFields: React.FC<ProfileFieldsProps> = ({
   register,
   errors
 }: ProfileFieldsProps): React.ReactNode => {
-  const t = useTranslations('profile')
-  const t_common = useTranslations('common')
+  const t = useTranslations()
 
   return (
     <Column className='gap-2'>
       <Field name='name' error={errors.name?.message}>
-        <Label>{t('name')}:</Label>
-        <Input placeholder={t_common('enter_field', { field: t('name') })} {...register('name')} />
+        <Label>{t('auth.form.name')}:</Label>
+        <Input
+          placeholder={t('common.enter_field', { field: t('auth.form.name') })}
+          {...register('name')}
+        />
       </Field>
 
       <Field name='gender' error={errors.gender?.message}>
-        <Label>{t('gender')}:</Label>
+        <Label>{t('profile.gender.title')}:</Label>
         <select
           className='w-full rounded-3xl border border-outline bg-surface-primary px-4 py-1.5 text-primary outline-none'
           {...register('gender')}
         >
-          <option value=''>{t('gender_empty')}</option>
-          <option value='male'>{t('male')}</option>
-          <option value='female'>{t('female')}</option>
+          <option value=''>{t('profile.gender.empty')}</option>
+          <option value='male'>{t('profile.gender.male')}</option>
+          <option value='female'>{t('profile.gender.female')}</option>
         </select>
       </Field>
     </Column>

@@ -3,8 +3,8 @@
 import type React from 'react'
 import { useEffect, useState } from 'react'
 
-import { ProfileFields } from '@/components/app/profile/profile-fields'
-import { ProfilePictureField } from '@/components/app/profile/profile-picture-field'
+import { ProfileFields } from '@/components/app/settings/profile/profile-fields'
+import { ProfilePictureField } from '@/components/app/settings/profile/profile-picture-field'
 import { profileSchema, type ProfileInputValues, type ProfileValues } from '@/service/user/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserService } from '@/service/user'
