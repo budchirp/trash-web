@@ -5,7 +5,7 @@ import type React from 'react'
 import { Avatar } from '@/components/app/settings/avatar'
 import { useTranslations } from 'next-intl'
 
-import { Column, Field, Heading, Input, Label, Row } from '@trash-kit/ui'
+import { Column, Field, FileField, Heading, Input, Label, Row } from '@trash-kit/ui'
 
 type ProfilePictureFieldProps = {
   src: string | null
@@ -25,16 +25,15 @@ export const ProfilePictureField: React.FC<ProfilePictureFieldProps> = ({
   return (
     <Column className='gap-4'>
       <Row className='gap-3'>
-        <Avatar src={src} alt={alt} className='size-16' showUsername={false} />
+        <Avatar src={src} alt={alt} className='size-16' showUsername={false} color='primary' />
 
         <Heading size='h4'>{file?.name ?? t('no_picture')}</Heading>
       </Row>
 
       <Field name='picture'>
         <Label>{t('picture')}:</Label>
-        <Input
+        <FileField
           accept='image/*'
-          type='file'
           onChange={(event) => onFileChange(event.target.files?.[0] ?? null)}
         />
       </Field>

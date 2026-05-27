@@ -41,6 +41,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
   token
 }: SignInClientPageProps): React.ReactNode => {
   const locale = useLocale()
+  const cookies = useCookies()
 
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
@@ -53,7 +54,6 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     resolver: zodResolver(newSessionSchema)
   })
 
-  const cookies = useCookies()
   const accountSession = new AccountSession(cookies)
 
   const onSubmit = async (values: NewSessionValues) => {

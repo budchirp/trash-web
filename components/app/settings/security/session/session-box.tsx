@@ -94,12 +94,6 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
           </Row>
         </Column>
       </BoxContent>
-
-      <Divider />
-
-      <BoxContent>
-        <PermissionsSection permissions={session.token.permissions} />
-      </BoxContent>
     </Box>
   )
 }

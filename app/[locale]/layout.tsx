@@ -21,11 +21,11 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
   params
 }: DynamicLayoutProps): Promise<React.ReactNode> => {
   const { locale } = await params
-  if (!hasLocale(routing.locales, locale)) {
+  if (!hasLocale(routing.locales, locale || 'en')) {
     notFound()
   }
 
-  setRequestLocale(locale)
+  setRequestLocale(locale as any)
 
   const cookies = await getCookies()
   const accountSession = new AccountSession(cookies)

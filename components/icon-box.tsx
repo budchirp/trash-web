@@ -1,7 +1,7 @@
 import { Center, cn } from '@trash-kit/ui'
 import type React from 'react'
 
-interface IconBoxProps {
+export type IconBoxProps = {
   className?: string
   color?: 'accent' | 'primary' | 'secondary'
   icon: React.ReactNode

@@ -4,7 +4,7 @@ import type React from 'react'
 
 import { useTranslations } from 'next-intl'
 
-import { Column, Field, Input, Label } from '@trash-kit/ui'
+import { Column, Field, Input, Label, Select } from '@trash-kit/ui'
 
 import type { ProfileInputValues } from '@/service/user/schema'
 import type { FieldErrors, UseFormRegister } from 'react-hook-form'
@@ -32,14 +32,11 @@ export const ProfileFields: React.FC<ProfileFieldsProps> = ({
 
       <Field name='gender' error={errors.gender?.message}>
         <Label>{t('profile.gender.title')}:</Label>
-        <select
-          className='w-full rounded-3xl border border-outline bg-surface-primary px-4 py-1.5 text-primary outline-none'
-          {...register('gender')}
-        >
+        <Select {...register('gender')}>
           <option value=''>{t('profile.gender.empty')}</option>
           <option value='male'>{t('profile.gender.male')}</option>
           <option value='female'>{t('profile.gender.female')}</option>
-        </select>
+        </Select>
       </Field>
     </Column>
   )

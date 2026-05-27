@@ -29,7 +29,7 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
           'group',
           !box && 'border-0',
           box && 'bg-surface-primary',
-          box && isSelected && 'bg-surface-secondary'
+          box && isSelected && 'bg-surface-secondary border-outline-hover'
         )}
       >
         <BoxContent
