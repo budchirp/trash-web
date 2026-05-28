@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@trash-kit/ui/styles.css";
+@import "@trash-kit/ui";
 
 @source "../node_modules/@trash-kit/ui";
 
