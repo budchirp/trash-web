@@ -32,7 +32,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
             <Heading className='truncate' size='h3'>
               {user.profile?.name?.trim() || user.username}
             </Heading>
-            <Heading size='h4' className='text-tertiary truncate'>
+            <Heading size='h4' className='text-content-tertiary truncate'>
               {user.email}
             </Heading>
           </Column>

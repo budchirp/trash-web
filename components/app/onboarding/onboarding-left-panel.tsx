@@ -28,7 +28,9 @@ export const OnboardingLeftPanel: React.FC<OnboardingLeftPanelProps> = ({
         <Column className='gap-4 max-w-sm'>
           <Column className='gap-2'>
             <Heading size='h1'>{title}</Heading>
-            <Heading size='h4' className='text-tertiary'>{description}</Heading>
+            <Heading size='h4' className='text-content-tertiary'>
+              {description}
+            </Heading>
           </Column>
 
           <Column className='hidden gap-2 lg:flex'>
@@ -40,12 +42,31 @@ export const OnboardingLeftPanel: React.FC<OnboardingLeftPanelProps> = ({
                 )}
                 key={step.id}
               >
-                <Center className={cn("aspect-square border-r p-2 ", activeStep === index ? "border-accent-700/50" : "border-outline")}>
-                  <Text className={activeStep === index ? 'font-bold text-primary' : 'text-tertiary'}>{String(index + 1).padStart(2, '0')}</Text>
+                <Center
+                  className={cn(
+                    'aspect-square border-r p-2 ',
+                    activeStep === index ? 'border-accent-700/50' : 'border-outline'
+                  )}
+                >
+                  <Text
+                    className={
+                      activeStep === index
+                        ? 'font-bold text-content-primary'
+                        : 'text-content-tertiary'
+                    }
+                  >
+                    {String(index + 1).padStart(2, '0')}
+                  </Text>
                 </Center>
 
-                <BoxContent padding="none" className='flex-row items-center h-full py-2'>
-                  <Text className={activeStep === index ? 'font-bold text-primary' : 'text-tertiary'}>
+                <BoxContent padding='none' className='flex-row items-center h-full py-2'>
+                  <Text
+                    className={
+                      activeStep === index
+                        ? 'font-bold text-content-primary'
+                        : 'text-content-tertiary'
+                    }
+                  >
                     {step.label}
                   </Text>
                 </BoxContent>

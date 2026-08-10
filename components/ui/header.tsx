@@ -41,10 +41,10 @@ const HeaderLink: React.FC<HeaderLinkProps> = ({
   return (
     <Link
       className={cn(
-        'hover:text-primary text-lg leading-6 transition-all duration-300 hover:font-bold',
+        'hover:text-content-primary text-lg leading-6 transition-all duration-300 hover:font-bold',
         (url.length > 1 ? pathname.includes(url) : pathname === url)
-          ? 'text-primary font-bold'
-          : 'text-tertiary font-medium'
+          ? 'text-content-primary font-bold'
+          : 'text-content-tertiary font-medium'
       )}
       href={url}
     >
@@ -119,14 +119,14 @@ export const Header: React.FC = (): React.ReactNode => {
                         <Text
                           key={index}
                           className={cn(
-                            'hover:text-primary text-lg leading-6 transition-all duration-300 hover:font-bold',
+                            'hover:text-content-primary text-lg leading-6 transition-all duration-300 hover:font-bold',
                             (
                               link.url.length > 1
                                 ? pathname.includes(link.url)
                                 : pathname === link.url
                             )
-                              ? 'text-primary font-bold'
-                              : 'text-tertiary font-medium'
+                              ? 'text-content-primary font-bold'
+                              : 'text-content-tertiary font-medium'
                           )}
                           onClick={link.onClick}
                         >

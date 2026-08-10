@@ -57,12 +57,12 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
                 <Row className='md:gap-4 flex-col md:flex-row items-start md:items-center'>
                   <Row className='gap-1'>
                     <Globe className='size-4' />
-                    <Text className='text-tertiary'>{session.ip}</Text>
+                    <Text className='text-content-tertiary'>{session.ip}</Text>
                   </Row>
 
                   <Row className='gap-1'>
                     <Download className='size-4' />
-                    <Text className='text-tertiary'>{session.browser}</Text>
+                    <Text className='text-content-tertiary'>{session.browser}</Text>
                   </Row>
                 </Row>
               </Column>
@@ -70,7 +70,7 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
 
             <div className='shrink-0'>
               {session.token.id === currentTokenId ? (
-                <Text className='text-tertiary'>{t('session.current_session')}</Text>
+                <Text className='text-content-tertiary'>{t('session.current_session')}</Text>
               ) : (
                 <Button onClick={() => onRevoke(session)}>{t('security.revoke')}</Button>
               )}

@@ -38,8 +38,8 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
             'text-lg',
             box && 'leading-4',
             isSelected
-              ? 'text-primary font-bold'
-              : 'text-tertiary font-medium group-hover:text-primary group-hover:font-bold'
+              ? 'text-content-primary font-bold'
+              : 'text-content-tertiary font-medium group-hover:text-content-primary group-hover:font-bold'
           )}
         >
           {label}

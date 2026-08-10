@@ -23,7 +23,7 @@ export const CenteredPage: React.FC<VerticalPageProps> = ({
 
           <Column className='gap-1'>
             {items.map((item, index) => (
-              <Text className='text-text-secondary text-2xl font-medium' key={index}>
+              <Text className='text-text-content-secondary text-2xl font-medium' key={index}>
                 {item}
               </Text>
             ))}

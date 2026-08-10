@@ -46,7 +46,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
   })
 
   const cookies = useCookies()
-  const accountSession = new AccountSession(cookies)
+  const session = new AccountSession(cookies)
 
   const onSubmit = async (values: NewUserValues) => {
     const user = await UserService.create(values, { locale })
@@ -55,18 +55,18 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
       return
     }
 
-    const session = await SessionService.create(
+    const response = await SessionService.create(
       { email: values.email, password: values.password },
       { locale }
     )
 
-    if (session.error) {
-      toast(session.message)
+    if (response.error) {
+      toast(response.message)
       return
     }
 
-    accountSession.set(session.data.token)
-    accountSession.add(session.data.token)
+    session.set(response.data.token)
+    session.add(response.data.token)
 
     const query = redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''
     window.location.replace(`/${locale}/onboarding${query}`)
@@ -83,7 +83,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
           title={t('sign_up.title')}
           description={
             <Link href={signInHref}>
-              <Heading className='text-tertiary' size='h4'>
+              <Heading className='text-content-tertiary' size='h4'>
                 {t('sign_up.sign_in_link')}
               </Heading>
             </Link>

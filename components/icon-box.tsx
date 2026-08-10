@@ -16,7 +16,7 @@ export const IconBox: React.FC<IconBoxProps> = ({
     <Center
       className={cn(
         'rounded-full overflow-hidden shrink-0 border aspect-square p-2',
-        color === 'accent' && 'bg-surface-accent border-outline-accent text-accent',
+        color === 'accent' && 'bg-surface-accent border-outline-accent text-surface-content-accent',
         color === 'primary' && 'bg-surface-primary border-outline',
         color === 'secondary' && 'bg-surface-secondary border-outline',
         className

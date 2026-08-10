@@ -31,7 +31,7 @@ export const ApplicationSection: React.FC<ApplicationSectionProps> = ({
 
       <Column className='grow'>
         <Heading size='h3'>{application?.name}</Heading>
-        <Text className='text-tertiary'>{application?.description}</Text>
+        <Text className='text-content-tertiary'>{application?.description}</Text>
       </Column>
 
       {children}

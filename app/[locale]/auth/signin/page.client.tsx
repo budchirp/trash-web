@@ -28,6 +28,7 @@ import {
 import { AccountSwitcher } from '@/components/app/settings/account/account-switcher'
 
 import type { SavedAccount } from '@/types/app/account'
+import { useEffect } from 'react'
 
 type SignInClientPageProps = {
   redirectTo: string | null
@@ -54,16 +55,16 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     resolver: zodResolver(newSessionSchema)
   })
 
-  const accountSession = new AccountSession(cookies)
+  const session = new AccountSession(cookies)
 
   const onSubmit = async (values: NewSessionValues) => {
-    const session = await SessionService.create(values, { locale })
-    if (session.error) {
-      toast(session.message)
+    const response = await SessionService.create(values, { locale })
+    if (response.error) {
+      toast(response.message)
       return
     }
 
-    const jwt = session.data.token
+    const jwt = response.data.token
 
     const user = await UserService.get({ jwt, locale })
     if (user.error) {
@@ -71,8 +72,8 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
       return
     }
 
-    accountSession.set(jwt)
-    accountSession.add(jwt)
+    session.set(jwt)
+    session.add(jwt)
 
     if (!user.data?.profile?.name?.trim()) {
       const query = redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''
@@ -105,7 +106,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
                   : '/auth/signup'
               }
             >
-              <Heading className='text-tertiary' size='h4'>
+              <Heading className='text-content-tertiary' size='h4'>
                 {t('sign_in.sign_up_link')}
               </Heading>
             </Link>

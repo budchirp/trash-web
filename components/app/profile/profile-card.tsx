@@ -32,7 +32,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 
           <Column className='gap-1 pb-2 text-center md:text-left'>
             <Heading size='h1'>{user.profile?.name || user.username}</Heading>
-            <Heading size='h4' className='text-tertiary'>
+            <Heading size='h4' className='text-content-tertiary'>
               @{user.username}
             </Heading>
           </Column>
