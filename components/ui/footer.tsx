@@ -1,13 +1,15 @@
+'use client'
+
 import type React from 'react'
 
-import { getTranslations } from 'next-intl/server'
-import { Link } from '@/lib/i18n/routing'
+import { SelectableLink } from '@/components/link'
+import { useTranslations } from 'next-intl'
 import { Logo } from '@/components/logo'
 
 import { BoxContent, Container, Divider, Row, Text } from '@trash-kit/ui'
 
-export const Footer: React.FC = async (): Promise<React.ReactNode> => {
-  const t = await getTranslations()
+export const Footer: React.FC = (): React.ReactNode => {
+  const t = useTranslations()
 
   return (
     <footer className='bg-surface-primary/50 backdrop-blur-xs border-t border-outline w-full'>
@@ -25,13 +27,9 @@ export const Footer: React.FC = async (): Promise<React.ReactNode> => {
             <Text className='font-medium'>Made by Can Kolay with ❤️</Text>
 
             <Row className='gap-4'>
-              <Link href='/help/legal/terms-of-service'>
-                <Text className='text-content-tertiary'>{t('legal.terms.title')}</Text>
-              </Link>
+              <SelectableLink url='/help/legal/terms-of-service' label={t('legal.terms.title')} />
 
-              <Link href='/help/legal/privacy-policy'>
-                <Text className='text-content-tertiary'>{t('legal.privacy.title')}</Text>
-              </Link>
+              <SelectableLink url='/help/legal/privacy-policy' label={t('legal.privacy.title')} />
             </Row>
           </Row>
         </BoxContent>

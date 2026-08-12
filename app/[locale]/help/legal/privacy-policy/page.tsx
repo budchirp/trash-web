@@ -1,6 +1,6 @@
 import type React from 'react'
 
-import { LegalPage } from '@/components/legal/legal-page'
+import { LegalPage } from '@/components/app/legal/legal-page'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { getTranslations } from 'next-intl/server'
 

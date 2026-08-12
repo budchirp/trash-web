@@ -23,18 +23,18 @@ export const LegalPage: React.FC<LegalPageProps> = ({
   const sections = t.raw(`${scope}.sections`) as LegalSection[]
 
   return (
-    <Section className='py-16'>
-      <Container className='max-w-3xl'>
-        <Column className='gap-10'>
-          <Column className='gap-4'>
-            <Tag>{t(`${scope}.last_updated`)}</Tag>
+    <Section>
+      <Container>
+        <Section
+          title={
+            <Column className='gap-4'>
+              <Tag>{t(`${scope}.last_updated`)}</Tag>
 
-            <Column className='gap-2'>
-              <Heading size='h1'>{t(`${scope}.title`)}</Heading>
-              <Text className='text-lg text-content-tertiary'>{t(`${scope}.description`)}</Text>
+              <Heading>{t(`${scope}.title`)}</Heading>
             </Column>
-          </Column>
-
+          }
+          description={t(`${scope}.description`)}
+        >
           <Column className='gap-4'>
             {sections.map((section) => (
               <Box key={section.title}>
@@ -47,7 +47,7 @@ export const LegalPage: React.FC<LegalPageProps> = ({
               </Box>
             ))}
           </Column>
-        </Column>
+        </Section>
       </Container>
     </Section>
   )
