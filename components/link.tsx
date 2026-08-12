@@ -24,7 +24,7 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
   return (
     <Link href={url}>
       <Box
-        clickable
+        clickable={box}
         className={cn(
           'group',
           !box && 'border-0',
@@ -35,11 +35,11 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
         <BoxContent
           padding={box ? 'default' : 'none'}
           className={cn(
-            'text-lg',
-            box && 'leading-4',
-            isSelected
-              ? 'text-content-primary font-bold'
-              : 'text-content-tertiary font-medium group-hover:text-content-primary group-hover:font-bold'
+            'text-lg text-content-primary',
+            !box && 'text-content-tertiary hover:text-content-primary',
+            box && 'leading-4 text-content-primary',
+            !box && isSelected && 'underline text-content-primary',
+            isSelected ? 'font-bold' : 'font-medium'
           )}
         >
           {label}

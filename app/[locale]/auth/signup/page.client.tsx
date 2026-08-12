@@ -2,7 +2,7 @@
 
 import type React from 'react'
 
-import { newUserSchema, type NewUserValues } from '@/service/user/schema'
+import { signUpSchema, type SignUpValues } from '@/service/user/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLocale, useTranslations } from 'use-intl'
 import { UserService } from '@/service/user'
@@ -14,6 +14,7 @@ import { AccountSession } from '@/lib/account-session'
 
 import {
   Button,
+  Checkbox,
   Column,
   Container,
   Field,
@@ -22,6 +23,7 @@ import {
   Label,
   Row,
   Section,
+  Text,
   toast
 } from '@trash-kit/ui'
 
@@ -41,15 +43,21 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     register,
     handleSubmit,
     formState: { errors, isSubmitting }
-  } = useForm<NewUserValues>({
-    resolver: zodResolver(newUserSchema)
+  } = useForm<SignUpValues>({
+    resolver: zodResolver(signUpSchema)
   })
 
   const cookies = useCookies()
   const session = new AccountSession(cookies)
 
-  const onSubmit = async (values: NewUserValues) => {
-    const user = await UserService.create(values, { locale })
+  const onSubmit = async (values: SignUpValues) => {
+    const payload = {
+      email: values.email,
+      username: values.username,
+      password: values.password
+    }
+
+    const user = await UserService.create(payload, { locale })
     if (user.error) {
       toast(user.message)
       return
@@ -121,6 +129,21 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
                 />
               </Field>
             </Column>
+
+            <Field name='accept_terms' error={errors.accept_terms?.message}>
+              <Checkbox {...register('accept_terms')}>
+                <Text>
+                  {t.rich('sign_up.accept_terms', {
+                    terms: () => (
+                      <Link href='/help/legal/terms-of-service'>{t('sign_up.terms')}</Link>
+                    ),
+                    privacy: () => (
+                      <Link href='/help/legal/privacy-policy'>{t('sign_up.privacy')}</Link>
+                    )
+                  })}
+                </Text>
+              </Checkbox>
+            </Field>
 
             <Row className='w-full justify-end'>
               <Button disabled={isSubmitting} type='submit' loading={isSubmitting}>

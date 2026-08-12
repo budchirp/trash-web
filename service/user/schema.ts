@@ -8,6 +8,12 @@ export const newUserSchema = z.object({
 
 export type NewUserValues = z.infer<typeof newUserSchema>
 
+export const signUpSchema = newUserSchema.extend({
+  accept_terms: z.literal(true, 'You must accept the Terms of Service and Privacy Policy')
+})
+
+export type SignUpValues = z.infer<typeof signUpSchema>
+
 export const profileSchema = z.object({
   name: z.string().trim().min(1, 'Enter your name').max(100),
   gender: z.preprocess(

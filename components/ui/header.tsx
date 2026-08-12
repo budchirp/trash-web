@@ -1,85 +1,32 @@
 'use client'
 
 import type React from 'react'
-import { useState, useEffect, use } from 'react'
-import { createPortal } from 'react-dom'
+import { useState, use } from 'react'
 
-import { Transition, Menu, MenuItems, MenuItem, MenuButton } from '@headlessui/react'
+import { Dialog, DialogPanel, Transition } from '@headlessui/react'
 import { Menu as MenuIcon, X } from 'lucide-react'
 import { useLogout } from '@/lib/hooks/use-logout'
-import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/routing'
 import { Logo } from '@/components/logo'
 
-import {
-  cn,
-  Box,
-  BoxContent,
-  Button,
-  Backdrop,
-  Center,
-  Column,
-  Container,
-  Text,
-  Heading,
-  Row
-} from '@trash-kit/ui'
+import { cn, Button, Container, Row, Section, Divider, Column } from '@trash-kit/ui'
 import { UserContext } from '@/context/user'
-
-type HeaderLinkProps = {
-  pathname: string
-  label: string
-  url: string
-}
-
-const HeaderLink: React.FC<HeaderLinkProps> = ({
-  pathname,
-  label,
-  url
-}: HeaderLinkProps): React.ReactNode => {
-  return (
-    <Link
-      className={cn(
-        'hover:text-content-primary text-lg leading-6 transition-all duration-300 hover:font-bold',
-        (url.length > 1 ? pathname.includes(url) : pathname === url)
-          ? 'text-content-primary font-bold'
-          : 'text-content-tertiary font-medium'
-      )}
-      href={url}
-    >
-      {label}
-    </Link>
-  )
-}
+import { SelectableLink } from '../link'
 
 export const Header: React.FC = (): React.ReactNode => {
-  const [mounted, setMounted] = useState<boolean>(false)
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
   const t = useTranslations()
 
-  const pathname = usePathname()
-
-  const logout = useLogout()
-
   const { user } = use(UserContext)
+  const logout = useLogout()
 
   const links: {
     [key in 'true' | 'false']: {
       label: string
       url: string
-      onClick?: () => Promise<void>
     }[]
   } = {
     true: [
-      {
-        label: t('auth.logout'),
-        url: '',
-        onClick: async () => await logout()
-      },
       {
         label: t('dashboard.title'),
         url: '/dashboard'
@@ -89,112 +36,102 @@ export const Header: React.FC = (): React.ReactNode => {
         url: '/settings'
       }
     ],
-    false: [
-      {
-        label: 'Home',
-        url: '/'
-      }
-    ]
+    false: []
   }
 
+  const [open, setOpen] = useState(false)
+
+  const buttons = user ? (
+    <Button color='primary' className='w-full md:w-fit' onClick={() => logout()}>
+      {t('auth.logout')}
+    </Button>
+  ) : (
+    <>
+      <Link href='/auth/signin'>
+        <Button color='primary' className='w-full md:w-fit'>
+          {t('auth.sign_in.title')}
+        </Button>
+      </Link>
+
+      <Link href='/auth/signup'>
+        <Button color='primary' className='w-full md:w-fit'>
+          {t('auth.sign_up.title')}
+        </Button>
+      </Link>
+    </>
+  )
+
   return (
-    <Menu>
-      {({ open, close }) => {
-        useEffect((): void => {
-          close()
+    <>
+      <header className='bg-surface-primary/50 border-b border-outline select-none fixed top-0 z-20 h-16 w-full backdrop-blur-sm'>
+        <Container className='h-full'>
+          <Row className='h-full justify-between gap-2'>
+            <Logo />
 
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        }, [pathname])
-
-        return (
-          <div>
-            <header className='bg-surface-primary/50 border-b border-outline select-none fixed top-0 z-20 h-16 w-full backdrop-blur-sm'>
-              <Container className='h-full'>
-                <Row className='gap-2 h-full justify-between'>
-                  <Logo />
-
-                  <Row className='gap-3'>
-                    <Row className='hidden flex-row-reverse gap-2 md:flex'>
+            <Row className='gap-3'>
+              <Row className='hidden md:flex gap-4'>
+                {links.false.length > 0 && (
+                  <>
+                    <Row className='flex-row-reverse gap-2'>
                       {links[user ? 'true' : 'false'].map((link, index) => (
-                        <Text
-                          key={index}
-                          className={cn(
-                            'hover:text-content-primary text-lg leading-6 transition-all duration-300 hover:font-bold',
-                            (
-                              link.url.length > 1
-                                ? pathname.includes(link.url)
-                                : pathname === link.url
-                            )
-                              ? 'text-content-primary font-bold'
-                              : 'text-content-tertiary font-medium'
-                          )}
-                          onClick={link.onClick}
-                        >
-                          {link.onClick ? link.label : <Link href={link.url}>{link.label}</Link>}
-                        </Text>
+                        <SelectableLink label={link.label} url={link.url} key={index} />
                       ))}
                     </Row>
 
-                    <MenuButton
-                      as={Button}
-                      className='md:hidden'
-                      aria-label='Open menu'
-                      shape='circle'
-                      color='primary'
-                      onClick={close}
-                    >
-                      {open ? <X /> : <MenuIcon />}
-                    </MenuButton>
-                  </Row>
-                </Row>
+                    <Divider className='h-8' thickness='thick' orientation='vertical' />
+                  </>
+                )}
+
+                <Row className='gap-2'>{buttons}</Row>
+              </Row>
+
+              <Button
+                className='md:hidden'
+                aria-label={open ? 'Close menu' : 'Open menu'}
+                shape='circle'
+                color='primary'
+                onClick={() => setOpen((value) => !value)}
+              >
+                {open ? <X /> : <MenuIcon />}
+              </Button>
+            </Row>
+          </Row>
+        </Container>
+      </header>
+
+      <Transition show={open}>
+        <div
+          className={cn(
+            'fixed inset-x-0 top-16 bottom-0 z-10',
+            'overflow-y-auto',
+            'bg-surface-primary',
+            'transition-all duration-300 ease-out',
+            'data-closed:-translate-y-2 data-closed:opacity-0 data-closed:ease-in'
+          )}
+        >
+          <Section>
+            <Column className='gap-4'>
+              <Container>
+                <Column className='gap-2'>
+                  {links[user ? 'true' : 'false'].map((link, index) => (
+                    <SelectableLink box label={link.label} url={link.url} key={index} />
+                  ))}
+                </Column>
               </Container>
-            </header>
 
-            {mounted &&
-              createPortal(
-                <Backdrop open={open} onClose={close} />,
-                document.querySelector('#main') as Element
-              )}
+              <Divider />
 
-            <Transition
-              show={open}
-              as='div'
-              className={cn(
-                'w-screen h-screen_ flex justify-center items-center origin-[90%_0%] z-20 mx-auto inset-0 fixed',
-                'transition-all scale-100 opacity-100',
-                'data-closed:scale-90 data-closed:opacity-0',
-                'data-enter:ease-out data-enter:duration-400',
-                'data-leave:ease-in data-leave:duration-200'
-              )}
-            >
-              <Container className='fixed top-20'>
-                <Center>
-                  <MenuItems as={Box} static className='max-w-(--breakpoint-xs)'>
-                    <BoxContent>
-                      <Heading size='h2'>Links</Heading>
-
-                      <Column padding='none' className='gap-1'>
-                        {links[user ? 'true' : 'false'].map((link, index) => (
-                          <MenuItem
-                            as={HeaderLink}
-                            pathname={pathname}
-                            label={link.label}
-                            url={link.url}
-                            key={index}
-                          />
-                        ))}
-                      </Column>
-                    </BoxContent>
-                  </MenuItems>
-                </Center>
+              <Container>
+                <Column className='gap-2'>{buttons}</Column>
               </Container>
-            </Transition>
+            </Column>
+          </Section>
+        </div>
+      </Transition>
 
-            <div className='h-16' />
-          </div>
-        )
-      }}
-    </Menu>
+      <div className='h-16' />
+    </>
   )
 }
+
 Header.displayName = 'Header'
