@@ -15,16 +15,8 @@ export const Footer: React.FC = (): React.ReactNode => {
     <footer className='bg-surface-primary/50 backdrop-blur-xs border-t border-outline w-full'>
       <Container>
         <BoxContent padding='md' className='px-0'>
-          <Row className='gap-2 justify-between'>
+          <Row className='gap-2 flex-col md:flex-row items-start md:items-center justify-between'>
             <Logo />
-          </Row>
-        </BoxContent>
-
-        <Divider />
-
-        <BoxContent padding='md' className='px-0'>
-          <Row className='gap-2 justify-between'>
-            <Text className='font-medium'>Made by Can Kolay with ❤️</Text>
 
             <Row className='gap-4'>
               <SelectableLink url='/help/legal/terms-of-service' label={t('legal.terms.title')} />

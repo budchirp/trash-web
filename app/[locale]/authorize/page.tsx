@@ -47,17 +47,15 @@ const Page: React.FC<DynamicPageProps> = async ({
   }
 
   return (
-    <Container className='max-w-lg!'>
-      <Section title={t('title')}>
-        <AuthorizeClientPage
-          jwt={jwt}
-          user={user}
-          callback={callback}
-          application={application.data}
-          permissions={permissions?.split(',') || []}
-        />
-      </Section>
-    </Container>
+    <Section>
+      <AuthorizeClientPage
+        jwt={jwt}
+        user={user}
+        callback={callback}
+        application={application.data}
+        permissions={permissions?.split(',') || []}
+      />
+    </Section>
   )
 }
 

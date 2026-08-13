@@ -12,8 +12,7 @@
 ## TODO
 
 - [ ] Dashboard page
-- [ ] Profile page
-- [x] Settings page
 - [ ] Email verification
 - [ ] Password reset
-- [ ] Add a check if application exists or not
+- [ ] 2FA
+- [ ] Profile pictures

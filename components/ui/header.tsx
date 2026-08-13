@@ -1,24 +1,27 @@
 'use client'
 
 import type React from 'react'
-import { useState, use } from 'react'
+import { useState, use, useEffect } from 'react'
 
-import { Dialog, DialogPanel, Transition } from '@headlessui/react'
 import { Menu as MenuIcon, X } from 'lucide-react'
 import { useLogout } from '@/lib/hooks/use-logout'
+import { SelectableLink } from '@/components/link'
+import { Transition } from '@headlessui/react'
+import { UserContext } from '@/context/user'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/routing'
 import { Logo } from '@/components/logo'
 
 import { cn, Button, Container, Row, Section, Divider, Column } from '@trash-kit/ui'
-import { UserContext } from '@/context/user'
-import { SelectableLink } from '../link'
+import { usePathname } from 'next/navigation'
 
 export const Header: React.FC = (): React.ReactNode => {
   const t = useTranslations()
 
   const { user } = use(UserContext)
   const logout = useLogout()
+
+  const pathname = usePathname()
 
   const links: {
     [key in 'true' | 'false']: {
@@ -40,6 +43,10 @@ export const Header: React.FC = (): React.ReactNode => {
   }
 
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
 
   const buttons = user ? (
     <Button className='w-full md:w-fit' onClick={() => logout()}>
