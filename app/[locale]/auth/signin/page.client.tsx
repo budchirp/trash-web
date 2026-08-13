@@ -2,7 +2,7 @@
 
 import type React from 'react'
 
-import { newSessionSchema, type NewSessionValues } from '@/service/session/schemas'
+import { signInSchema, type SignInValues } from '@/service/session/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLocale, useTranslations } from 'use-intl'
 import { SessionService } from '@/service/session'
@@ -11,6 +11,8 @@ import { useForm } from 'react-hook-form'
 import { Link } from '@/lib/i18n/routing'
 import { UserService } from '@/service/user'
 import { AccountSession } from '@/lib/account-session'
+import { CaptchaService } from '@/service/captcha'
+import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
 
 import {
   Button,
@@ -28,7 +30,7 @@ import {
 import { AccountSwitcher } from '@/components/app/settings/account/account-switcher'
 
 import type { SavedAccount } from '@/types/app/account'
-import { useEffect } from 'react'
+import { useRef } from 'react'
 
 type SignInClientPageProps = {
   redirectTo: string | null
@@ -50,15 +52,30 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting }
-  } = useForm<NewSessionValues>({
-    resolver: zodResolver(newSessionSchema)
+  } = useForm<SignInValues>({
+    resolver: zodResolver(signInSchema)
   })
 
   const session = new AccountSession(cookies)
+  const turnstileRef = useRef<TurnstileWidgetRef>(null)
 
-  const onSubmit = async (values: NewSessionValues) => {
-    const response = await SessionService.create(values, { locale })
+  const onSubmit = async (values: SignInValues) => {
+    const captcha = await CaptchaService.verify(values.captcha, 'signin')
+    turnstileRef.current?.reset()
+
+    if (captcha.error) {
+      toast(captcha.message || t_common('captcha_failed'))
+      return
+    }
+
+    const payload = {
+      email: values.email,
+      password: values.password
+    }
+
+    const response = await SessionService.create(payload, { locale })
     if (response.error) {
       toast(response.message)
       return
@@ -134,6 +151,16 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
                 />
               </Field>
             </Column>
+
+            <Field name='captcha' error={errors.captcha?.message}>
+              <input type='hidden' {...register('captcha')} />
+              <TurnstileWidget
+                ref={turnstileRef}
+                action='signin'
+                onToken={(value) => setValue('captcha', value, { shouldValidate: true })}
+                onExpired={() => setValue('captcha', '', { shouldValidate: false })}
+              />
+            </Field>
 
             <Row className='w-full justify-end'>
               <Button disabled={isSubmitting} type='submit' loading={isSubmitting}>

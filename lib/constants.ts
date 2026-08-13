@@ -2,6 +2,7 @@ export const CONSTANTS = {
   APP_NAME: 'Trash',
 
   API_URL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080',
+  TURNSTILE_SITEKEY: process.env.NEXT_PUBLIC_TURNSTILE_KEY ?? '',
 
   COOKIES: {
     TOKEN: 'token',

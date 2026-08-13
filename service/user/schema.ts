@@ -9,7 +9,8 @@ export const newUserSchema = z.object({
 export type NewUserValues = z.infer<typeof newUserSchema>
 
 export const signUpSchema = newUserSchema.extend({
-  accept_terms: z.literal(true, 'You must accept the Terms of Service and Privacy Policy')
+  accept_terms: z.literal(true, 'You must accept the Terms of Service and Privacy Policy'),
+  captcha: z.string().min(1, 'Complete the captcha')
 })
 
 export type SignUpValues = z.infer<typeof signUpSchema>

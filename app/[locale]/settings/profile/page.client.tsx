@@ -58,7 +58,13 @@ export const ProfileSettingsClientPage: React.FC<ProfileSettingsClientPageProps>
   }, [file])
 
   const onSubmit = async (values: ProfileValues) => {
-    const profile = await UserService.updateProfile(values, { jwt, locale })
+    const payload = {
+      name: values.name,
+      gender: values.gender,
+      picture: values.picture
+    }
+
+    const profile = await UserService.updateProfile(payload, { jwt, locale })
     if (profile.error) {
       toast(profile.message)
       return

@@ -10,6 +10,7 @@
     "error": "An error occurred",
     "retry": "Retry",
     "success": "Success",
+    "captcha_failed": "Captcha verification failed. Please try again.",
     "next": "Next",
     "back": "Back",
     "continue": "Continue"

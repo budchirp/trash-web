@@ -6,3 +6,9 @@ export const newSessionSchema = z.object({
 })
 
 export type NewSessionValues = z.infer<typeof newSessionSchema>
+
+export const signInSchema = newSessionSchema.extend({
+  captcha: z.string().min(1, 'Complete the captcha')
+})
+
+export type SignInValues = z.infer<typeof signInSchema>

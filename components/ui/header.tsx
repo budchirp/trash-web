@@ -70,7 +70,7 @@ export const Header: React.FC = (): React.ReactNode => {
 
             <Row className='gap-3'>
               <Row className='hidden md:flex gap-4'>
-                {links.false.length > 0 && (
+                {links[user ? 'true' : 'false'].length > 0 && (
                   <>
                     <Row className='flex-row-reverse gap-2'>
                       {links[user ? 'true' : 'false'].map((link, index) => (

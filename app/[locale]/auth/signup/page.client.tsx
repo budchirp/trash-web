@@ -11,6 +11,9 @@ import { SessionService } from '@/service/session'
 import { useCookies } from 'next-client-cookies'
 import { Link } from '@/lib/i18n/routing'
 import { AccountSession } from '@/lib/account-session'
+import { CaptchaService } from '@/service/captcha'
+import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
+import { useRef } from 'react'
 
 import {
   Button,
@@ -42,6 +45,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting }
   } = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema)
@@ -49,8 +53,17 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
 
   const cookies = useCookies()
   const session = new AccountSession(cookies)
+  const turnstileRef = useRef<TurnstileWidgetRef>(null)
 
   const onSubmit = async (values: SignUpValues) => {
+    const captcha = await CaptchaService.verify(values.captcha, 'signup')
+    turnstileRef.current?.reset()
+
+    if (captcha.error) {
+      toast(captcha.message || t_common('captcha_failed'))
+      return
+    }
+
     const payload = {
       email: values.email,
       username: values.username,
@@ -143,6 +156,16 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
                   })}
                 </Text>
               </Checkbox>
+            </Field>
+
+            <Field name='captcha' error={errors.captcha?.message}>
+              <input type='hidden' {...register('captcha')} />
+              <TurnstileWidget
+                ref={turnstileRef}
+                action='signup'
+                onToken={(value) => setValue('captcha', value, { shouldValidate: true })}
+                onExpired={() => setValue('captcha', '', { shouldValidate: false })}
+              />
             </Field>
 
             <Row className='w-full justify-end'>

@@ -77,7 +77,13 @@ export const OnboardingClientPage: React.FC<OnboardingClientPageProps> = ({
   }, [file])
 
   const submitProfile = async (values: ProfileValues) => {
-    const profile = await UserService.updateProfile(values, { jwt, locale })
+    const payload = {
+      name: values.name,
+      gender: values.gender,
+      picture: values.picture
+    }
+
+    const profile = await UserService.updateProfile(payload, { jwt, locale })
     if (profile.error) {
       toast(profile.message)
       return
@@ -91,13 +97,7 @@ export const OnboardingClientPage: React.FC<OnboardingClientPageProps> = ({
       id: 'identity',
       label: t('identity_step'),
       fields: ['name', 'gender'],
-      render: ({ next }) => (
-        <IdentityStep
-          onNext={next}
-          register={register}
-          errors={errors}
-        />
-      )
+      render: ({ next }) => <IdentityStep onNext={next} register={register} errors={errors} />
     },
     {
       id: 'picture',
@@ -145,9 +145,7 @@ export const OnboardingClientPage: React.FC<OnboardingClientPageProps> = ({
           activeStep={step}
         />
 
-        <OnboardingRightPanel>
-          {activeStep.render({ next: next, back: back })}
-        </OnboardingRightPanel>
+        <OnboardingRightPanel>{activeStep.render({ next: next, back: back })}</OnboardingRightPanel>
       </div>
     </form>
   )
