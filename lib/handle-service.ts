@@ -10,13 +10,12 @@ type ServiceResponseLike =
 
 export const handle = <T extends ServiceResponseLike>(
   response: T,
-  locale: string,
   onError?: (message: string) => void
 ): response is Extract<T, { error: true }> => {
   if (!response.error) return false
 
   if (response.status === 401) {
-    window.location.replace(getSignInPath(locale, getCurrentRedirect()))
+    window.location.replace(getSignInPath(getCurrentRedirect()))
     return true
   }
 

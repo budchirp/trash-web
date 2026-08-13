@@ -66,7 +66,7 @@ export const ProfileSettingsClientPage: React.FC<ProfileSettingsClientPageProps>
     }
 
     const profile = await UserService.updateProfile(payload, { jwt, locale })
-    if (handle(profile, locale)) return
+    if (handle(profile)) return
 
     toast(profile.message || t_common('success'))
   }

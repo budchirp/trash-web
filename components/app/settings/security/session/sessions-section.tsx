@@ -7,7 +7,7 @@ import { SessionService } from '@/service/session'
 import { handle } from '@/lib/handle-service'
 import { ServiceError } from '@/components/service-error'
 import { Column, Section, Text, toast } from '@trash-kit/ui'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { SessionBox } from './session-box'
 import jsonwebtoken from 'jsonwebtoken'
 
@@ -32,14 +32,12 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
   const [sessions, setSessions] = useState(initialSessions)
   const [error, setError] = useState(initialError ?? null)
 
-  const locale = useLocale()
-
   const decoded = jsonwebtoken.decode(jwt)
   const tokenId = decoded && typeof decoded === 'object' ? (decoded as DecodedToken).id : undefined
 
   const fetchSessions = async () => {
     const response = await SessionService.getAll({ jwt })
-    if (handle(response, locale, setError)) return
+    if (handle(response, setError)) return
 
     setError(null)
     setSessions(response.data)
@@ -65,7 +63,7 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
               if (session.token.id === tokenId) return
 
               const response = await SessionService.delete(session.token.id, { jwt })
-              if (handle(response, locale)) return
+              if (handle(response)) return
 
               toast(t('security.revoked'))
               setSessions((previous) => previous.filter((s) => s.token.id !== session.token.id))

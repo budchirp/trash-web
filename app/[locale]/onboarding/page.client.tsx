@@ -84,7 +84,7 @@ export const OnboardingClientPage: React.FC<OnboardingClientPageProps> = ({
     }
 
     const profile = await UserService.updateProfile(payload, { jwt, locale })
-    if (handle(profile, locale)) return
+    if (handle(profile)) return
 
     window.location.replace(redirectTo ?? `/${locale}/dashboard`)
   }

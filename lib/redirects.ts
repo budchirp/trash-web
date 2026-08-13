@@ -6,8 +6,8 @@ const isInternalFlowRedirect = (pathname: string): boolean => {
   return authPage === 'signin' || authPage === 'signup' || onboardingPage
 }
 
-const getSafeRedirectTo = (value: string | null | undefined, depth: number): string | null => {
-  if (!value || depth > 3) return null
+export const safeRedirectTo = (value?: string | null): string | null => {
+  if (!value) return null
 
   const path = value.trim()
   if (!path.startsWith('/') || path.startsWith('//') || path.includes('\\')) return null
@@ -18,9 +18,7 @@ const getSafeRedirectTo = (value: string | null | undefined, depth: number): str
     if (isInternalFlowRedirect(url.pathname)) return null
 
     const nestedRedirects = url.searchParams.getAll('redirectTo').filter(Boolean)
-    if (nestedRedirects.some((redirectTo) => !getSafeRedirectTo(redirectTo, depth + 1))) {
-      return null
-    }
+    if (nestedRedirects.some((redirectTo) => !safeRedirectTo(redirectTo))) return null
   } catch {
     return null
   }
@@ -28,22 +26,17 @@ const getSafeRedirectTo = (value: string | null | undefined, depth: number): str
   return path
 }
 
-export const safeRedirectTo = (value?: string | null): string | null => getSafeRedirectTo(value, 0)
-
 export const getRedirectQuery = (redirectTo: string | null | undefined): string =>
   redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''
 
 export const getCurrentRedirect = (): string =>
   `${window.location.pathname}${window.location.search}`
 
-export const getAuthPath = (
-  locale: string,
-  page: 'signin' | 'signup',
-  redirectTo: string | null | undefined
-): string => `/${locale}/auth/${page}${getRedirectQuery(redirectTo)}`
+const getAuthPath = (page: 'signin' | 'signup', redirectTo: string | null | undefined): string =>
+  `/auth/${page}${getRedirectQuery(redirectTo)}`
 
-export const getSignInPath = (locale: string, redirectTo?: string | null): string =>
-  getAuthPath(locale, 'signin', safeRedirectTo(redirectTo) ?? `/${locale}/dashboard`)
+export const getSignInPath = (redirectTo?: string | null): string =>
+  getAuthPath('signin', safeRedirectTo(redirectTo) ?? '/dashboard')
 
-export const getSignUpPath = (locale: string, redirectTo?: string | null): string =>
-  getAuthPath(locale, 'signup', safeRedirectTo(redirectTo) ?? `/${locale}/dashboard`)
+export const getSignUpPath = (redirectTo?: string | null): string =>
+  getAuthPath('signup', safeRedirectTo(redirectTo) ?? '/dashboard')

@@ -13,7 +13,7 @@ import { Link } from '@/lib/i18n/routing'
 import { AccountSession } from '@/lib/account-session'
 import { CaptchaService } from '@/service/captcha'
 import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
-import { getAuthPath, getRedirectQuery } from '@/lib/redirects'
+import { getRedirectQuery, getSignInPath } from '@/lib/redirects'
 import { handle } from '@/lib/handle-service'
 import { useRef } from 'react'
 
@@ -60,7 +60,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     const captcha = await CaptchaService.verify(values.captcha, 'signup')
     turnstileRef.current?.reset()
 
-    if (handle(captcha, locale)) return
+    if (handle(captcha)) return
 
     const payload = {
       email: values.email,
@@ -69,14 +69,14 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     }
 
     const user = await UserService.create(payload, { locale })
-    if (handle(user, locale)) return
+    if (handle(user)) return
 
     const response = await SessionService.create(
       { email: values.email, password: values.password },
       { locale }
     )
 
-    if (handle(response, locale)) return
+    if (handle(response)) return
 
     session.set(response.data.token)
     session.add(response.data.token)
@@ -90,7 +90,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
         <Section
           title={t('sign_up.title')}
           description={
-            <Link href={getAuthPath(locale, 'signin', redirectTo)}>
+            <Link href={getSignInPath(redirectTo)}>
               <Heading className='text-content-tertiary' size='h4'>
                 {t('sign_up.sign_in_link')}
               </Heading>

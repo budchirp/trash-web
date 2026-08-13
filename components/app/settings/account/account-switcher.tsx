@@ -4,8 +4,8 @@ import type React from 'react'
 
 import { AccountSession } from '@/lib/account-session'
 import { useCookies } from 'next-client-cookies'
-import { useLocale, useTranslations } from 'next-intl'
-import { getAuthPath, getCurrentRedirect } from '@/lib/redirects'
+import { useTranslations } from 'next-intl'
+import { getCurrentRedirect, getSignInPath } from '@/lib/redirects'
 
 import { Button, Column, Row, Section } from '@trash-kit/ui'
 
@@ -26,7 +26,6 @@ export const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
   redirectTo = null,
   showUseAnother = true
 }: AccountSwitcherProps): React.ReactNode => {
-  const locale = useLocale()
   const cookies = useCookies()
 
   const t = useTranslations('auth.account')
@@ -73,7 +72,7 @@ export const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
             <Button
               color='primary'
               onClick={() => {
-                window.location.replace(getAuthPath(locale, 'signin', getCurrentRedirect()))
+                window.location.replace(getSignInPath(getCurrentRedirect()))
               }}
             >
               {t('use_another_account')}

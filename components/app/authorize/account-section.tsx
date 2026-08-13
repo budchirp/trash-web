@@ -3,8 +3,8 @@
 import type React from 'react'
 
 import { AccountCard } from '../settings/account/account-card'
-import { useLocale, useTranslations } from 'next-intl'
-import { getAuthPath, getCurrentRedirect } from '@/lib/redirects'
+import { useTranslations } from 'next-intl'
+import { getCurrentRedirect, getSignInPath } from '@/lib/redirects'
 
 import { Button, Column, Row, Section } from '@trash-kit/ui'
 
@@ -19,8 +19,6 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
   user,
   action
 }: AccountSectionProps): React.ReactNode => {
-  const locale = useLocale()
-
   const t = useTranslations('auth.account')
 
   return (
@@ -32,7 +30,7 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
           <Button
             color='primary'
             onClick={() => {
-              window.location.replace(getAuthPath(locale, 'signin', getCurrentRedirect()))
+              window.location.replace(getSignInPath(getCurrentRedirect()))
             }}
           >
             {t('use_another_account')}

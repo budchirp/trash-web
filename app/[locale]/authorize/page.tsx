@@ -41,7 +41,7 @@ const Page: React.FC<DynamicPageProps> = async ({
 
   const application = await ApplicationService.get(id, { jwt, locale })
   if (application.error) {
-    if (application.status === 401) redirect(getSignInPath(locale, redirectTo))
+    if (application.status === 401) redirect(getSignInPath(redirectTo))
 
     return renderError(application.message)
   }

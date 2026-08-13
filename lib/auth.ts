@@ -35,7 +35,7 @@ export const _authenticate = async (
 ): Promise<AuthenticatedSession> => {
   const session = await getCurrentSession(locale)
 
-  if (!session) redirect(getSignInPath(locale, redirectTo))
+  if (!session) redirect(getSignInPath(redirectTo))
 
   return session
 }
