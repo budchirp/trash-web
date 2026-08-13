@@ -2,7 +2,7 @@ import type React from 'react'
 
 import { CookiesProvider } from 'next-client-cookies/server'
 import { NextIntlClientProvider } from 'next-intl'
-import { Inter } from 'next/font/google'
+import { Google_Sans, Inter } from 'next/font/google'
 
 import { cn, Container, ToastProvider } from '@trash-kit/ui'
 
@@ -11,7 +11,7 @@ import type { LayoutProps } from '@/types/app/layout'
 
 import '@/app/globals.css'
 
-const inter = Inter({
+const main = Google_Sans({
   subsets: ['latin'],
   variable: '--font-main'
 })
@@ -19,7 +19,7 @@ const inter = Inter({
 const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNode => {
   return (
     <html lang='en'>
-      <body className={cn('size-full relative', inter.variable)}>
+      <body className={cn('size-full relative', main.variable)}>
         <div className='absolute z-0 inset-0 overflow-hidden'>
           <Container className='absolute inset-0'>
             <div className='absolute top-[10%] left-[15%] size-96 opacity-25 bg-accent-500 rounded-full blur-[128px]' />
