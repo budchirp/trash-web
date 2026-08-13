@@ -58,9 +58,10 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
 
   const onSubmit = async (values: SignUpValues) => {
     const captcha = await CaptchaService.verify(values.captcha, 'signup')
-    turnstileRef.current?.reset()
-
-    if (handle(captcha)) return
+    if (handle(captcha)) {
+      turnstileRef.current?.reset()
+      return
+    }
 
     const payload = {
       email: values.email,
@@ -69,14 +70,20 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     }
 
     const user = await UserService.create(payload, { locale })
-    if (handle(user)) return
+    if (handle(user)) {
+      turnstileRef.current?.reset()
+      return
+    }
 
     const response = await SessionService.create(
       { email: values.email, password: values.password },
       { locale }
     )
 
-    if (handle(response)) return
+    if (handle(response)) {
+      turnstileRef.current?.reset()
+      return
+    }
 
     session.set(response.data.token)
     session.add(response.data.token)

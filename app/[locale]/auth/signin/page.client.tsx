@@ -64,9 +64,10 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
 
   const onSubmit = async (values: SignInValues) => {
     const captcha = await CaptchaService.verify(values.captcha, 'signin')
-    turnstileRef.current?.reset()
-
-    if (handle(captcha)) return
+    if (handle(captcha)) {
+      turnstileRef.current?.reset()
+      return
+    }
 
     const payload = {
       email: values.email,
@@ -74,12 +75,18 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     }
 
     const response = await SessionService.create(payload, { locale })
-    if (handle(response)) return
+    if (handle(response)) {
+      turnstileRef.current?.reset()
+      return
+    }
 
     const jwt = response.data.token
 
     const user = await UserService.get({ jwt, locale })
-    if (handle(user)) return
+    if (handle(user)) {
+      turnstileRef.current?.reset()
+      return
+    }
 
     session.set(jwt)
     session.add(jwt)
