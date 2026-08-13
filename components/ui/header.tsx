@@ -42,21 +42,17 @@ export const Header: React.FC = (): React.ReactNode => {
   const [open, setOpen] = useState(false)
 
   const buttons = user ? (
-    <Button color='primary' className='w-full md:w-fit' onClick={() => logout()}>
+    <Button className='w-full md:w-fit' onClick={() => logout()}>
       {t('auth.logout')}
     </Button>
   ) : (
     <>
       <Link href='/auth/signin'>
-        <Button color='primary' className='w-full md:w-fit'>
-          {t('auth.sign_in.title')}
-        </Button>
+        <Button className='w-full md:w-fit'>{t('auth.sign_in.title')}</Button>
       </Link>
 
       <Link href='/auth/signup'>
-        <Button color='primary' className='w-full md:w-fit'>
-          {t('auth.sign_up.title')}
-        </Button>
+        <Button className='w-full md:w-fit'>{t('auth.sign_up.title')}</Button>
       </Link>
     </>
   )
@@ -111,15 +107,19 @@ export const Header: React.FC = (): React.ReactNode => {
         >
           <Section>
             <Column className='gap-4'>
-              <Container>
-                <Column className='gap-2'>
-                  {links[user ? 'true' : 'false'].map((link, index) => (
-                    <SelectableLink box label={link.label} url={link.url} key={index} />
-                  ))}
-                </Column>
-              </Container>
+              {links[user ? 'true' : 'false'].length > 0 && (
+                <>
+                  <Container>
+                    <Column className='gap-2'>
+                      {links[user ? 'true' : 'false'].map((link, index) => (
+                        <SelectableLink box label={link.label} url={link.url} key={index} />
+                      ))}
+                    </Column>
+                  </Container>
 
-              <Divider />
+                  <Divider />
+                </>
+              )}
 
               <Container>
                 <Column className='gap-2'>{buttons}</Column>

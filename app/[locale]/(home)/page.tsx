@@ -133,7 +133,7 @@ const PermissionPreview: React.FC<{ t: Translate }> = ({ t }) => (
 )
 
 const Hero: React.FC<{ t: Translate }> = ({ t }) => (
-  <Section className='h-screen_'>
+  <Section className='min-h-screen_'>
     <Container>
       <div className='grid min-h-[72vh] items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.1fr_0.9fr]'>
         <Column className='gap-8'>
@@ -152,7 +152,7 @@ const Hero: React.FC<{ t: Translate }> = ({ t }) => (
             </Heading>
           </Column>
 
-          <Row className='flex-col gap-3 sm:flex-row'>
+          <Row className='flex-col items-start md:items-center gap-3 sm:flex-row'>
             <Link href='/auth/signup'>
               <Button className='gap-2'>
                 {t('home.primary_cta')}
@@ -187,7 +187,7 @@ const Features: React.FC<{ t: Translate }> = ({ t }) => {
           title={t('home.features_title')}
           description={t('home.features_description')}
         >
-          <div className='grid gap-4 md:grid-cols-3'>
+          <Grid className='gap-4 md:grid-cols-3'>
             {features.map(([Icon, title, description]) => (
               <Box key={title} color='secondary'>
                 <BoxContent padding='md'>
@@ -204,7 +204,7 @@ const Features: React.FC<{ t: Translate }> = ({ t }) => {
                 </BoxContent>
               </Box>
             ))}
-          </div>
+          </Grid>
         </Part>
       </Container>
     </Section>
@@ -237,7 +237,7 @@ const DataSection: React.FC<{ t: Translate }> = ({ t }) => {
           title={t('home.data_title')}
           description={t('home.data_description')}
         >
-          <Row className='justify-between'>
+          <Row className='flex-col md:flex-row gap-8 justify-between'>
             {groups.map(([Icon, title, items]) => (
               <Column key={title} className='gap-4'>
                 <Row className='items-start gap-3'>

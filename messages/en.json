@@ -16,22 +16,17 @@
   },
   "permissions": {
     "title": "Permissions",
-
     "user:read": "Read user info (username, email)",
     "user:delete": "Delete user",
     "profile:update": "Update profile",
-
     "session:read": "Read session info",
     "session:delete": "Delete sessions",
-
     "application:read": "Read application info",
     "application:create": "Create applications",
     "application:delete": "Delete applications",
-
     "connection:read": "Read connection info",
     "connection:create": "Create connections with applications",
     "connection:delete": "Delete connections",
-
     "*": "All"
   },
   "auth": {
@@ -230,70 +225,70 @@
     }
   },
   "home": {
-    "eyebrow": "Identity, permissions, and sessions in one place",
-    "title": "One account for every Trash app.",
-    "description": "Create a profile once, connect apps with clear permissions, and keep every session under control from a single clean dashboard.",
-    "primary_cta": "Create your account",
+    "eyebrow": "One place for your account and connected apps",
+    "title": "One account for your apps.",
+    "description": "Create your profile once, connect apps when you need to, and manage your sessions and permissions from one place.",
+    "primary_cta": "Create an account",
     "secondary_cta": "Sign in",
-    "features_eyebrow": "Core features",
-    "features_title": "Built for connected apps",
-    "features_description": "Trash gives users a polished account layer while apps get simple authorization, profile access, and session management.",
+    "features_eyebrow": "Features",
+    "features_title": "Everything in one place",
+    "features_description": "Manage your profile, app connections, permissions, and sessions from a single account.",
     "stats": {
       "profile": {
         "value": "1",
-        "label": "Unified profile",
-        "description": "The same identity follows users across every connected app."
+        "label": "Profile",
+        "description": "Use the same profile across your connected apps."
       },
       "apps": {
         "value": "Any",
         "label": "Connected apps",
-        "description": "Each app requests access only when it needs account data."
+        "description": "Connect apps when you need them."
       },
       "permissions": {
         "value": "Clear",
-        "label": "Permission prompts",
-        "description": "Readable scopes show what will be shared before consent."
+        "label": "Permissions",
+        "description": "See what each app can access before you approve it."
       },
       "sessions": {
         "value": "Live",
-        "label": "Session controls",
-        "description": "Users can review and revoke access from settings."
+        "label": "Sessions",
+        "description": "See your active sessions and revoke ones you don't recognize."
       }
     },
     "preview": {
       "badge": "Authorize Trash Notes",
-      "title": "Share only what is needed",
-      "description": "Review exactly what an app can access before you continue.",
+      "title": "Know what you're sharing",
+      "description": "See what an app can access before you connect it.",
       "allowed": "Allowed",
       "review": "Review",
       "connection": "Connection ready after authorization",
       "permissions": {
         "account": "Username and email for account linking.",
-        "profile": "Profile details only after explicit approval.",
-        "sessions": "Session metadata for security screens."
+        "profile": "Profile details you choose to share.",
+        "sessions": "Session information used for security."
       }
     },
     "features": {
       "profile": {
-        "title": "A profile users understand",
-        "description": "Names, avatars, and profile details are managed once and reused consistently."
+        "title": "Manage your profile",
+        "description": "Update your name, picture, and other profile details in one place."
       },
       "permissions": {
-        "title": "Consent that feels obvious",
-        "description": "Every app connection shows readable scopes before data is shared."
+        "title": "Know what apps can access",
+        "description": "See the permissions an app requests before you connect it."
       },
       "sessions": {
-        "title": "Session control built in",
-        "description": "Users can review active sessions and revoke access when something looks wrong."
+        "title": "Manage your sessions",
+        "description": "Review your active sessions and revoke access you don't recognize."
       },
       "connections": {
-        "title": "Connections stay visible",
-        "description": "Every app relationship is listed so users understand what is connected."
+        "title": "See your connected apps",
+        "description": "Keep track of which apps are connected to your account."
       }
     },
-    "data_eyebrow": "More than a login screen",
-    "data_title": "The account layer apps can rely on.",
-    "data_description": "Trash keeps the important identity, security, and authorization data organized in one consistent place.",
+    "data_eyebrow": "Your account",
+    "data_title": "The details that keep everything connected.",
+    "data_description": "Your profile, security settings, and app connections all live in one place.",
     "data": {
       "profile": {
         "title": "Profile data",
@@ -314,26 +309,26 @@
         "tokens": "Connection tokens"
       }
     },
-    "flow_eyebrow": "User flow",
-    "flow_title": "A simple path from signup to connected apps.",
-    "flow_description": "The landing story now matches the product flow: account, profile, authorization, and ongoing control.",
+    "flow_eyebrow": "How it works",
+    "flow_title": "Set up your account and connect your apps.",
+    "flow_description": "Create an account, add your profile, and approve app connections when you're ready.",
     "flow": {
       "create": {
         "title": "Create an account",
-        "description": "Users sign up once and complete the profile connected apps will recognize."
+        "description": "Sign up and add the profile details you want connected apps to use."
       },
       "review": {
         "title": "Review app access",
-        "description": "Authorization screens explain the app, callback, and requested permissions."
+        "description": "See what an app is requesting before you approve the connection."
       },
       "control": {
-        "title": "Control everything later",
-        "description": "Settings keep account details, profile data, sessions, and connections available."
+        "title": "Manage it later",
+        "description": "Update your profile, review connections, and manage active sessions from settings."
       }
     },
     "cta": {
-      "title": "Start with a clean account foundation.",
-      "description": "Create your Trash account, set up your profile, and connect apps with permission prompts that make sense."
+      "title": "Your account, all in one place.",
+      "description": "Create your account, set up your profile, and connect apps when you need them."
     }
   }
 }
