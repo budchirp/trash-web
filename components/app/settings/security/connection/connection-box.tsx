@@ -38,12 +38,12 @@ export const ConnectionBox: React.FC<ConnectionBoxProps> = ({
         <Column className='gap-1'>
           <Row className='gap-2'>
             <Heading size='h4'>{t('security.created_at')}:</Heading>
-            <Text>{DateUtil.format(new Date(connection.createdAt), locale)}</Text>
+            <Text>{DateUtil.format(connection.createdAt, locale)}</Text>
           </Row>
 
           <Row className='gap-2'>
             <Heading size='h4'>{t('security.expires_at')}:</Heading>
-            <Text>{DateUtil.format(new Date(connection.token.expiresAt), locale)}</Text>
+            <Text>{DateUtil.format(connection.token.expiresAt, locale)}</Text>
           </Row>
         </Column>
       </BoxContent>

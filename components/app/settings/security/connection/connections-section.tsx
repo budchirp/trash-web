@@ -4,8 +4,9 @@ import type React from 'react'
 import { useEffect, useState } from 'react'
 
 import { ConnectionService } from '@/service/connection'
+import { handle } from '@/lib/handle-service'
 import { Box, BoxContent, Column, Section, Text, toast } from '@trash-kit/ui'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { ConnectionBox } from './connection-box'
 
 import type { Connection } from '@/types/api/connection'
@@ -21,15 +22,13 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
   initialConnections
 }: ConnectionsSectionProps): React.ReactNode => {
   const [connections, setConnections] = useState(initialConnections)
+  const locale = useLocale()
 
   const fetchConnections = async () => {
-    const { error, message, data } = await ConnectionService.getAll({ jwt })
-    if (error) {
-      toast(message)
-      return
-    }
+    const response = await ConnectionService.getAll({ jwt })
+    if (handle(response, locale)) return
 
-    setConnections(data)
+    setConnections(response.data)
   }
 
   useEffect(() => {
@@ -41,23 +40,20 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
   return (
     <Section title={t('connection.title')} description={t('connection.description')}>
       <Column className='gap-4'>
-        {connections?.map((connection, index) => (
+        {connections?.map((connection) => (
           <ConnectionBox
-            key={index}
+            key={connection.token.id}
             connection={connection}
             onRevoke={async (connection) => {
-              const { error, message } = await ConnectionService.delete(connection.token.id, {
+              const response = await ConnectionService.delete(connection.token.id, {
                 jwt
               })
-              if (!error) {
-                toast(t('security.revoked'))
+              if (handle(response, locale)) return
 
-                setConnections((previous) =>
-                  previous.filter((s) => s.token.id !== connection.token.id)
-                )
-              } else {
-                toast(message)
-              }
+              toast(t('security.revoked'))
+              setConnections((previous) =>
+                previous.filter((s) => s.token.id !== connection.token.id)
+              )
             }}
           />
         ))}

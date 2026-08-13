@@ -4,11 +4,17 @@ import type React from 'react'
 import { useEffect, useState } from 'react'
 
 import { SessionService } from '@/service/session'
+import { handle } from '@/lib/handle-service'
 import { Column, Section, Text, toast } from '@trash-kit/ui'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { SessionBox } from './session-box'
+import jsonwebtoken from 'jsonwebtoken'
 
 import type { Session } from '@/types/api/session'
+
+type DecodedToken = {
+  id?: string
+}
 
 type SessionsSectionProps = {
   jwt: string
@@ -21,15 +27,16 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
   initialSessions
 }: SessionsSectionProps): React.ReactNode => {
   const [sessions, setSessions] = useState(initialSessions)
+  const locale = useLocale()
+  const decoded = jsonwebtoken.decode(jwt)
+  const currentTokenId =
+    decoded && typeof decoded === 'object' ? (decoded as DecodedToken).id : undefined
 
   const fetchSessions = async () => {
-    const { error, message, data } = await SessionService.getAll({ jwt })
-    if (error) {
-      toast(message)
-      return
-    }
+    const response = await SessionService.getAll({ jwt })
+    if (handle(response, locale)) return
 
-    setSessions(data)
+    setSessions(response.data)
   }
 
   useEffect(() => {
@@ -41,20 +48,19 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
   return (
     <Section title={t('session.title')} description={t('session.description')}>
       <Column className='gap-4'>
-        {sessions?.map((session, index) => (
+        {sessions?.map((session) => (
           <SessionBox
-            key={index}
-            jwt={jwt}
+            key={session.token.id}
             session={session}
+            currentTokenId={currentTokenId}
             onRevoke={async (session) => {
-              const { error, message } = await SessionService.delete(session.token.id, { jwt })
-              if (!error) {
-                toast(t('security.revoked'))
+              if (session.token.id === currentTokenId) return
 
-                setSessions((previous) => previous.filter((s) => s.token.id !== session.token.id))
-              } else {
-                toast(message)
-              }
+              const response = await SessionService.delete(session.token.id, { jwt })
+              if (handle(response, locale)) return
+
+              toast(t('security.revoked'))
+              setSessions((previous) => previous.filter((s) => s.token.id !== session.token.id))
             }}
           />
         ))}

@@ -90,14 +90,7 @@ export class AccountSession {
     if (token === currentAccount.token) return currentAccount
 
     const response = await UserService.get({ jwt: token, locale })
-    if (response.error) {
-      if (response.status === 401) {
-        this.remove(token)
-        return null
-      }
-
-      throw new Error(response.message)
-    }
+    if (response.error) return null
 
     return { token, user: response.data }
   }

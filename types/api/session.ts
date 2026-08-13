@@ -10,5 +10,5 @@ export type Session = {
     platform: string
   }
 
-  createdAt: string
+  createdAt: string | null
 }

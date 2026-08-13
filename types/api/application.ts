@@ -6,5 +6,5 @@ export type Application = {
 
   icon: string
 
-  createdAt: string
+  createdAt: string | null
 }

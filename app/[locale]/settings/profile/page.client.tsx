@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { UserService } from '@/service/user'
 import { useForm } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
+import { handle } from '@/lib/handle-service'
 
 import { Button, Column, Row, toast } from '@trash-kit/ui'
 
@@ -65,10 +66,7 @@ export const ProfileSettingsClientPage: React.FC<ProfileSettingsClientPageProps>
     }
 
     const profile = await UserService.updateProfile(payload, { jwt, locale })
-    if (profile.error) {
-      toast(profile.message)
-      return
-    }
+    if (handle(profile, locale)) return
 
     toast(profile.message || t_common('success'))
   }

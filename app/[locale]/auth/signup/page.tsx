@@ -1,7 +1,8 @@
 import type React from 'react'
 
 import { SignUpClientPage } from '@/app/[locale]/auth/signup/page.client'
-import { _public, safeRedirectTo } from '@/lib/auth'
+import { _public } from '@/lib/auth'
+import { safeRedirectTo } from '@/lib/redirects'
 
 import { Section } from '@trash-kit/ui'
 
@@ -14,13 +15,13 @@ const SignUpPage: React.FC<DynamicPageProps> = async ({
   const { locale } = await params
   const { redirectTo } = await searchParams
 
-  const safePath = safeRedirectTo(redirectTo)
+  const url = safeRedirectTo(redirectTo)
 
-  await _public(locale, safePath)
+  await _public(locale, url)
 
   return (
     <Section>
-      <SignUpClientPage redirectTo={safePath} />
+      <SignUpClientPage redirectTo={url} />
     </Section>
   )
 }

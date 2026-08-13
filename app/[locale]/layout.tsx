@@ -1,20 +1,18 @@
 import type React from 'react'
 
-import { getCookies } from 'next-client-cookies/server'
 import { UserContextProvider } from '@/context/user'
 import { setRequestLocale } from 'next-intl/server'
 import { Header } from '@/components/ui/header'
 import { Footer } from '@/components/ui/footer'
+import { ServiceErrorScreen } from '@/components/service-error-screen'
 import { routing } from '@/lib/i18n/routing'
-import { UserService } from '@/service/user'
 import { CONSTANTS } from '@/lib/constants'
-import { AccountSession } from '@/lib/account-session'
+import { getCurrentSession } from '@/lib/auth'
 import { notFound } from 'next/navigation'
 import { hasLocale } from 'next-intl'
 
 import type { Metadata } from 'next'
 import type { DynamicLayoutProps } from '@/types/app/layout'
-import type { User } from '@/types/api/user'
 
 const Layout: React.FC<DynamicLayoutProps> = async ({
   children,
@@ -27,27 +25,13 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
 
   setRequestLocale(locale as any)
 
-  const cookies = await getCookies()
-  const accountSession = new AccountSession(cookies)
-  const jwt = accountSession.get()
-
-  let user: User | null = null
-
-  if (jwt) {
-    const response = await UserService.get({ jwt, locale })
-    if (response.error) {
-      if (response.status === 401) {
-        accountSession.remove(jwt)
-      } else {
-        throw new Error(response.message)
-      }
-    } else {
-      user = response.data
-    }
+  const sessionResult = await getCurrentSession(locale)
+  if (sessionResult.error) {
+    return <ServiceErrorScreen response={sessionResult.error} />
   }
 
   return (
-    <UserContextProvider initialUser={user}>
+    <UserContextProvider initialUser={sessionResult.session?.user ?? null}>
       <Header />
 
       <main id='main' className='min-h-screen_'>

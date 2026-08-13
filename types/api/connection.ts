@@ -5,5 +5,5 @@ export type Connection = {
   token: Token
   application: Application
 
-  createdAt: string
+  createdAt: string | null
 }

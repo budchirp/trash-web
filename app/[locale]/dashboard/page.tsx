@@ -1,7 +1,7 @@
 import type React from 'react'
 
 import { getTranslations } from 'next-intl/server'
-import { _authtenticated } from '@/lib/auth'
+import { _authenticate } from '@/lib/auth'
 
 import { Container, Section } from '@trash-kit/ui'
 
@@ -11,7 +11,7 @@ const Page: React.FC<DynamicPageProps> = async ({
   params
 }: DynamicPageProps): Promise<React.ReactNode> => {
   const { locale } = await params
-  await _authtenticated(locale, `/${locale}/dashboard`)
+  await _authenticate(locale, `/${locale}/dashboard`)
 
   const t = await getTranslations({
     namespace: 'dashboard',

@@ -13,6 +13,7 @@ import { Link } from '@/lib/i18n/routing'
 import { AccountSession } from '@/lib/account-session'
 import { CaptchaService } from '@/service/captcha'
 import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
+import { handle } from '@/lib/handle-service'
 import { useRef } from 'react'
 
 import {
@@ -26,8 +27,7 @@ import {
   Label,
   Row,
   Section,
-  Text,
-  toast
+  Text
 } from '@trash-kit/ui'
 
 type SignUpClientPageProps = {
@@ -59,10 +59,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     const captcha = await CaptchaService.verify(values.captcha, 'signup')
     turnstileRef.current?.reset()
 
-    if (captcha.error) {
-      toast(captcha.message || t_common('captcha_failed'))
-      return
-    }
+    if (handle(captcha, locale)) return
 
     const payload = {
       email: values.email,
@@ -71,20 +68,14 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     }
 
     const user = await UserService.create(payload, { locale })
-    if (user.error) {
-      toast(user.message)
-      return
-    }
+    if (handle(user, locale)) return
 
     const response = await SessionService.create(
       { email: values.email, password: values.password },
       { locale }
     )
 
-    if (response.error) {
-      toast(response.message)
-      return
-    }
+    if (handle(response, locale)) return
 
     session.set(response.data.token)
     session.add(response.data.token)

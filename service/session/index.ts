@@ -1,6 +1,7 @@
 import { apiRequest } from '@/service/api'
 
 import type { NewSessionValues } from '@/service/session/schemas'
+import { mapSession, type SessionDto } from '@/service/session/mapper'
 import type { AuthenticatedHeaders, Headers } from '@/types/api'
 import type { ServiceResponse } from '@trash-kit/core'
 import type { Session } from '@/types/api/session'
@@ -24,10 +25,15 @@ export class SessionService {
     })
   }
 
-  public static async getAll<T = Session[]>(
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<T>> {
-    return await apiRequest<T>({ path: '/session/all', headers })
+  public static async getAll(headers: AuthenticatedHeaders): Promise<ServiceResponse<Session[]>> {
+    const response = await apiRequest<SessionDto[]>({ path: '/session/all', headers })
+    if (response.error) return response
+
+    return {
+      error: false,
+      message: response.message,
+      data: response.data.map(mapSession)
+    }
   }
 
   public static async delete(

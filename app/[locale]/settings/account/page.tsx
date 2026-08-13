@@ -1,8 +1,7 @@
 import type React from 'react'
 
 import { AccountClientPage } from './page.client'
-import { _authtenticated } from '@/lib/auth'
-import { UserService } from '@/service/user'
+import { _authenticate } from '@/lib/auth'
 import { getTranslations } from 'next-intl/server'
 
 import { Column, Section } from '@trash-kit/ui'
@@ -16,16 +15,13 @@ const Page: React.FC<DynamicPageProps> = async ({
 
   const t = await getTranslations({ namespace: 'settings.account', locale })
 
-  const jwt = await _authtenticated(locale, `/${locale}/settings/account`)
-  const user = await UserService.get({ jwt, locale })
-
-  if (user.error) throw new Error(user.message)
+  const { user } = await _authenticate(locale, `/${locale}/settings/account`)
 
   return (
     <Column>
       <Section title={t('title')} description={t('description')}>
         <form>
-          <AccountClientPage email={user.data.email} username={user.data.username} />
+          <AccountClientPage email={user.email} username={user.username} />
         </form>
       </Section>
     </Column>

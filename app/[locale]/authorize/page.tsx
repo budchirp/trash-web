@@ -2,7 +2,8 @@ import type React from 'react'
 
 import { AuthorizeClientPage } from './page.client'
 import { ApplicationService } from '@/service/application'
-import { getAuthenticatedSession } from '@/lib/auth'
+import { _authenticate } from '@/lib/auth'
+import { ServiceErrorScreen } from '@/components/service-error-screen'
 
 import { Section } from '@trash-kit/ui'
 
@@ -19,16 +20,16 @@ const Page: React.FC<DynamicPageProps> = async ({
     Object.entries(searchParams).filter((entry): entry is [string, string] => Boolean(entry[1]))
   ).toString()}`
 
-  const { jwt, user } = await getAuthenticatedSession(locale, redirectTo)
+  const { jwt, user } = await _authenticate(locale, redirectTo)
 
   const { callback, id, permissions } = searchParams
 
   if (!id || !callback || !permissions) {
-    throw new Error('Invalid authorization request')
+    return <ServiceErrorScreen response={{ message: 'Invalid authorization request' }} />
   }
 
   const application = await ApplicationService.get(id, { jwt, locale })
-  if (application.error) throw new Error(application.message)
+  if (application.error) return <ServiceErrorScreen response={application} />
 
   return (
     <Section>

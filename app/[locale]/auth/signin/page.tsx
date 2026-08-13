@@ -1,9 +1,10 @@
 import type React from 'react'
 
 import { SignInClientPage } from '@/app/[locale]/auth/signin/page.client'
-import { _public, safeRedirectTo } from '@/lib/auth'
+import { _public, getCurrentSession } from '@/lib/auth'
+import { safeRedirectTo } from '@/lib/redirects'
+import { ServiceErrorScreen } from '@/components/service-error-screen'
 import { getCookies } from 'next-client-cookies/server'
-import { UserService } from '@/service/user'
 import { AccountSession } from '@/lib/account-session'
 
 import { Section } from '@trash-kit/ui'
@@ -18,29 +19,26 @@ const SignInPage: React.FC<DynamicPageProps> = async ({
   const { locale } = await params
   const { redirectTo } = await searchParams
 
-  const safePath = safeRedirectTo(redirectTo)
-  const authorizePath = safePath?.startsWith(`/${locale}/authorize`) ?? false
+  const url = safeRedirectTo(redirectTo)
+  const authorizePath = url?.startsWith(`/${locale}/authorize`) ?? false
 
   let token: string | null = null
   let accounts: SavedAccount[] = []
 
-  if (safePath) {
-    const cookies = await getCookies()
-    const accountSession = new AccountSession(cookies)
-    const currentToken = accountSession.get()
+  if (url) {
+    const sessionResult = await getCurrentSession(locale)
+    if (sessionResult.error) {
+      return <ServiceErrorScreen response={sessionResult.error} />
+    }
 
-    if (currentToken) {
-      const response = await UserService.get({ jwt: currentToken, locale })
-      if (response.error) {
-        if (response.status === 401) accountSession.remove(currentToken)
-        else throw new Error(response.message)
-      } else if (authorizePath) {
-        token = currentToken
-        accounts = await accountSession.getAllAccounts(locale, {
-          token: currentToken,
-          user: response.data
-        })
-      }
+    if (sessionResult.session && authorizePath) {
+      const cookies = await getCookies()
+      const accountSession = new AccountSession(cookies)
+      token = sessionResult.session.jwt
+      accounts = await accountSession.getAllAccounts(locale, {
+        token: sessionResult.session.jwt,
+        user: sessionResult.session.user
+      })
     }
   } else {
     await _public(locale)
@@ -48,7 +46,7 @@ const SignInPage: React.FC<DynamicPageProps> = async ({
 
   return (
     <Section>
-      <SignInClientPage redirectTo={safePath} accounts={accounts} token={token} />
+      <SignInClientPage redirectTo={url} accounts={accounts} token={token} />
     </Section>
   )
 }

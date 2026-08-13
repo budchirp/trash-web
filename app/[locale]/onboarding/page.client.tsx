@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { UserService } from '@/service/user'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
-import { toast } from '@trash-kit/ui'
+import { handle } from '@/lib/handle-service'
 
 import type { User } from '@/types/api/user'
 
@@ -84,10 +84,7 @@ export const OnboardingClientPage: React.FC<OnboardingClientPageProps> = ({
     }
 
     const profile = await UserService.updateProfile(payload, { jwt, locale })
-    if (profile.error) {
-      toast(profile.message)
-      return
-    }
+    if (handle(profile, locale)) return
 
     window.location.replace(redirectTo ?? `/${locale}/dashboard`)
   }

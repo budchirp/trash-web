@@ -1,10 +1,8 @@
 export type CaptchaAction = 'signup' | 'signin'
 
-type CaptchaResponse = {
-  error: boolean
-  message: string
-  status?: number
-}
+type CaptchaResponse =
+  | { error: false; message: string }
+  | { error: true; message: string; status: number }
 
 export class CaptchaService {
   public static async verify(token: string, action: CaptchaAction): Promise<CaptchaResponse> {

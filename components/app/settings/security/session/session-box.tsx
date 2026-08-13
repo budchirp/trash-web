@@ -3,37 +3,28 @@
 import type React from 'react'
 
 import { Download, Globe, Laptop, Smartphone, Tablet } from 'lucide-react'
-import { PermissionsSection } from '../permissions-section'
 import { useLocale, useTranslations } from 'next-intl'
 import { IconBox } from '@/components/icon-box'
 import { DateUtil } from '@/lib/date-util'
-import jsonwebtoken from 'jsonwebtoken'
 
 import { Box, BoxContent, Button, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
 
 import type { Session } from '@/types/api/session'
 
-type DecodedToken = {
-  token?: string
-}
-
 type SessionBoxProps = {
-  jwt: string
   session: Session
+  currentTokenId?: string
   onRevoke: (session: Session) => void
 }
 
 export const SessionBox: React.FC<SessionBoxProps> = ({
-  jwt,
   session,
+  currentTokenId,
   onRevoke
 }: SessionBoxProps) => {
   const locale = useLocale()
 
   const t = useTranslations('settings')
-  const decoded = jsonwebtoken.decode(jwt)
-  const currentTokenId =
-    decoded && typeof decoded === 'object' ? (decoded as DecodedToken).token : undefined
 
   return (
     <Box color='secondary'>
@@ -85,12 +76,12 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
         <Column className='gap-1'>
           <Row className='gap-2'>
             <Heading size='h4'>{t('security.created_at')}:</Heading>
-            <Text>{DateUtil.format(new Date(session.createdAt), locale)}</Text>
+            <Text>{DateUtil.format(session.createdAt, locale)}</Text>
           </Row>
 
           <Row className='gap-2'>
             <Heading size='h4'>{t('security.expires_at')}:</Heading>
-            <Text>{DateUtil.format(new Date(session.token.expiresAt), locale)}</Text>
+            <Text>{DateUtil.format(session.token.expiresAt, locale)}</Text>
           </Row>
         </Column>
       </BoxContent>

@@ -1,6 +1,7 @@
 import { apiRequest } from '@/service/api'
 
 import type { AuthenticatedHeaders } from '@/types/api'
+import { mapConnection, type ConnectionDto } from '@/service/connection/mapper'
 
 import type { ServiceResponse } from '@trash-kit/core'
 import type { Connection } from '@/types/api/connection'
@@ -23,10 +24,17 @@ export class ConnectionService {
     })
   }
 
-  public static async getAll<T = Connection[]>(
+  public static async getAll(
     headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<T>> {
-    return await apiRequest<T>({ path: '/connection/all', headers })
+  ): Promise<ServiceResponse<Connection[]>> {
+    const response = await apiRequest<ConnectionDto[]>({ path: '/connection/all', headers })
+    if (response.error) return response
+
+    return {
+      error: false,
+      message: response.message,
+      data: response.data.map(mapConnection)
+    }
   }
 
   public static async delete(

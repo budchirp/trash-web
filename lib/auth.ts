@@ -1,8 +1,9 @@
-import { redirect } from 'next/navigation'
+import { redirect, unauthorized } from 'next/navigation'
 
 import { getCookies } from 'next-client-cookies/server'
 import { AccountSession } from './account-session'
 import { UserService } from '@/service/user'
+import { safeRedirectTo } from '@/lib/redirects'
 
 import type { User } from '@/types/api/user'
 
@@ -11,95 +12,66 @@ export type AuthenticatedSession = {
   user: User
 }
 
-const isInternalFlowRedirect = (pathname: string): boolean => {
-  const [, first, second, third] = pathname.split('/')
-  const authPage = first === 'auth' ? second : second === 'auth' ? third : null
-  const onboardingPage = first === 'onboarding' || second === 'onboarding'
-
-  return authPage === 'signin' || authPage === 'signup' || onboardingPage
+export type SessionLookup = {
+  session: AuthenticatedSession | null
+  error: {
+    message: string
+    status: number
+  } | null
 }
 
-const getSafeRedirectTo = (value: string | null | undefined, depth: number): string | null => {
-  if (!value) return null
-  if (depth > 3) return null
+export { safeRedirectTo }
 
-  const path = value.trim()
-  if (!path.startsWith('/') || path.startsWith('//') || path.includes('\\')) return null
-  if (/^[a-zA-Z][a-zA-Z\d+.-]*:/.test(path)) return null
-
-  try {
-    const url = new URL(path, 'http://trash.local')
-    if (isInternalFlowRedirect(url.pathname)) return null
-
-    const nestedRedirects = url.searchParams.getAll('redirectTo').filter(Boolean)
-    if (nestedRedirects.some((redirectTo) => !getSafeRedirectTo(redirectTo, depth + 1))) {
-      return null
-    }
-  } catch {
-    return null
-  }
-
-  return path
-}
-
-export const safeRedirectTo = (value?: string | null): string | null => getSafeRedirectTo(value, 0)
-
-export const getAuthenticatedSession = async (
-  locale: string = 'en',
-  redirectTo?: string | null
-): Promise<AuthenticatedSession> => {
+export const getCurrentSession = async (locale: string = 'en'): Promise<SessionLookup> => {
   const cookies = await getCookies()
   const accountSession = new AccountSession(cookies)
   const jwt = accountSession.get()
-  const signInPath = `/${locale}/auth/signin?redirectTo=${encodeURIComponent(
-    safeRedirectTo(redirectTo) ?? `/${locale}/dashboard`
-  )}`
+  if (!jwt) return { session: null, error: null }
 
-  if (!jwt) redirect(signInPath)
+  const response = await UserService.get({ jwt, locale })
+  if (response.error) {
+    if (response.status === 401) return { session: null, error: null }
 
-  const user = await UserService.get({ jwt, locale })
-  if (user.error) {
-    if (user.status === 401) {
-      accountSession.remove(jwt)
-      redirect(signInPath)
+    return {
+      session: null,
+      error: { message: response.message, status: response.status }
     }
-
-    throw new Error(user.message)
   }
 
-  return { jwt, user: user.data }
+  if (!response.data?.id) {
+    return { session: null, error: { message: 'Invalid user response', status: 500 } }
+  }
+
+  return {
+    session: { jwt, user: response.data },
+    error: null
+  }
 }
 
-export const _authtenticated = async (
+export const _authenticate = async (
   locale: string = 'en',
-  redirectTo?: string | null
-): Promise<string> => {
-  const { jwt } = await getAuthenticatedSession(locale, redirectTo)
+  _redirectTo?: string | null
+): Promise<AuthenticatedSession> => {
+  const result = await getCurrentSession(locale)
+  if (result.error) throw new Error(result.error.message)
 
-  return jwt
+  if (!result.session) unauthorized()
+
+  return result.session
 }
 
 export const _public = async (locale: string = 'en', redirectTo?: string | null): Promise<void> => {
-  const cookies = await getCookies()
-  const accountSession = new AccountSession(cookies)
-  const jwt = accountSession.get()
-  if (!jwt) return
+  const result = await getCurrentSession(locale)
+  if (result.error) throw new Error(result.error.message)
 
-  const user = await UserService.get({ jwt, locale })
-  if (user.error) {
-    if (user.status === 401) {
-      accountSession.remove(jwt)
-      return
-    }
+  if (!result.session) return
 
-    throw new Error(user.message)
+  const url = safeRedirectTo(redirectTo)
+  if (!result.session.user.profile?.name?.trim()) {
+    const query = url ? `?redirectTo=${encodeURIComponent(url)}` : ''
+    const onboardingPath = `/${locale}/onboarding${query}`
+    redirect(onboardingPath)
   }
 
-  const safePath = safeRedirectTo(redirectTo)
-  if (!user.data?.profile?.name?.trim()) {
-    const query = safePath ? `?redirectTo=${encodeURIComponent(safePath)}` : ''
-    redirect(`/${locale}/onboarding${query}`)
-  }
-
-  redirect(safePath ?? `/${locale}/dashboard`)
+  redirect(url ?? `/${locale}/dashboard`)
 }

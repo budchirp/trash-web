@@ -13,6 +13,7 @@ import { UserService } from '@/service/user'
 import { AccountSession } from '@/lib/account-session'
 import { CaptchaService } from '@/service/captcha'
 import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
+import { handle } from '@/lib/handle-service'
 
 import {
   Button,
@@ -23,8 +24,7 @@ import {
   Input,
   Label,
   Row,
-  Section,
-  toast
+  Section
 } from '@trash-kit/ui'
 
 import { AccountSwitcher } from '@/components/app/settings/account/account-switcher'
@@ -65,10 +65,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     const captcha = await CaptchaService.verify(values.captcha, 'signin')
     turnstileRef.current?.reset()
 
-    if (captcha.error) {
-      toast(captcha.message || t_common('captcha_failed'))
-      return
-    }
+    if (handle(captcha, locale)) return
 
     const payload = {
       email: values.email,
@@ -76,18 +73,12 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     }
 
     const response = await SessionService.create(payload, { locale })
-    if (response.error) {
-      toast(response.message)
-      return
-    }
+    if (handle(response, locale)) return
 
     const jwt = response.data.token
 
     const user = await UserService.get({ jwt, locale })
-    if (user.error) {
-      toast(user.message)
-      return
-    }
+    if (handle(user, locale)) return
 
     session.set(jwt)
     session.add(jwt)
