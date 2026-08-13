@@ -5,6 +5,7 @@ import type React from 'react'
 import { AccountSession } from '@/lib/account-session'
 import { useCookies } from 'next-client-cookies'
 import { useLocale, useTranslations } from 'next-intl'
+import { getAuthPath, getCurrentRedirect } from '@/lib/redirects'
 
 import { Button, Column, Row, Section } from '@trash-kit/ui'
 
@@ -72,10 +73,7 @@ export const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
             <Button
               color='primary'
               onClick={() => {
-                const redirectTo = `${window.location.pathname}${window.location.search}`
-                window.location.replace(
-                  `/${locale}/auth/signin?redirectTo=${encodeURIComponent(redirectTo)}`
-                )
+                window.location.replace(getAuthPath(locale, 'signin', getCurrentRedirect()))
               }}
             >
               {t('use_another_account')}

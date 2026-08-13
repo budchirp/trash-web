@@ -13,6 +13,7 @@ import { UserService } from '@/service/user'
 import { AccountSession } from '@/lib/account-session'
 import { CaptchaService } from '@/service/captcha'
 import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
+import { getAuthPath, getRedirectQuery } from '@/lib/redirects'
 import { handle } from '@/lib/handle-service'
 
 import {
@@ -84,8 +85,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     session.add(jwt)
 
     if (!user.data?.profile?.name?.trim()) {
-      const query = redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''
-      window.location.replace(`/${locale}/onboarding${query}`)
+      window.location.replace(`/${locale}/onboarding${getRedirectQuery(redirectTo)}`)
       return
     }
 
@@ -107,13 +107,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
         <Section
           title={t('sign_in.title')}
           description={
-            <Link
-              href={
-                redirectTo
-                  ? `/auth/signup?redirectTo=${encodeURIComponent(redirectTo)}`
-                  : '/auth/signup'
-              }
-            >
+            <Link href={getAuthPath(locale, 'signup', redirectTo)}>
               <Heading className='text-content-tertiary' size='h4'>
                 {t('sign_in.sign_up_link')}
               </Heading>

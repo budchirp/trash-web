@@ -30,7 +30,20 @@ const getSafeRedirectTo = (value: string | null | undefined, depth: number): str
 
 export const safeRedirectTo = (value?: string | null): string | null => getSafeRedirectTo(value, 0)
 
+export const getRedirectQuery = (redirectTo: string | null | undefined): string =>
+  redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''
+
+export const getCurrentRedirect = (): string =>
+  `${window.location.pathname}${window.location.search}`
+
+export const getAuthPath = (
+  locale: string,
+  page: 'signin' | 'signup',
+  redirectTo: string | null | undefined
+): string => `/${locale}/auth/${page}${getRedirectQuery(redirectTo)}`
+
 export const getSignInPath = (locale: string, redirectTo?: string | null): string =>
-  `/${locale}/auth/signin?redirectTo=${encodeURIComponent(
-    safeRedirectTo(redirectTo) ?? `/${locale}/dashboard`
-  )}`
+  getAuthPath(locale, 'signin', safeRedirectTo(redirectTo) ?? `/${locale}/dashboard`)
+
+export const getSignUpPath = (locale: string, redirectTo?: string | null): string =>
+  getAuthPath(locale, 'signup', safeRedirectTo(redirectTo) ?? `/${locale}/dashboard`)

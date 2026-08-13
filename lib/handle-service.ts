@@ -1,6 +1,6 @@
 'use client'
 
-import { getSignInPath } from '@/lib/redirects'
+import { getCurrentRedirect, getSignInPath } from '@/lib/redirects'
 
 import { toast } from '@trash-kit/ui'
 
@@ -16,8 +16,7 @@ export const handle = <T extends ServiceResponseLike>(
   if (!response.error) return false
 
   if (response.status === 401) {
-    const redirectTo = `${window.location.pathname}${window.location.search}`
-    window.location.replace(getSignInPath(locale, redirectTo))
+    window.location.replace(getSignInPath(locale, getCurrentRedirect()))
     return true
   }
 

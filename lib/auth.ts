@@ -40,16 +40,22 @@ export const _authenticate = async (
   return session
 }
 
-export const _public = async (locale: string = 'en', redirectTo?: string | null): Promise<void> => {
+export const _authFlow = async (
+  locale: string = 'en',
+  redirectTo?: string | null
+): Promise<void> => {
+  if (safeRedirectTo(redirectTo)) return
+
+  await _public(locale)
+}
+
+export const _public = async (locale: string = 'en'): Promise<void> => {
   const session = await getCurrentSession(locale)
   if (!session) return
 
-  const url = safeRedirectTo(redirectTo)
   if (!session.user.profile?.name?.trim()) {
-    const query = url ? `?redirectTo=${encodeURIComponent(url)}` : ''
-    const onboardingPath = `/${locale}/onboarding${query}`
-    redirect(onboardingPath)
+    redirect(`/${locale}/onboarding`)
   }
 
-  redirect(url ?? `/${locale}/dashboard`)
+  redirect(`/${locale}/dashboard`)
 }
