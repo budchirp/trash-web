@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 
 import { ConnectionService } from '@/service/connection'
 import { handle } from '@/lib/handle-service'
+import { ServiceError } from '@/components/service-error'
 import { Box, BoxContent, Column, Section, Text, toast } from '@trash-kit/ui'
 import { useLocale, useTranslations } from 'next-intl'
 import { ConnectionBox } from './connection-box'
@@ -15,19 +16,23 @@ type ConnectionsSectionProps = {
   jwt: string
 
   initialConnections: Connection[]
+  initialError?: string | null
 }
 
 export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
   jwt,
-  initialConnections
+  initialConnections,
+  initialError
 }: ConnectionsSectionProps): React.ReactNode => {
   const [connections, setConnections] = useState(initialConnections)
+  const [error, setError] = useState(initialError ?? null)
   const locale = useLocale()
 
   const fetchConnections = async () => {
     const response = await ConnectionService.getAll({ jwt })
-    if (handle(response, locale)) return
+    if (handle(response, locale, setError)) return
 
+    setError(null)
     setConnections(response.data)
   }
 
@@ -40,6 +45,8 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
   return (
     <Section title={t('connection.title')} description={t('connection.description')}>
       <Column className='gap-4'>
+        {error && <ServiceError message={error} />}
+
         {connections?.map((connection) => (
           <ConnectionBox
             key={connection.token.id}
@@ -58,7 +65,7 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
           />
         ))}
 
-        {connections.length === 0 && (
+        {connections.length === 0 && !error && (
           <Box color='secondary'>
             <BoxContent>
               <Text>{t('connection.no_connections')}</Text>

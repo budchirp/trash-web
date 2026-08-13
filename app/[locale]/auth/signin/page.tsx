@@ -3,7 +3,6 @@ import type React from 'react'
 import { SignInClientPage } from '@/app/[locale]/auth/signin/page.client'
 import { _public, getCurrentSession } from '@/lib/auth'
 import { safeRedirectTo } from '@/lib/redirects'
-import { ServiceErrorScreen } from '@/components/service-error-screen'
 import { getCookies } from 'next-client-cookies/server'
 import { AccountSession } from '@/lib/account-session'
 
@@ -26,18 +25,15 @@ const SignInPage: React.FC<DynamicPageProps> = async ({
   let accounts: SavedAccount[] = []
 
   if (url) {
-    const sessionResult = await getCurrentSession(locale)
-    if (sessionResult.error) {
-      return <ServiceErrorScreen response={sessionResult.error} />
-    }
+    const session = await getCurrentSession(locale)
 
-    if (sessionResult.session && authorizePath) {
+    if (session && authorizePath) {
       const cookies = await getCookies()
       const accountSession = new AccountSession(cookies)
-      token = sessionResult.session.jwt
+      token = session.jwt
       accounts = await accountSession.getAllAccounts(locale, {
-        token: sessionResult.session.jwt,
-        user: sessionResult.session.user
+        token: session.jwt,
+        user: session.user
       })
     }
   } else {

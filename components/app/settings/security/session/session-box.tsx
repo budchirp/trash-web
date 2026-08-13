@@ -13,13 +13,13 @@ import type { Session } from '@/types/api/session'
 
 type SessionBoxProps = {
   session: Session
-  currentTokenId?: string
+  tokenId?: string
   onRevoke: (session: Session) => void
 }
 
 export const SessionBox: React.FC<SessionBoxProps> = ({
   session,
-  currentTokenId,
+  tokenId,
   onRevoke
 }: SessionBoxProps) => {
   const locale = useLocale()
@@ -45,22 +45,22 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
               <Column className='gap-1 md:gap-0'>
                 <Heading size='h3'>{session.device.name}</Heading>
 
-                <Row className='md:gap-4 flex-col md:flex-row items-start md:items-center'>
+                <Row className='md:gap-4 flex-col md:flex-row items-start md:items-center text-content-tertiary'>
                   <Row className='gap-1'>
                     <Globe className='size-4' />
-                    <Text className='text-content-tertiary'>{session.ip}</Text>
+                    <Text>{session.ip}</Text>
                   </Row>
 
                   <Row className='gap-1'>
                     <Download className='size-4' />
-                    <Text className='text-content-tertiary'>{session.browser}</Text>
+                    <Text>{session.browser}</Text>
                   </Row>
                 </Row>
               </Column>
             </Column>
 
             <div className='shrink-0'>
-              {session.token.id === currentTokenId ? (
+              {session.token.id === tokenId ? (
                 <Text className='text-content-tertiary'>{t('session.current_session')}</Text>
               ) : (
                 <Button onClick={() => onRevoke(session)}>{t('security.revoke')}</Button>
@@ -73,13 +73,13 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
       <Divider />
 
       <BoxContent>
-        <Column className='gap-1'>
-          <Row className='gap-2'>
+        <Column>
+          <Row className='gap-1'>
             <Heading size='h4'>{t('security.created_at')}:</Heading>
             <Text>{DateUtil.format(session.createdAt, locale)}</Text>
           </Row>
 
-          <Row className='gap-2'>
+          <Row className='gap-1'>
             <Heading size='h4'>{t('security.expires_at')}:</Heading>
             <Text>{DateUtil.format(session.token.expiresAt, locale)}</Text>
           </Row>

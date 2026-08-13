@@ -4,7 +4,6 @@ import { UserContextProvider } from '@/context/user'
 import { setRequestLocale } from 'next-intl/server'
 import { Header } from '@/components/ui/header'
 import { Footer } from '@/components/ui/footer'
-import { ServiceErrorScreen } from '@/components/service-error-screen'
 import { routing } from '@/lib/i18n/routing'
 import { CONSTANTS } from '@/lib/constants'
 import { getCurrentSession } from '@/lib/auth'
@@ -25,13 +24,10 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
 
   setRequestLocale(locale as any)
 
-  const sessionResult = await getCurrentSession(locale)
-  if (sessionResult.error) {
-    return <ServiceErrorScreen response={sessionResult.error} />
-  }
+  const session = await getCurrentSession(locale)
 
   return (
-    <UserContextProvider initialUser={sessionResult.session?.user ?? null}>
+    <UserContextProvider initialUser={session?.user ?? null}>
       <Header />
 
       <main id='main' className='min-h-screen_'>

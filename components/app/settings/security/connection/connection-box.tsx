@@ -35,13 +35,13 @@ export const ConnectionBox: React.FC<ConnectionBoxProps> = ({
       <Divider />
 
       <BoxContent>
-        <Column className='gap-1'>
-          <Row className='gap-2'>
+        <Column>
+          <Row className='gap-1'>
             <Heading size='h4'>{t('security.created_at')}:</Heading>
             <Text>{DateUtil.format(connection.createdAt, locale)}</Text>
           </Row>
 
-          <Row className='gap-2'>
+          <Row className='gap-1'>
             <Heading size='h4'>{t('security.expires_at')}:</Heading>
             <Text>{DateUtil.format(connection.token.expiresAt, locale)}</Text>
           </Row>

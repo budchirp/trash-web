@@ -5,7 +5,6 @@ import { SessionsSection } from '@/components/app/settings/security/session/sess
 import { ConnectionService } from '@/service/connection'
 import { SessionService } from '@/service/session'
 import { _authenticate } from '@/lib/auth'
-import { ServiceErrorScreen } from '@/components/service-error-screen'
 
 import { Column } from '@trash-kit/ui'
 
@@ -18,16 +17,21 @@ const Page: React.FC<DynamicPageProps> = async ({
   const { jwt } = await _authenticate(locale, `/${locale}/settings/security`)
 
   const sessions = await SessionService.getAll({ jwt, locale })
-  if (sessions.error) return <ServiceErrorScreen response={sessions} />
-
   const connections = await ConnectionService.getAll({ jwt, locale })
-  if (connections.error) return <ServiceErrorScreen response={connections} />
 
   return (
     <Column className='gap-4'>
-      <SessionsSection initialSessions={sessions.data || []} jwt={jwt} />
+      <SessionsSection
+        initialSessions={sessions.error ? [] : sessions.data || []}
+        initialError={sessions.error ? sessions.message : null}
+        jwt={jwt}
+      />
 
-      <ConnectionsSection initialConnections={connections.data || []} jwt={jwt} />
+      <ConnectionsSection
+        initialConnections={connections.error ? [] : connections.data || []}
+        initialError={connections.error ? connections.message : null}
+        jwt={jwt}
+      />
     </Column>
   )
 }

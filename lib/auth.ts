@@ -1,9 +1,10 @@
-import { redirect, unauthorized } from 'next/navigation'
+import { redirect } from 'next/navigation'
+import { cache } from 'react'
 
 import { getCookies } from 'next-client-cookies/server'
 import { AccountSession } from './account-session'
 import { UserService } from '@/service/user'
-import { safeRedirectTo } from '@/lib/redirects'
+import { getSignInPath, safeRedirectTo } from '@/lib/redirects'
 
 import type { User } from '@/types/api/user'
 
@@ -12,62 +13,39 @@ export type AuthenticatedSession = {
   user: User
 }
 
-export type SessionLookup = {
-  session: AuthenticatedSession | null
-  error: {
-    message: string
-    status: number
-  } | null
-}
-
 export { safeRedirectTo }
 
-export const getCurrentSession = async (locale: string = 'en'): Promise<SessionLookup> => {
-  const cookies = await getCookies()
-  const accountSession = new AccountSession(cookies)
-  const jwt = accountSession.get()
-  if (!jwt) return { session: null, error: null }
+export const getCurrentSession = cache(
+  async (locale: string = 'en'): Promise<AuthenticatedSession | null> => {
+    const cookies = await getCookies()
+    const accountSession = new AccountSession(cookies)
+    const jwt = accountSession.get()
+    if (!jwt) return null
 
-  const response = await UserService.get({ jwt, locale })
-  if (response.error) {
-    if (response.status === 401) return { session: null, error: null }
+    const response = await UserService.get({ jwt, locale })
+    if (response.error || !response.data?.id) return null
 
-    return {
-      session: null,
-      error: { message: response.message, status: response.status }
-    }
+    return { jwt, user: response.data }
   }
-
-  if (!response.data?.id) {
-    return { session: null, error: { message: 'Invalid user response', status: 500 } }
-  }
-
-  return {
-    session: { jwt, user: response.data },
-    error: null
-  }
-}
+)
 
 export const _authenticate = async (
   locale: string = 'en',
-  _redirectTo?: string | null
+  redirectTo?: string | null
 ): Promise<AuthenticatedSession> => {
-  const result = await getCurrentSession(locale)
-  if (result.error) throw new Error(result.error.message)
+  const session = await getCurrentSession(locale)
 
-  if (!result.session) unauthorized()
+  if (!session) redirect(getSignInPath(locale, redirectTo))
 
-  return result.session
+  return session
 }
 
 export const _public = async (locale: string = 'en', redirectTo?: string | null): Promise<void> => {
-  const result = await getCurrentSession(locale)
-  if (result.error) throw new Error(result.error.message)
-
-  if (!result.session) return
+  const session = await getCurrentSession(locale)
+  if (!session) return
 
   const url = safeRedirectTo(redirectTo)
-  if (!result.session.user.profile?.name?.trim()) {
+  if (!session.user.profile?.name?.trim()) {
     const query = url ? `?redirectTo=${encodeURIComponent(url)}` : ''
     const onboardingPath = `/${locale}/onboarding${query}`
     redirect(onboardingPath)

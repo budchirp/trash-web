@@ -10,7 +10,6 @@
     "error": "An error occurred",
     "retry": "Retry",
     "success": "Success",
-    "captcha_failed": "Captcha verification failed. Please try again.",
     "next": "Next",
     "back": "Back",
     "continue": "Continue"
@@ -60,7 +59,8 @@
       "title": "Authorize",
       "description": "Authorize application",
       "authorize": "Authorize",
-      "authorizing": "Authorizing..."
+      "authorizing": "Authorizing...",
+      "invalid_request": "Invalid authorization request"
     },
     "account": {
       "title": "Account",

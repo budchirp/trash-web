@@ -10,7 +10,8 @@ type ServiceResponseLike =
 
 export const handle = <T extends ServiceResponseLike>(
   response: T,
-  locale: string
+  locale: string,
+  onError?: (message: string) => void
 ): response is Extract<T, { error: true }> => {
   if (!response.error) return false
 
@@ -20,6 +21,7 @@ export const handle = <T extends ServiceResponseLike>(
     return true
   }
 
-  toast(response.message)
+  if (onError) onError(response.message)
+  else toast(response.message)
   return true
 }
