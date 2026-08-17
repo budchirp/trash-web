@@ -19,7 +19,7 @@ const Page: React.FC<DynamicPageProps> = async ({
 
   const { jwt, user } = await _authenticate(locale, `/onboarding${query}`)
 
-  if (!user.profile?.name?.trim()) {
+  if (user.profile?.name?.trim()) {
     redirect(url ?? `/${locale}/dashboard`)
   }
 
