@@ -1,18 +1,26 @@
 {
   "common": {
-    "errors": {
-      "invalid_session": "Invalid session",
-      "user_not_found": "User not found"
-    },
-    "enter_field": "Enter {field}",
+    "save": "Save",
     "submit": "Submit",
+    "cancel": "Cancel",
     "loading": "Loading...",
     "error": "An error occurred",
     "retry": "Retry",
     "success": "Success",
     "next": "Next",
     "back": "Back",
-    "continue": "Continue"
+    "continue": "Continue",
+    "home": "Home",
+    "enter_field": "Enter {field}",
+    "errors": {
+      "invalid_session": "Invalid session",
+      "user_not_found": "User not found"
+    },
+    "forbidden": {
+      "title": "403 Forbidden",
+      "description": "You do not have permission to edit this profile.",
+      "back": "Go to dashboard"
+    }
   },
   "permissions": {
     "title": "Permissions",
@@ -60,7 +68,7 @@
     "account": {
       "title": "Account",
       "this_account": "This account will be used",
-      "choose_account": "Choose an account to continue or sign in bellow",
+      "choose_account": "Choose an account to continue or sign in below",
       "current_account": "Current account",
       "switch_account": "Switch",
       "use_another_account": "Use another account"
@@ -152,16 +160,25 @@
     "setup_title": "Set up your profile",
     "setup_description": "Add the public details apps will use to recognize you.",
     "identity_step": "Identity",
-    "picture_step": "Picture",
-    "picture": "Profile picture",
-    "no_picture": "No picture selected",
-    "picture_stub": "Upload is not connected yet. This preview is local only.",
-    "submit": "Save profile",
+    "name": "Name",
     "gender": {
       "title": "Gender",
       "empty": "Prefer not to say",
       "male": "Male",
       "female": "Female"
+    },
+    "public": "Make profile public",
+    "private_title": "Private profile",
+    "edit": "Edit profile",
+    "picture": "Profile picture",
+    "picture_description": "Upload a photo to customize your public profile.",
+    "upload_success": "Profile picture updated",
+    "delete_success": "Profile picture removed",
+    "errors": {
+      "invalid_type": "Only JPEG, PNG, and WebP images are allowed.",
+      "too_large": "Image size must be less than 5 MB.",
+      "upload_failed": "Failed to upload profile picture.",
+      "delete_failed": "Failed to remove profile picture."
     }
   },
   "settings": {
@@ -169,14 +186,9 @@
     "description": "Settings for your account",
     "account": {
       "title": "Account",
-      "description": "Your account identifiers. These fields cannot be edited here.",
+      "description": "Your account identifiers.",
       "username": "Username",
-      "email": "Email",
-      "edit_profile": "Edit profile"
-    },
-    "profile": {
-      "title": "Profile",
-      "description": "Update the profile details connected apps can see."
+      "email": "Email"
     },
     "security": {
       "title": "Security",
@@ -196,33 +208,11 @@
       "title": "Connections",
       "description": "Apps that you are connected to",
       "no_connections": "No connections found"
-    },
-    "application": {
-      "title": "Apps",
-      "description": "Your applications"
     }
   },
   "onboarding": {
-    "title": "Finish setting up your account",
-    "description": "Create a simple profile so connected apps know who you are.",
-    "identity": "One profile",
-    "identity_description": "Use the same name and profile details across Trash apps.",
-    "security": "You stay in control",
-    "security_description": "Review sessions and app connections from your settings.",
-    "continue": "Create profile",
-    "profile": {
-      "title": "Create your profile",
-      "description": "You can update these details later.",
-      "name": "Name",
-      "gender": "Gender",
-      "gender_empty": "Prefer not to say",
-      "male": "Male",
-      "female": "Female",
-      "picture": "Profile picture",
-      "no_picture": "No picture selected",
-      "picture_stub": "Upload is not connected yet. This preview is local only.",
-      "submit": "Save profile"
-    }
+    "title": "Set up your profile",
+    "description": "Add the public details apps will use to recognize you."
   },
   "home": {
     "eyebrow": "One place for your account and connected apps",
@@ -233,26 +223,18 @@
     "features_eyebrow": "Features",
     "features_title": "Everything in one place",
     "features_description": "Manage your profile, app connections, permissions, and sessions from a single account.",
-    "stats": {
+    "features": {
       "profile": {
-        "value": "1",
-        "label": "Profile",
-        "description": "Use the same profile across your connected apps."
-      },
-      "apps": {
-        "value": "Any",
-        "label": "Connected apps",
-        "description": "Connect apps when you need them."
+        "title": "Manage your profile",
+        "description": "Update your name, picture, and other profile details in one place."
       },
       "permissions": {
-        "value": "Clear",
-        "label": "Permissions",
-        "description": "See what each app can access before you approve it."
+        "title": "Know what apps can access",
+        "description": "See the permissions an app requests before you connect it."
       },
       "sessions": {
-        "value": "Live",
-        "label": "Sessions",
-        "description": "See your active sessions and revoke ones you don't recognize."
+        "title": "Manage your sessions",
+        "description": "Review your active sessions and revoke access you don't recognize."
       }
     },
     "preview": {
@@ -266,24 +248,6 @@
         "account": "Username and email for account linking.",
         "profile": "Profile details you choose to share.",
         "sessions": "Session information used for security."
-      }
-    },
-    "features": {
-      "profile": {
-        "title": "Manage your profile",
-        "description": "Update your name, picture, and other profile details in one place."
-      },
-      "permissions": {
-        "title": "Know what apps can access",
-        "description": "See the permissions an app requests before you connect it."
-      },
-      "sessions": {
-        "title": "Manage your sessions",
-        "description": "Review your active sessions and revoke access you don't recognize."
-      },
-      "connections": {
-        "title": "See your connected apps",
-        "description": "Keep track of which apps are connected to your account."
       }
     },
     "data_eyebrow": "Your account",
@@ -301,29 +265,6 @@
         "sessions": "Active sessions",
         "connections": "App connections",
         "permissions": "Approved permissions"
-      },
-      "apps": {
-        "title": "App data",
-        "authorize": "Authorization requests",
-        "scopes": "Readable scopes",
-        "tokens": "Connection tokens"
-      }
-    },
-    "flow_eyebrow": "How it works",
-    "flow_title": "Set up your account and connect your apps.",
-    "flow_description": "Create an account, add your profile, and approve app connections when you're ready.",
-    "flow": {
-      "create": {
-        "title": "Create an account",
-        "description": "Sign up and add the profile details you want connected apps to use."
-      },
-      "review": {
-        "title": "Review app access",
-        "description": "See what an app is requesting before you approve the connection."
-      },
-      "control": {
-        "title": "Manage it later",
-        "description": "Update your profile, review connections, and manage active sessions from settings."
       }
     },
     "cta": {

@@ -10,9 +10,9 @@ type OnboardingRightPanelProps = {
 export const OnboardingRightPanel: React.FC<OnboardingRightPanelProps> = ({
   children
 }: OnboardingRightPanelProps): React.ReactNode => (
-  <section className='flex lg:items-center size-full lg:px-4'>
+  <section className='flex items-center size-full py-8 lg:px-4'>
     <Container className='flex justify-center lg:justify-start'>
-      <Column className='gap-8 max-w-sm'>
+      <Column className='gap-8 max-w-sm w-full'>
         {children}
       </Column>
     </Container>

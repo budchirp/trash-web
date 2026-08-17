@@ -3,7 +3,7 @@
 import { Button, Column, Divider, Section } from '@trash-kit/ui'
 import type React from 'react'
 import { SettingsLinksSection } from './links-section'
-import { Avatar } from './avatar'
+import { Avatar } from '../user/avatar'
 import { useLogout } from '@/lib/hooks/use-logout'
 import { useTranslations } from 'next-intl'
 
@@ -14,7 +14,7 @@ export const SidebarSection: React.FC = (): React.ReactNode => {
 
   return (
     <Column className='gap-4'>
-      <Section divider={false} title={<Avatar />}>
+      <Section divider={false} title={<Avatar showUsername={true} className='size-24' />}>
         <SettingsLinksSection />
       </Section>
 

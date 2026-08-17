@@ -1,14 +1,15 @@
 import type React from 'react'
 
 import { UserContextProvider } from '@/context/user'
-import { setRequestLocale } from 'next-intl/server'
+import { getMessages, setRequestLocale } from 'next-intl/server'
 import { Header } from '@/components/ui/header'
 import { Footer } from '@/components/ui/footer'
 import { routing } from '@/lib/i18n/routing'
 import { CONSTANTS } from '@/lib/constants'
 import { getCurrentSession } from '@/lib/auth'
 import { notFound } from 'next/navigation'
-import { hasLocale } from 'next-intl'
+import { hasLocale, NextIntlClientProvider } from 'next-intl'
+import enMessages from '@/messages/en.json'
 
 import type { Metadata } from 'next'
 import type { DynamicLayoutProps } from '@/types/app/layout'
@@ -24,18 +25,21 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
 
   setRequestLocale(locale as any)
 
+  const messages = (await getMessages().catch(() => enMessages)) || enMessages
   const session = await getCurrentSession(locale)
 
   return (
-    <UserContextProvider initialUser={session?.user ?? null}>
-      <Header />
+    <NextIntlClientProvider messages={messages}>
+      <UserContextProvider initialUser={session?.user ?? null}>
+        <Header />
 
-      <main id='main' className='min-h-screen_'>
-        {children}
-      </main>
+        <main id='main' className='min-h-screen_'>
+          {children}
+        </main>
 
-      <Footer />
-    </UserContextProvider>
+        <Footer />
+      </UserContextProvider>
+    </NextIntlClientProvider>
   )
 }
 

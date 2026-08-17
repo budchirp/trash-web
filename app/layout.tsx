@@ -1,7 +1,6 @@
 import type React from 'react'
 
 import { CookiesProvider } from 'next-client-cookies/server'
-import { NextIntlClientProvider } from 'next-intl'
 import { Google_Sans } from 'next/font/google'
 
 import { cn, Container, ToastProvider } from '@trash-kit/ui'
@@ -33,7 +32,7 @@ const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNo
           <ToastProvider />
 
           <div className='relative z-10 size-full'>
-            <NextIntlClientProvider>{children}</NextIntlClientProvider>
+            {children}
           </div>
         </CookiesProvider>
       </body>

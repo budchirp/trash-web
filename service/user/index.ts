@@ -2,7 +2,7 @@ import { apiRequest } from '@/service/api'
 
 import type { NewUserValues, ProfileValues } from '@/service/user/schema'
 import type { AuthenticatedHeaders, Headers } from '@/types/api'
-import type { Profile, User } from '@/types/api/user'
+import type { Profile, PublicUser, User } from '@/types/api/user'
 
 import type { ServiceResponse } from '@trash-kit/core'
 
@@ -13,6 +13,16 @@ export class UserService {
 
   public static async get<T = User>(headers: AuthenticatedHeaders): Promise<ServiceResponse<T>> {
     return await apiRequest<T>({ path: '/user', headers })
+  }
+
+  public static async getByUsername(
+    username: string,
+    headers: AuthenticatedHeaders
+  ): Promise<ServiceResponse<PublicUser>> {
+    return await apiRequest<PublicUser>({
+      path: `/user/${encodeURIComponent(username)}`,
+      headers
+    })
   }
 
   public static async updateProfile<T = Profile>(

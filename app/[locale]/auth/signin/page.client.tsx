@@ -4,7 +4,7 @@ import type React from 'react'
 
 import { signInSchema, type SignInValues } from '@/service/session/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useLocale, useTranslations } from 'use-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { SessionService } from '@/service/session'
 import { useCookies } from 'next-client-cookies'
 import { useForm } from 'react-hook-form'

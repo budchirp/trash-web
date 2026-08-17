@@ -18,6 +18,7 @@ const Page: React.FC<DynamicPageProps> = async ({
   searchParams: _searchParams
 }: DynamicPageProps): Promise<React.ReactNode> => {
   const { locale } = await params
+
   const t = await getTranslations('auth.authorize')
 
   const searchParams = await _searchParams

@@ -16,10 +16,6 @@ export const SettingsLinksSection: React.FC = (): React.ReactNode => {
       label: t('account.title')
     },
     {
-      url: '/settings/profile',
-      label: t('profile.title')
-    },
-    {
       url: '/settings/security',
       label: t('security.title')
     }

@@ -17,13 +17,13 @@ const Page: React.FC<DynamicPageProps> = async ({
   const url = safeRedirectTo(redirectTo)
   const query = url ? `?redirectTo=${encodeURIComponent(url)}` : ''
 
-  const { jwt, user } = await _authenticate(locale, `/${locale}/onboarding${query}`)
+  const { jwt, user } = await _authenticate(locale, `/onboarding${query}`)
 
-  if (user.profile?.name?.trim()) {
+  if (!user.profile?.name?.trim()) {
     redirect(url ?? `/${locale}/dashboard`)
   }
 
-  return <OnboardingClientPage jwt={jwt} locale={locale} user={user} redirectTo={url} />
+  return <OnboardingClientPage jwt={jwt} redirectTo={url} />
 }
 
 export default Page

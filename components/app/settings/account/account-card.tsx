@@ -3,7 +3,7 @@
 import type React from 'react'
 
 import { useTranslations } from 'next-intl'
-import { Avatar } from '@/components/app/settings/avatar'
+import { Avatar } from '@/components/app/user/avatar'
 
 import { Box, BoxContent, Button, Column, Heading, Row, Text } from '@trash-kit/ui'
 
@@ -26,7 +26,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
     <Box>
       <BoxContent className='flex-row justify-between gap-4'>
         <Row className='gap-3'>
-          <Avatar showUsername={false} src={user.profile?.picture || ''} className='size-12' />
+          <Avatar showUsername={false} user={user} className='size-12' />
 
           <Column>
             <Heading className='truncate' size='h3'>
