@@ -3,12 +3,17 @@ import type React from 'react'
 import { usePathname } from '@/lib/i18n/routing'
 import Link from 'next/link'
 
-import { Box, BoxContent, cn } from '@trash-kit/ui'
+import { Box, BoxContent, cn, Column, Row } from '@trash-kit/ui'
 
-type SelectableLinkProps = {
+export type SelectableLinkProps = {
   label: string
   url: string
 
+  box?: boolean
+}
+
+type SelectableLinksProps = {
+  links: SelectableLinkProps[]
   box?: boolean
 }
 
@@ -46,5 +51,27 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
         </BoxContent>
       </Box>
     </Link>
+  )
+}
+
+export const SelectableLinks: React.FC<SelectableLinksProps> = ({ links, box = false }) => {
+  if (!links.length) return null
+
+  if (box) {
+    return (
+      <Column className='gap-2'>
+        {links.map((link) => (
+          <SelectableLink key={link.url} {...link} box />
+        ))}
+      </Column>
+    )
+  }
+
+  return (
+    <Row className='flex-row-reverse gap-2'>
+      {links.map((link) => (
+        <SelectableLink key={link.url} {...link} />
+      ))}
+    </Row>
   )
 }

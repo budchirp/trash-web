@@ -6,6 +6,7 @@ import { ProfileView } from '@/components/app/user/profile/profile-view'
 import { Avatar } from '@/components/app/user/avatar'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/routing'
+import { LINKS } from '@/lib/link'
 
 import { Button, Row, Heading } from '@trash-kit/ui'
 
@@ -38,7 +39,7 @@ export const ProfileClientPage: React.FC<ProfileClientPageProps> = ({
       header={
         <Row className='gap-4'>
           {isCurrentUser && (
-            <Link href={`/user/${encodeURIComponent(user.username)}/edit`}>
+            <Link href={LINKS.user.profileEdit(user.username)}>
               <Button>{t('edit')}</Button>
             </Link>
           )}

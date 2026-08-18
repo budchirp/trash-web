@@ -7,6 +7,8 @@ import { Footer } from '@/components/ui/footer'
 import { routing } from '@/lib/i18n/routing'
 import { CONSTANTS } from '@/lib/constants'
 import { getCurrentSession } from '@/lib/auth'
+import { AccountSession } from '@/lib/account-session'
+import { getCookies } from 'next-client-cookies/server'
 import { notFound } from 'next/navigation'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import enMessages from '@/messages/en.json'
@@ -27,11 +29,17 @@ const Layout: React.FC<DynamicLayoutProps> = async ({
 
   const messages = (await getMessages().catch(() => enMessages)) || enMessages
   const session = await getCurrentSession(locale)
+  const accounts = session
+    ? await new AccountSession(await getCookies()).getAllAccounts(locale, {
+        token: session.jwt,
+        user: session.user
+      })
+    : []
 
   return (
     <NextIntlClientProvider messages={messages}>
       <UserContextProvider initialUser={session?.user ?? null}>
-        <Header />
+        <Header accounts={accounts} />
 
         <main id='main' className='min-h-screen_'>
           {children}

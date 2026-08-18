@@ -6,11 +6,12 @@ import { useState } from 'react'
 import { Avatar } from '@/components/app/user/avatar'
 import {
   OnboardingLeftPanel,
-  OnboardingStep
+  type OnboardingStep
 } from '@/components/app/onboarding/onboarding-left-panel'
 import { OnboardingRightPanel } from '@/components/app/onboarding/onboarding-right-panel'
 import { ProfileForm } from '@/components/app/user/profile/profile-form'
 import { useLogout } from '@/lib/hooks/use-logout'
+import { LINKS } from '@/lib/link'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 
@@ -35,7 +36,7 @@ export const OnboardingClientPage = ({
   const [step, setStep] = useState(0)
 
   const handleFinish = () => {
-    window.location.replace(redirectTo ?? `/${locale}/dashboard`)
+    window.location.replace(redirectTo ?? `/${locale}${LINKS.dashboard}`)
   }
 
   const next = () => {

@@ -14,6 +14,7 @@ import { AccountSession } from '@/lib/account-session'
 import { CaptchaService } from '@/service/captcha'
 import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
 import { getRedirectQuery, getSignUpPath } from '@/lib/redirects'
+import { LINKS } from '@/lib/link'
 import { handle } from '@/lib/handle-service'
 
 import {
@@ -92,11 +93,11 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     session.add(jwt)
 
     if (!user.data?.profile?.name?.trim()) {
-      window.location.replace(`/${locale}/onboarding${getRedirectQuery(redirectTo)}`)
+      window.location.replace(`/${locale}${LINKS.onboarding}${getRedirectQuery(redirectTo)}`)
       return
     }
 
-    window.location.replace(redirectTo ?? `/${locale}/dashboard`)
+    window.location.replace(redirectTo ?? `/${locale}${LINKS.dashboard}`)
   }
 
   return (

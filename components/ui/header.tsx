@@ -4,121 +4,36 @@ import type React from 'react'
 import { use, useEffect, useMemo, useState } from 'react'
 
 import { Menu as MenuIcon, X } from 'lucide-react'
-import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
+import { Menu, MenuButton, MenuItems, Transition } from '@headlessui/react'
 import { useTranslations } from 'next-intl'
 
 import { useLogout } from '@/lib/hooks/use-logout'
-import { SelectableLink } from '@/components/link'
+import { SelectableLinks } from '@/components/link'
 import { UserContext } from '@/context/user'
-import { Link, usePathname } from '@/lib/i18n/routing'
+import { getDesktopNavLinks, getDrawerNavLinks, getUserMenuLinks, type NavLink } from '@/lib/link'
+import { usePathname } from '@/lib/i18n/routing'
+
 import { Logo } from '@/components/logo'
 import { Avatar } from '@/components/app/user/avatar'
+import { AccountBox, AuthButtons } from '@/components/ui/account-switcher'
 
-import {
-  cn,
-  Button,
-  Container,
-  Row,
-  Section,
-  Divider,
-  Column,
-  Heading,
-  Text,
-  Box,
-  BoxContent
-} from '@trash-kit/ui'
+import { Box, BoxContent, Button, cn, Column, Container, Divider, Row } from '@trash-kit/ui'
 
+import type { SavedAccount } from '@/types/app/account'
 import type { User } from '@/types/api/user'
-
-type NavLink = {
-  label: string
-  url: string
-}
-
-type UserProfileInfoProps = {
-  user: User
-}
-
-export const UserProfileInfo: React.FC<UserProfileInfoProps> = ({ user }) => (
-  <Row className='min-w-0 gap-3'>
-    <Avatar user={user} className='size-12 shrink-0' />
-
-    <Column className='min-w-0'>
-      {user.profile?.name?.trim() && (
-        <Heading size='h3' className='truncate font-semibold'>
-          {user.profile.name}
-        </Heading>
-      )}
-
-      <Text className='truncate text-content-tertiary'>@{user.username}</Text>
-    </Column>
-  </Row>
-)
-
-type AuthButtonsProps = {
-  direction?: 'row' | 'column'
-}
-
-export const AuthButtons: React.FC<AuthButtonsProps> = ({ direction = 'row' }) => {
-  const t = useTranslations('auth')
-  const isRow = direction === 'row'
-
-  const Wrapper = isRow ? Row : Column
-
-  return (
-    <Wrapper className='gap-2'>
-      <Link href='/auth/signin' className={cn(!isRow && 'w-full')}>
-        <Button color='secondary' className='w-full md:w-fit'>
-          {t('sign_in.title')}
-        </Button>
-      </Link>
-
-      <Link href='/auth/signup' className={cn(!isRow && 'w-full')}>
-        <Button color='secondary' className='w-full md:w-fit'>
-          {t('sign_up.title')}
-        </Button>
-      </Link>
-    </Wrapper>
-  )
-}
-
-type NavLinksProps = {
-  links: NavLink[]
-  box?: boolean
-}
-
-export const NavLinks: React.FC<NavLinksProps> = ({ links, box = false }) => {
-  if (!links.length) return null
-
-  if (box) {
-    return (
-      <Column className='gap-2'>
-        {links.map((link) => (
-          <SelectableLink key={link.url} box label={link.label} url={link.url} />
-        ))}
-      </Column>
-    )
-  }
-
-  return (
-    <Row className='flex-row-reverse gap-2'>
-      {links.map((link) => (
-        <SelectableLink key={link.url} label={link.label} url={link.url} />
-      ))}
-    </Row>
-  )
-}
 
 type UserMenuProps = {
   user: User
+  accounts: SavedAccount[]
   onLogout: () => void
 }
 
-export const UserMenu: React.FC<UserMenuProps> = ({ user, onLogout }) => {
-  const t = useTranslations('auth')
+const UserMenu: React.FC<UserMenuProps> = ({ user, accounts, onLogout }) => {
+  const t = useTranslations()
+  const pathname = usePathname()
 
   return (
-    <Menu as='div' className='relative'>
+    <Menu key={pathname} as='div' className='relative'>
       <MenuButton
         as={Button}
         shape='circle'
@@ -139,17 +54,21 @@ export const UserMenu: React.FC<UserMenuProps> = ({ user, onLogout }) => {
         )}
       >
         <BoxContent>
-          <UserProfileInfo user={user} />
+          <AccountBox user={user} accounts={accounts} menu />
         </BoxContent>
 
-        <Divider />
+        <Divider className='w-full' />
 
         <BoxContent>
-          <MenuItem>
-            <Button color='secondary' className='w-full justify-center' onClick={onLogout}>
-              {t('logout')}
-            </Button>
-          </MenuItem>
+          <SelectableLinks box links={getUserMenuLinks(t, user)} />
+        </BoxContent>
+
+        <Divider className='w-full' />
+
+        <BoxContent>
+          <Button color='secondary' className='w-full justify-center' onClick={onLogout}>
+            {t('auth.logout')}
+          </Button>
         </BoxContent>
       </MenuItems>
     </Menu>
@@ -158,12 +77,13 @@ export const UserMenu: React.FC<UserMenuProps> = ({ user, onLogout }) => {
 
 type MobileDrawerProps = {
   user: User | null
-  onLogout: () => void
-  open: boolean
+  accounts: SavedAccount[]
   links: NavLink[]
+  open: boolean
+  onLogout: () => void
 }
 
-export const MobileDrawer: React.FC<MobileDrawerProps> = ({ open, user, links, onLogout }) => {
+const MobileDrawer: React.FC<MobileDrawerProps> = ({ user, accounts, links, open, onLogout }) => {
   const t = useTranslations('auth')
 
   return (
@@ -172,44 +92,42 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ open, user, links, o
         id='mobile-navigation'
         className={cn(
           'fixed inset-x-0 top-16 bottom-0 z-20 overflow-y-auto',
-          'bg-surface-primary border-b border-outline',
+          'border-b border-outline bg-surface-primary',
           'transition-[transform,opacity] duration-200 ease-out',
           'data-closed:-translate-y-2 data-closed:opacity-0'
         )}
       >
-        <Section>
-          <Column className='gap-4'>
-            {links.length > 0 && (
-              <>
-                <Container>
-                  <NavLinks links={links} box />
-                </Container>
+        <Column>
+          {links.length > 0 && (
+            <>
+              <BoxContent>
+                <SelectableLinks links={links} box />
+              </BoxContent>
 
-                <Divider />
-              </>
-            )}
+              <Divider className='w-full' />
+            </>
+          )}
 
-            {user && (
-              <>
-                <Container>
-                  <UserProfileInfo user={user} />
-                </Container>
+          {user ? (
+            <>
+              <BoxContent>
+                <AccountBox user={user} accounts={accounts} />
+              </BoxContent>
 
-                <Divider />
-              </>
-            )}
+              <Divider className='w-full' />
 
-            <Container>
-              {user ? (
+              <BoxContent>
                 <Button color='secondary' className='w-full justify-center' onClick={onLogout}>
                   {t('logout')}
                 </Button>
-              ) : (
-                <AuthButtons direction='column' />
-              )}
+              </BoxContent>
+            </>
+          ) : (
+            <Container>
+              <AuthButtons direction='column' />
             </Container>
-          </Column>
-        </Section>
+          )}
+        </Column>
       </div>
     </Transition>
   )
@@ -217,25 +135,37 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ open, user, links, o
 
 type DesktopNavigationProps = {
   user: User | null
+  accounts: SavedAccount[]
   links: NavLink[]
   onLogout: () => void
 }
 
-const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ user, links, onLogout }) => (
-  <Row className='hidden items-center gap-4 md:flex'>
-    {links.length > 0 && (
-      <>
-        <NavLinks links={links} />
+const DesktopNavigation: React.FC<DesktopNavigationProps> = ({
+  user,
+  accounts,
+  links,
+  onLogout
+}) => {
+  return (
+    <Row className='hidden items-center gap-4 md:flex'>
+      {links.length > 0 && (
+        <>
+          <SelectableLinks links={links} />
 
-        <Divider className='h-8' thickness='thick' orientation='vertical' />
-      </>
-    )}
+          <Divider className='h-8' thickness='thick' orientation='vertical' />
+        </>
+      )}
 
-    {user ? <UserMenu user={user} onLogout={onLogout} /> : <AuthButtons />}
-  </Row>
-)
+      {user ? <UserMenu user={user} accounts={accounts} onLogout={onLogout} /> : <AuthButtons />}
+    </Row>
+  )
+}
 
-export const Header: React.FC = (): React.ReactNode => {
+type HeaderProps = {
+  accounts: SavedAccount[]
+}
+
+export const Header: React.FC<HeaderProps> = ({ accounts }) => {
   const t = useTranslations()
   const { user } = use(UserContext)
   const logout = useLogout()
@@ -245,31 +175,15 @@ export const Header: React.FC = (): React.ReactNode => {
 
   const isHome = pathname === '/'
 
-  const links = useMemo<NavLink[]>(() => {
-    if (user) {
-      return [
-        {
-          label: t('dashboard.title'),
-          url: '/dashboard'
-        },
-        {
-          label: t('settings.title'),
-          url: '/settings'
-        }
-      ]
-    }
+  const desktopLinks = useMemo<NavLink[]>(
+    () => getDesktopNavLinks(t, user, isHome),
+    [t, user, isHome]
+  )
 
-    if (!isHome) {
-      return [
-        {
-          label: t('common.home'),
-          url: '/'
-        }
-      ]
-    }
-
-    return []
-  }, [user, isHome, t])
+  const drawerLinks = useMemo<NavLink[]>(
+    () => getDrawerNavLinks(t, user, isHome),
+    [t, user, isHome]
+  )
 
   const showContent = user !== null || !isHome
 
@@ -292,7 +206,12 @@ export const Header: React.FC = (): React.ReactNode => {
 
             {showContent && (
               <Row className='items-center gap-3'>
-                <DesktopNavigation user={user} links={links} onLogout={logout} />
+                <DesktopNavigation
+                  user={user}
+                  accounts={accounts}
+                  links={desktopLinks}
+                  onLogout={logout}
+                />
 
                 <Button
                   aria-label={open ? 'Close menu' : 'Open menu'}
@@ -311,10 +230,19 @@ export const Header: React.FC = (): React.ReactNode => {
         </Container>
       </header>
 
-      {showContent && <MobileDrawer open={open} user={user} links={links} onLogout={logout} />}
+      {showContent && (
+        <MobileDrawer
+          open={open}
+          user={user}
+          accounts={accounts}
+          links={drawerLinks}
+          onLogout={logout}
+        />
+      )}
 
       <div className='h-16' />
     </>
   )
 }
+
 Header.displayName = 'Header'

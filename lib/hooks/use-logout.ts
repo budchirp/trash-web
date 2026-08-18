@@ -3,6 +3,7 @@
 import { useCookies } from 'next-client-cookies'
 import { AccountSession } from '@/lib/account-session'
 import { SessionService } from '@/service/session'
+import { LINKS } from '@/lib/link'
 
 export const useLogout = (): ((session?: string) => Promise<void>) => {
   const cookies = useCookies()
@@ -19,12 +20,12 @@ export const useLogout = (): ((session?: string) => Promise<void>) => {
       if (!token) {
         accountSession.remove(jwt)
 
-        window.location.replace('/')
+        window.location.replace(LINKS.home)
       }
     }
   } catch {
     return async () => {
-      window.location.replace('/')
+      window.location.replace(LINKS.home)
     }
   }
 }

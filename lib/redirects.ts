@@ -1,3 +1,5 @@
+import { LINKS } from '@/lib/link'
+
 const isInternalFlowRedirect = (pathname: string): boolean => {
   const [, first, second, third] = pathname.split('/')
   const authPage = first === 'auth' ? second : second === 'auth' ? third : null
@@ -32,11 +34,14 @@ export const getRedirectQuery = (redirectTo: string | null | undefined): string 
 export const getCurrentRedirect = (): string =>
   `${window.location.pathname}${window.location.search}`
 
-const getAuthPath = (page: 'signin' | 'signup', redirectTo: string | null | undefined): string =>
-  `/auth/${page}${getRedirectQuery(redirectTo)}`
+const getAuthPath = (page: 'signin' | 'signup', redirectTo: string | null | undefined): string => {
+  const path = page === 'signin' ? LINKS.auth.signIn : LINKS.auth.signUp
+
+  return `${path}${getRedirectQuery(redirectTo)}`
+}
 
 export const getSignInPath = (redirectTo?: string | null): string =>
-  getAuthPath('signin', safeRedirectTo(redirectTo) ?? '/dashboard')
+  getAuthPath('signin', safeRedirectTo(redirectTo) ?? LINKS.dashboard)
 
 export const getSignUpPath = (redirectTo?: string | null): string =>
-  getAuthPath('signup', safeRedirectTo(redirectTo) ?? '/dashboard')
+  getAuthPath('signup', safeRedirectTo(redirectTo) ?? LINKS.dashboard)

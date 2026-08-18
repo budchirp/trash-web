@@ -14,6 +14,7 @@ import { AccountSession } from '@/lib/account-session'
 import { CaptchaService } from '@/service/captcha'
 import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
 import { getRedirectQuery, getSignInPath } from '@/lib/redirects'
+import { LINKS } from '@/lib/link'
 import { handle } from '@/lib/handle-service'
 import { useRef } from 'react'
 
@@ -88,7 +89,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     session.set(response.data.token)
     session.add(response.data.token)
 
-    window.location.replace(`/${locale}/onboarding${getRedirectQuery(redirectTo)}`)
+    window.location.replace(`/${locale}${LINKS.onboarding}${getRedirectQuery(redirectTo)}`)
   }
 
   return (
@@ -141,12 +142,8 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
               <Checkbox {...register('accept_terms')}>
                 <Text>
                   {t.rich('sign_up.accept_terms', {
-                    terms: () => (
-                      <Link href='/help/legal/terms-of-service'>{t('sign_up.terms')}</Link>
-                    ),
-                    privacy: () => (
-                      <Link href='/help/legal/privacy-policy'>{t('sign_up.privacy')}</Link>
-                    )
+                    terms: () => <Link href={LINKS.help.terms}>{t('sign_up.terms')}</Link>,
+                    privacy: () => <Link href={LINKS.help.privacy}>{t('sign_up.privacy')}</Link>
                   })}
                 </Text>
               </Checkbox>

@@ -71,7 +71,8 @@
       "choose_account": "Choose an account to continue or sign in below",
       "current_account": "Current account",
       "switch_account": "Switch",
-      "use_another_account": "Use another account"
+      "use_another_account": "Use another account",
+      "add_account": "Add account"
     }
   },
   "legal": {

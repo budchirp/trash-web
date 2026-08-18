@@ -2,6 +2,7 @@ import type React from 'react'
 
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/lib/i18n/routing'
+import { LINKS } from '@/lib/link'
 import { _public } from '@/lib/auth'
 
 import { ArrowRight, CheckCircle2, Database, KeyRound, ShieldCheck, UserRound } from 'lucide-react'
@@ -153,14 +154,14 @@ const Hero: React.FC<{ t: Translate }> = ({ t }) => (
           </Column>
 
           <Row className='flex-col items-start md:items-center gap-3 sm:flex-row'>
-            <Link href='/auth/signup'>
+            <Link href={LINKS.auth.signUp}>
               <Button className='gap-2'>
                 {t('home.primary_cta')}
                 <ArrowRight className='size-4' />
               </Button>
             </Link>
 
-            <Link href='/auth/signin'>
+            <Link href={LINKS.auth.signIn}>
               <Button>{t('home.secondary_cta')}</Button>
             </Link>
           </Row>
@@ -284,7 +285,7 @@ const Cta: React.FC<{ t: Translate }> = ({ t }) => (
                 </Heading>
               </Column>
 
-              <Link href='/auth/signup'>
+              <Link href={LINKS.auth.signUp}>
                 <Button>
                   <Row className='gap-2'>
                     {t('home.primary_cta')}

@@ -3,6 +3,7 @@ import type React from 'react'
 import { OnboardingClientPage } from './page.client'
 import { _authenticate } from '@/lib/auth'
 import { safeRedirectTo } from '@/lib/redirects'
+import { LINKS } from '@/lib/link'
 import { redirect } from 'next/navigation'
 
 import type { DynamicPageProps } from '@/types/app/page'
@@ -17,10 +18,10 @@ const Page: React.FC<DynamicPageProps> = async ({
   const url = safeRedirectTo(redirectTo)
   const query = url ? `?redirectTo=${encodeURIComponent(url)}` : ''
 
-  const { jwt, user } = await _authenticate(locale, `/onboarding${query}`)
+  const { jwt, user } = await _authenticate(locale, `${LINKS.onboarding}${query}`)
 
   if (user.profile?.name?.trim()) {
-    redirect(url ?? `/${locale}/dashboard`)
+    redirect(url ?? `/${locale}${LINKS.dashboard}`)
   }
 
   return <OnboardingClientPage jwt={jwt} redirectTo={url} />

@@ -2,6 +2,7 @@ import type React from 'react'
 
 import { CenteredPage } from '@/components/vertical-page'
 import { Link } from '@/lib/i18n/routing'
+import { LINKS } from '@/lib/link'
 import { getTranslations } from 'next-intl/server'
 
 import { Button } from '@trash-kit/ui'
@@ -16,7 +17,7 @@ const ForbiddenPage: React.FC<DynamicPageProps> = async ({
 
   return (
     <CenteredPage title={t('title')} items={[t('description')]}>
-      <Link href='/dashboard'>
+      <Link href={LINKS.dashboard}>
         <Button>{t('back')}</Button>
       </Link>
     </CenteredPage>
