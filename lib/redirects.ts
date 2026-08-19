@@ -41,7 +41,7 @@ const getAuthPath = (page: 'signin' | 'signup', redirectTo: string | null | unde
 }
 
 export const getSignInPath = (redirectTo?: string | null): string =>
-  getAuthPath('signin', safeRedirectTo(redirectTo) ?? LINKS.dashboard)
+  getAuthPath('signin', safeRedirectTo(redirectTo) ?? LINKS.home)
 
 export const getSignUpPath = (redirectTo?: string | null): string =>
-  getAuthPath('signup', safeRedirectTo(redirectTo) ?? LINKS.dashboard)
+  getAuthPath('signup', safeRedirectTo(redirectTo) ?? LINKS.home)

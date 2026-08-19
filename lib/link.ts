@@ -4,7 +4,6 @@ import type { User } from '@/types/api/user'
 
 export const LINKS = {
   home: '/',
-  dashboard: '/dashboard',
   onboarding: '/onboarding',
   auth: {
     signIn: '/auth/signin',
@@ -18,6 +17,12 @@ export const LINKS = {
     root: '/settings',
     account: '/settings/account',
     security: '/settings/security'
+  },
+  dashboard: '/home',
+  developers: {
+    root: '/developers',
+    applications: '/developers/applications',
+    newApplication: '/developers/applications/new'
   },
   user: {
     profile: (username: string): string => `/user/${encodeURIComponent(username)}`,

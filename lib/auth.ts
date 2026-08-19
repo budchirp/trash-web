@@ -58,5 +58,5 @@ export const _public = async (locale: string = 'en'): Promise<void> => {
     redirect(`/${locale}${LINKS.onboarding}`)
   }
 
-  redirect(`/${locale}${LINKS.dashboard}`)
+  redirect(`/${locale}${LINKS.home}`)
 }

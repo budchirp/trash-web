@@ -97,7 +97,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
       return
     }
 
-    window.location.replace(redirectTo ?? `/${locale}${LINKS.dashboard}`)
+    window.location.replace(redirectTo ?? `/${locale}${LINKS.home}`)
   }
 
   return (

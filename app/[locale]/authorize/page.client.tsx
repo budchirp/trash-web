@@ -31,6 +31,7 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
   permissions
 }): React.ReactNode => {
   const t = useTranslations('auth.authorize')
+  const t_common = useTranslations('common')
 
   const [loading, setLoading] = useState(false)
 
@@ -67,7 +68,7 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
             user={user}
             action={
               <Button disabled={loading} loading={loading} onClick={authorize}>
-                {loading ? t('authorizing') : t('authorize')}
+                {loading ? t_common('loading') : t('authorize')}
               </Button>
             }
           />

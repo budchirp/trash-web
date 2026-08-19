@@ -1,6 +1,6 @@
 import type React from 'react'
 
-import { IconBox } from '@/components/icon-box'
+import { ApplicationIcon } from '@/components/app/developers/application-icon'
 
 import { Column, Heading, Row, Text } from '@trash-kit/ui'
 
@@ -18,16 +18,7 @@ export const ApplicationSection: React.FC<ApplicationSectionProps> = ({
 }) => {
   return (
     <Row className='w-full gap-3'>
-      <IconBox
-        className='size-12 p-1'
-        icon={
-          <img
-            className='rounded-full size-full object-cover'
-            src={application?.icon}
-            alt={application?.name}
-          />
-        }
-      />
+      <ApplicationIcon application={application} className='size-12' color='primary' />
 
       <Column className='grow'>
         <Heading size='h3'>{application?.name}</Heading>

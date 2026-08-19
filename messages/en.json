@@ -2,7 +2,6 @@
   "common": {
     "save": "Save",
     "submit": "Submit",
-    "cancel": "Cancel",
     "loading": "Loading...",
     "error": "An error occurred",
     "retry": "Retry",
@@ -12,15 +11,13 @@
     "continue": "Continue",
     "home": "Home",
     "enter_field": "Enter {field}",
-    "errors": {
-      "invalid_session": "Invalid session",
-      "user_not_found": "User not found"
-    },
     "forbidden": {
       "title": "403 Forbidden",
       "description": "You do not have permission to edit this profile.",
-      "back": "Go to dashboard"
-    }
+      "back": "Go to home"
+    },
+    "new": "New",
+    "delete": "Delete"
   },
   "permissions": {
     "title": "Permissions",
@@ -41,18 +38,15 @@
     "logout": "Logout",
     "form": {
       "email": "Email",
-      "name": "Name",
       "username": "Username",
       "password": "Password"
     },
     "sign_in": {
       "title": "Sign in",
-      "description": "Sign in to your account",
       "sign_up_link": "Don't have an account? Sign up"
     },
     "sign_up": {
       "title": "Sign up",
-      "description": "Create a new account",
       "sign_in_link": "Already have an account? Sign in",
       "terms": "Terms of Service",
       "privacy": "Privacy Policy",
@@ -60,16 +54,13 @@
     },
     "authorize": {
       "title": "Authorize",
-      "description": "Authorize application",
       "authorize": "Authorize",
-      "authorizing": "Authorizing...",
       "invalid_request": "Invalid authorization request"
     },
     "account": {
       "title": "Account",
       "this_account": "This account will be used",
       "choose_account": "Choose an account to continue or sign in below",
-      "current_account": "Current account",
       "switch_account": "Switch",
       "use_another_account": "Use another account",
       "add_account": "Add account"
@@ -152,15 +143,43 @@
     }
   },
   "dashboard": {
-    "title": "Dashboard",
-    "description": "Dashboard"
+    "title": "Home"
+  },
+  "developers": {
+    "title": "Developers",
+    "go_to_applications": "Go to applications",
+    "gate": {
+      "title": "Join the developer program",
+      "description": "Creating applications requires developer enrollment. Join the developer program to create and manage applications.",
+      "joined": "Welcome to the developer program"
+    },
+    "applications": {
+      "title": "Applications",
+      "empty": "You haven't created any applications yet.",
+      "new": {
+        "title": "New application",
+        "description": "Create a new application to integrate with Trash.",
+        "name": "Name",
+        "description_field": "Description",
+        "icon": "Icon",
+        "choose_icon": "Choose an icon",
+        "dropzone_description": "Drag and drop an image here, or click to browse. JPEG, PNG, or WebP, up to 5 MB.",
+        "steps": {
+          "creating": "Creating application…",
+          "uploading": "Uploading icon…"
+        },
+        "icon_failed": "The application was created, but the icon upload failed.",
+        "errors": {
+          "invalid_type": "Only JPEG, PNG, and WebP images are allowed.",
+          "too_large": "Image size must be less than 5 MB."
+        }
+      }
+    }
   },
   "profile": {
     "title": "Profile",
-    "description": "Manage the profile details connected apps see.",
     "setup_title": "Set up your profile",
     "setup_description": "Add the public details apps will use to recognize you.",
-    "identity_step": "Identity",
     "name": "Name",
     "gender": {
       "title": "Gender",
@@ -171,29 +190,22 @@
     "public": "Make profile public",
     "private_title": "Private profile",
     "edit": "Edit profile",
-    "picture": "Profile picture",
-    "picture_description": "Upload a photo to customize your public profile.",
     "upload_success": "Profile picture updated",
     "delete_success": "Profile picture removed",
     "errors": {
       "invalid_type": "Only JPEG, PNG, and WebP images are allowed.",
-      "too_large": "Image size must be less than 5 MB.",
-      "upload_failed": "Failed to upload profile picture.",
-      "delete_failed": "Failed to remove profile picture."
+      "too_large": "Image size must be less than 5 MB."
     }
   },
   "settings": {
     "title": "Settings",
-    "description": "Settings for your account",
     "account": {
       "title": "Account",
-      "description": "Your account identifiers.",
       "username": "Username",
       "email": "Email"
     },
     "security": {
       "title": "Security",
-      "description": "Security settings",
       "revoke": "Revoke",
       "revoked": "Revoked",
       "expires_at": "Expires at",
@@ -201,20 +213,15 @@
     },
     "session": {
       "title": "Sessions",
-      "description": "Manage and see your active sessions. Revoke any session you don't recognize.",
       "current_session": "Current session",
       "no_sessions": "No sessions found"
     },
     "connection": {
       "title": "Connections",
-      "description": "Apps that you are connected to",
       "no_connections": "No connections found"
     }
   },
-  "onboarding": {
-    "title": "Set up your profile",
-    "description": "Add the public details apps will use to recognize you."
-  },
+  "onboarding": {},
   "home": {
     "eyebrow": "One place for your account and connected apps",
     "title": "One account for your apps.",

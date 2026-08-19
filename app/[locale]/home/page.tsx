@@ -11,7 +11,7 @@ const Page: React.FC<DynamicPageProps> = async ({
   params
 }: DynamicPageProps): Promise<React.ReactNode> => {
   const { locale } = await params
-  await _authenticate(locale, `/${locale}/dashboard`)
+  await _authenticate(locale, `/${locale}/home`)
 
   const t = await getTranslations({
     namespace: 'dashboard',
@@ -21,9 +21,7 @@ const Page: React.FC<DynamicPageProps> = async ({
   return (
     <Section>
       <Container>
-        <Section title={t('title')} description={t('description')}>
-          Dashboard
-        </Section>
+        <Section title={t('title')}>Home</Section>
       </Container>
     </Section>
   )

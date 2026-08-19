@@ -50,7 +50,7 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
   const t = useTranslations('settings')
 
   return (
-    <Section title={t('session.title')} description={t('session.description')}>
+    <Section title={t('session.title')}>
       <Column className='gap-4'>
         {error && <ServiceError message={error} />}
 

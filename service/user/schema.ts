@@ -22,7 +22,8 @@ export const profileSchema = z.object({
     z.enum(['male', 'female']).optional()
   ),
   picture: z.string().nullable().optional(),
-  public: z.boolean().optional()
+  public: z.boolean().optional(),
+  dev: z.boolean().optional()
 })
 
 export type ProfileValues = z.infer<typeof profileSchema>

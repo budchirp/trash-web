@@ -36,7 +36,7 @@ export const OnboardingClientPage = ({
   const [step, setStep] = useState(0)
 
   const handleFinish = () => {
-    window.location.replace(redirectTo ?? `/${locale}${LINKS.dashboard}`)
+    window.location.replace(redirectTo ?? `/${locale}${LINKS.home}`)
   }
 
   const next = () => {

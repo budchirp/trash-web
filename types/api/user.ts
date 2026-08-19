@@ -3,6 +3,7 @@ export type Profile = {
   picture?: string | null
   gender?: 'male' | 'female'
   public?: boolean
+  dev?: boolean
 }
 
 export type User = {
@@ -17,15 +18,4 @@ export type User = {
 export type PublicUser = {
   username: string
   profile: Profile | null
-}
-
-export type ProfilePictureUploadRequest = {
-  content_type: string
-  content_length?: number
-}
-
-export type ProfilePictureUploadResponse = {
-  url: string
-  key: string
-  expires_at: string
 }

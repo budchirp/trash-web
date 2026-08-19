@@ -1,22 +1,18 @@
-import { S3Helper } from '@/lib/s3-helper'
+import { uploadFile } from '@/lib/file-upload'
 import { apiRequest } from '@/service/api'
 import { UserService } from '@/service/user'
 
 import type { AuthenticatedHeaders } from '@/types/api'
-import type {
-  ProfilePictureUploadRequest,
-  ProfilePictureUploadResponse,
-  User
-} from '@/types/api/user'
-
+import type { PresignedUploadRequest, PresignedUploadResponse } from '@/types/api/upload'
 import type { ServiceResponse } from '@trash-kit/core'
+import type { User } from '@/types/api/user'
 
 export class ProfilePictureService {
   public static async requestUpload(
-    values: ProfilePictureUploadRequest,
+    values: PresignedUploadRequest,
     headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<ProfilePictureUploadResponse>> {
-    return await apiRequest<ProfilePictureUploadResponse>({
+  ): Promise<ServiceResponse<PresignedUploadResponse>> {
+    return await apiRequest<PresignedUploadResponse>({
       method: 'POST',
       path: '/user/profile/picture',
       body: values,
@@ -38,28 +34,16 @@ export class ProfilePictureService {
     headers: AuthenticatedHeaders,
     onProgress?: (progress: number) => void
   ): Promise<ServiceResponse<User>> {
-    const presigned = await ProfilePictureService.requestUpload(
-      { content_type: file.type, content_length: file.size },
-      headers
+    const uploaded = await uploadFile(
+      file,
+      () =>
+        ProfilePictureService.requestUpload(
+          { content_type: file.type, content_length: file.size },
+          headers
+        ),
+      onProgress
     )
-    if (presigned.error) {
-      return {
-        error: true,
-        message: presigned.message,
-        status: presigned.status,
-        data: null
-      }
-    }
-
-    const upload = await S3Helper.upload(presigned.data.url, file, file.type, onProgress)
-    if (upload.error) {
-      return {
-        error: true,
-        message: upload.message,
-        status: upload.status,
-        data: null
-      }
-    }
+    if (uploaded.error) return uploaded
 
     return await UserService.get<User>(headers)
   }

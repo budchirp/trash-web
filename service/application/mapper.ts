@@ -4,7 +4,7 @@ export type ApplicationDto = {
   id: string
   name: string
   description: string
-  icon: string
+  icon: string | null
   created_at: string | null
 }
 

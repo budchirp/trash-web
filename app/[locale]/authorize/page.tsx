@@ -30,7 +30,7 @@ const Page: React.FC<DynamicPageProps> = async ({
 
   const { callback, id, permissions } = searchParams
 
-  const renderError = (message: string): React.ReactNode => (
+  const error = (message: string): React.ReactNode => (
     <Container className='max-w-lg!'>
       <Section title={t('title')}>
         <ServiceError message={message} />
@@ -38,13 +38,11 @@ const Page: React.FC<DynamicPageProps> = async ({
     </Container>
   )
 
-  if (!id || !callback || !permissions) return renderError(t('invalid_request'))
+  if (!id || !callback || !permissions) return error(t('invalid_request'))
 
   const application = await ApplicationService.get(id, { jwt, locale })
   if (application.error) {
-    if (application.status === 401) redirect(getSignInPath(redirectTo))
-
-    return renderError(application.message)
+    return error(application.message)
   }
 
   return (

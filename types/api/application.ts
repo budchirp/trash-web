@@ -4,7 +4,7 @@ export type Application = {
   name: string
   description: string
 
-  icon: string
+  icon: string | null
 
   createdAt: string | null
 }

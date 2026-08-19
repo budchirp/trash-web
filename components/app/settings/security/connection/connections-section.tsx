@@ -42,7 +42,7 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
   const t = useTranslations('settings')
 
   return (
-    <Section title={t('connection.title')} description={t('connection.description')}>
+    <Section title={t('connection.title')}>
       <Column className='gap-4'>
         {error && <ServiceError message={error} />}
 

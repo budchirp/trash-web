@@ -19,7 +19,7 @@ const Page: React.FC<DynamicPageProps> = async ({
 
   return (
     <Column>
-      <Section title={t('title')} description={t('description')}>
+      <Section title={t('title')}>
         <form>
           <AccountClientPage email={user.email} username={user.username} />
         </form>

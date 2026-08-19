@@ -30,4 +30,16 @@ export class FileUtil {
 
     return { valid: true }
   }
+
+  static formatSize(bytes: number): string {
+    if (bytes >= FileUtil.MAX_IMAGE_SIZE) {
+      return `${(bytes / FileUtil.MAX_IMAGE_SIZE).toFixed(1)} MB`
+    }
+
+    if (bytes >= 1024) {
+      return `${Math.round(bytes / 1024)} KB`
+    }
+
+    return `${bytes} B`
+  }
 }

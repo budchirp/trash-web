@@ -26,7 +26,7 @@ export class UserService {
   }
 
   public static async updateProfile<T = Profile>(
-    values: ProfileValues,
+    values: Partial<ProfileValues>,
     headers: AuthenticatedHeaders
   ): Promise<ServiceResponse<T>> {
     return await apiRequest<T>({ method: 'PATCH', path: '/user/profile', body: values, headers })

@@ -17,7 +17,7 @@ const ForbiddenPage: React.FC<DynamicPageProps> = async ({
 
   return (
     <CenteredPage title={t('title')} items={[t('description')]}>
-      <Link href={LINKS.dashboard}>
+      <Link href={LINKS.home}>
         <Button>{t('back')}</Button>
       </Link>
     </CenteredPage>
