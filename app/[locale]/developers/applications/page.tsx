@@ -1,16 +1,13 @@
 import type React from 'react'
 
-import { getTranslations } from 'next-intl/server'
-import { redirect } from 'next/navigation'
-
 import { ApplicationIcon } from '@/components/app/developers/application-icon'
 import { ServiceError } from '@/components/service-error'
-import { _authenticate } from '@/lib/auth'
-import { DateUtil } from '@/lib/date-util'
-import { Link } from '@/lib/i18n/routing'
-import { LINKS } from '@/lib/link'
-import { getSignInPath } from '@/lib/redirects'
+import { requireSession } from '@/lib/auth'
+import { Link, redirect } from '@/lib/i18n/navigation'
+import { getLocale, getTranslations } from 'next-intl/server'
+import { withRedirect } from '@/lib/redirect'
 import { ApplicationService } from '@/service/application'
+import { LINKS } from '@/lib/link'
 
 import {
   Box,
@@ -25,22 +22,22 @@ import {
   Text
 } from '@trash-kit/ui'
 
-import type { DynamicPageProps } from '@/types/app/page'
+const Page: React.FC = async (): Promise<React.ReactNode> => {
+  const { token, user } = await requireSession(LINKS.developers.applications)
 
-const Page: React.FC<DynamicPageProps> = async ({
-  params
-}: DynamicPageProps): Promise<React.ReactNode> => {
-  const { locale } = await params
-  const { jwt, user } = await _authenticate(locale, `/${locale}/developers/applications`)
+  if (!user.profile?.dev) {
+    redirect({ href: LINKS.developers.root, locale: await getLocale() })
+  }
 
-  if (!user.profile?.dev) redirect(`/${locale}/developers`)
+  const t = await getTranslations('developers.applications')
+  const t_common = await getTranslations('common')
 
-  const t = await getTranslations({ namespace: 'developers.applications', locale })
-  const t_common = await getTranslations({ namespace: 'common', locale })
-
-  const applications = await ApplicationService.getAll({ jwt, locale })
-  if ((applications as any).status === 401) {
-    redirect(getSignInPath(`/${locale}/developers/applications`))
+  const applications = await ApplicationService.getAll(token)
+  if (applications.error && applications.status === 401) {
+    redirect({
+      href: withRedirect(LINKS.auth.signIn, LINKS.developers.applications),
+      locale: await getLocale()
+    })
   }
 
   return (

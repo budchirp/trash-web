@@ -2,10 +2,9 @@
 
 import type React from 'react'
 
-import { Link } from '@/lib/i18n/routing'
 import { useTranslations } from 'next-intl'
 
-import { Button, Column, Field, Input, Label, Row } from '@trash-kit/ui'
+import { Column, Field, Input, Label } from '@trash-kit/ui'
 
 type AccountClientPageProps = {
   username: string

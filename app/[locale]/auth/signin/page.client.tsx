@@ -4,18 +4,17 @@ import type React from 'react'
 
 import { signInSchema, type SignInValues } from '@/service/session/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { SessionService } from '@/service/session'
 import { useCookies } from 'next-client-cookies'
 import { useForm } from 'react-hook-form'
-import { Link } from '@/lib/i18n/routing'
+import { Link } from '@/lib/i18n/navigation'
 import { UserService } from '@/service/user'
-import { AccountSession } from '@/lib/account-session'
+import { save } from '@/lib/session'
 import { CaptchaService } from '@/service/captcha'
 import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
-import { getRedirectQuery, getSignUpPath } from '@/lib/redirects'
+import { withRedirect } from '@/lib/redirect'
 import { LINKS } from '@/lib/link'
-import { handle } from '@/lib/handle-service'
 
 import {
   Button,
@@ -26,7 +25,8 @@ import {
   Input,
   Label,
   Row,
-  Section
+  Section,
+  toast
 } from '@trash-kit/ui'
 
 import { AccountSwitcher } from '@/components/app/settings/account/account-switcher'
@@ -45,7 +45,6 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
   accounts,
   token
 }: SignInClientPageProps): React.ReactNode => {
-  const locale = useLocale()
   const cookies = useCookies()
 
   const t = useTranslations('auth')
@@ -60,44 +59,44 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     resolver: zodResolver(signInSchema)
   })
 
-  const session = new AccountSession(cookies)
   const turnstileRef = useRef<TurnstileWidgetRef>(null)
 
   const onSubmit = async (values: SignInValues) => {
     const captcha = await CaptchaService.verify(values.captcha, 'signin')
-    if (handle(captcha)) {
+    if (captcha.error) {
       turnstileRef.current?.reset()
+      toast(captcha.message)
       return
     }
 
-    const payload = {
+    const response = await SessionService.create({
       email: values.email,
       password: values.password
-    }
-
-    const response = await SessionService.create(payload, { locale })
-    if (handle(response)) {
+    })
+    if (response.error) {
       turnstileRef.current?.reset()
+      toast(response.message)
       return
     }
 
-    const jwt = response.data.token
+    const token = response.data.token
 
-    const user = await UserService.get({ jwt, locale })
-    if (handle(user)) {
+    const user = await UserService.get(token)
+    if (user.error) {
       turnstileRef.current?.reset()
+      toast(user.message)
+      await SessionService.delete(null, token).catch(() => null)
       return
     }
 
-    session.set(jwt)
-    session.add(jwt)
+    save(cookies, token)
 
     if (!user.data?.profile?.name?.trim()) {
-      window.location.replace(`/${locale}${LINKS.onboarding}${getRedirectQuery(redirectTo)}`)
+      window.location.replace(withRedirect(LINKS.onboarding, redirectTo))
       return
     }
 
-    window.location.replace(redirectTo ?? `/${locale}${LINKS.home}`)
+    window.location.replace(redirectTo ?? LINKS.dashboard)
   }
 
   return (
@@ -115,7 +114,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
         <Section
           title={t('sign_in.title')}
           description={
-            <Link href={getSignUpPath(redirectTo)}>
+            <Link href={withRedirect(LINKS.auth.signUp, redirectTo)}>
               <Heading className='text-content-tertiary' size='h4'>
                 {t('sign_in.sign_up_link')}
               </Heading>

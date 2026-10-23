@@ -12,21 +12,20 @@ import { OnboardingRightPanel } from '@/components/app/onboarding/onboarding-rig
 import { ProfileForm } from '@/components/app/user/profile/profile-form'
 import { useLogout } from '@/lib/hooks/use-logout'
 import { LINKS } from '@/lib/link'
-import { useRouter } from 'next/navigation'
-import { useLocale, useTranslations } from 'next-intl'
+import { useRouter } from '@/lib/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 import { Column } from '@trash-kit/ui'
 
 type OnboardingClientPageProps = {
-  jwt: string
+  token: string
   redirectTo: string | null
 }
 
 export const OnboardingClientPage = ({
-  jwt,
+  token,
   redirectTo
 }: OnboardingClientPageProps): React.ReactNode => {
-  const locale = useLocale()
   const router = useRouter()
   const logout = useLogout()
 
@@ -36,7 +35,7 @@ export const OnboardingClientPage = ({
   const [step, setStep] = useState(0)
 
   const handleFinish = () => {
-    window.location.replace(redirectTo ?? `/${locale}${LINKS.home}`)
+    window.location.replace(redirectTo ?? LINKS.dashboard)
   }
 
   const next = () => {
@@ -68,11 +67,11 @@ export const OnboardingClientPage = ({
       description: t('setup_description'),
       render: ({ isLast, next }) => (
         <Column className='gap-8 items-center w-full'>
-          <Avatar jwt={jwt} className='size-32 md:size-40' />
+          <Avatar token={token} className='size-32 md:size-40' />
 
           <div className='w-full'>
             <ProfileForm
-              jwt={jwt}
+              token={token}
               submitLabel={isLast ? tCommon('submit') : tCommon('next')}
               onSuccess={() => {
                 next()
@@ -88,7 +87,7 @@ export const OnboardingClientPage = ({
   const isLastStep = step === steps.length - 1
 
   return (
-    <div className='relative isolate grid h-screen_ grid-rows-[auto_1fr] lg:grid-cols-2 lg:grid-rows-1'>
+    <div className='relative isolate grid h-screen grid-rows-[auto_1fr] lg:grid-cols-2 lg:grid-rows-1'>
       <OnboardingLeftPanel steps={steps} active={step} onBack={handleBack} />
 
       <OnboardingRightPanel>

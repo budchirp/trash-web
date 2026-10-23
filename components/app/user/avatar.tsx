@@ -2,14 +2,11 @@
 
 import type React from 'react'
 
-import { use } from 'react'
-
 import { IconBox, type IconBoxProps } from '@/components/icon-box'
-import { UserContext } from '@/context/user'
+import { useUser } from '@/context/user'
 import { useProfilePicture } from '@/lib/hooks/use-profile-picture'
-import { FileUtil } from '@/lib/file-util'
+import { IMAGE_TYPES } from '@/lib/file'
 import { Camera, Loader2, Trash, UserIcon } from 'lucide-react'
-import { useLocale } from 'next-intl'
 
 import { Button, Center, Heading, Row, Text, cn } from '@trash-kit/ui'
 
@@ -17,7 +14,7 @@ import type { User } from '@/types/api/user'
 
 type AvatarProps = {
   user?: User | null
-  jwt?: string
+  token?: string
   showUsername?: boolean
 
   className?: string
@@ -26,19 +23,17 @@ type AvatarProps = {
 
 export const Avatar: React.FC<AvatarProps> = ({
   user,
-  jwt,
+  token,
   showUsername = false,
   className = 'size-24',
   color = 'secondary'
 }): React.ReactNode => {
-  const { user: _user } = use(UserContext)
-  const locale = useLocale()
+  const { user: _user } = useUser()
 
   user = user ?? _user
 
   const { ref, picture, isLoading, progress, upload, remove } = useProfilePicture({
-    jwt,
-    locale,
+    token,
     src: user?.profile?.picture
   })
 
@@ -60,11 +55,11 @@ export const Avatar: React.FC<AvatarProps> = ({
 
   return (
     <Center className={cn('gap-2', showUsername && 'w-full')}>
-      {jwt && (
+      {token && (
         <input
           ref={ref}
           type='file'
-          accept={FileUtil.ALLOWED_IMAGE_TYPES.join(',')}
+          accept={IMAGE_TYPES.join(',')}
           className='hidden'
           onChange={handleFileChange}
         />
@@ -97,7 +92,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           </Center>
         )}
 
-        {jwt && (
+        {token && (
           <Center className='absolute inset-0 z-5 size-full rounded-full'>
             <Row className='absolute bottom-4 gap-2'>
               <Button type='button' onClick={handleUpload}>

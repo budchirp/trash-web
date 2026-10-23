@@ -5,7 +5,7 @@ import type React from 'react'
 import { useTranslations } from 'next-intl'
 import { Avatar } from '@/components/app/user/avatar'
 
-import { Box, BoxContent, Button, Column, Heading, Row, Text } from '@trash-kit/ui'
+import { Box, BoxContent, Button, Column, Heading, Row } from '@trash-kit/ui'
 
 import type { User } from '@/types/api/user'
 

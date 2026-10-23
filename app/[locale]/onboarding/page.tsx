@@ -1,30 +1,28 @@
 import type React from 'react'
 
 import { OnboardingClientPage } from './page.client'
-import { _authenticate } from '@/lib/auth'
-import { safeRedirectTo } from '@/lib/redirects'
+import { requireSession } from '@/lib/auth'
+import { sanitize, withRedirect } from '@/lib/redirect'
+import { redirect } from '@/lib/i18n/navigation'
+import { getLocale } from 'next-intl/server'
 import { LINKS } from '@/lib/link'
-import { redirect } from 'next/navigation'
 
 import type { DynamicPageProps } from '@/types/app/page'
 
 const Page: React.FC<DynamicPageProps> = async ({
-  params,
   searchParams
 }: DynamicPageProps): Promise<React.ReactNode> => {
-  const { locale } = await params
   const { redirectTo } = await searchParams
 
-  const url = safeRedirectTo(redirectTo)
-  const query = url ? `?redirectTo=${encodeURIComponent(url)}` : ''
+  const url = sanitize(redirectTo)
 
-  const { jwt, user } = await _authenticate(locale, `${LINKS.onboarding}${query}`)
+  const { token, user } = await requireSession(withRedirect(LINKS.onboarding, url))
 
   if (user.profile?.name?.trim()) {
-    redirect(url ?? `/${locale}${LINKS.home}`)
+    redirect({ href: url ?? LINKS.dashboard, locale: await getLocale() })
   }
 
-  return <OnboardingClientPage jwt={jwt} redirectTo={url} />
+  return <OnboardingClientPage token={token} redirectTo={url} />
 }
 
 export default Page

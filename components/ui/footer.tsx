@@ -6,7 +6,7 @@ import { SelectableLink } from '@/components/link'
 import { useTranslations } from 'next-intl'
 import { Logo } from '@/components/logo'
 
-import { BoxContent, Container, Divider, Row, Text } from '@trash-kit/ui'
+import { BoxContent, Container, Row } from '@trash-kit/ui'
 
 export const Footer: React.FC = (): React.ReactNode => {
   const t = useTranslations()

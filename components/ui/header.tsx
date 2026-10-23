@@ -1,7 +1,7 @@
 'use client'
 
 import type React from 'react'
-import { use, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Menu as MenuIcon, X } from 'lucide-react'
 import { Menu, MenuButton, MenuItems, Transition } from '@headlessui/react'
@@ -9,9 +9,9 @@ import { useTranslations } from 'next-intl'
 
 import { useLogout } from '@/lib/hooks/use-logout'
 import { SelectableLinks } from '@/components/link'
-import { UserContext } from '@/context/user'
+import { useUser } from '@/context/user'
 import { getDesktopNavLinks, getDrawerNavLinks, getUserMenuLinks, type NavLink } from '@/lib/link'
-import { usePathname } from '@/lib/i18n/routing'
+import { usePathname } from '@/lib/i18n/navigation'
 
 import { Logo } from '@/components/logo'
 import { Avatar } from '@/components/app/user/avatar'
@@ -167,7 +167,7 @@ type HeaderProps = {
 
 export const Header: React.FC<HeaderProps> = ({ accounts }) => {
   const t = useTranslations()
-  const { user } = use(UserContext)
+  const { user } = useUser()
   const logout = useLogout()
   const pathname = usePathname()
 

@@ -8,18 +8,18 @@ import { useTranslations } from 'next-intl'
 import { Container, Section } from '@trash-kit/ui'
 
 type NewApplicationClientPageProps = {
-  jwt: string
+  token: string
 }
 
 export const NewApplicationClientPage: React.FC<NewApplicationClientPageProps> = ({
-  jwt
+  token
 }: NewApplicationClientPageProps): React.ReactNode => {
   const t = useTranslations('developers.applications.new')
 
   return (
     <Container className='max-w-lg!'>
       <Section title={t('title')}>
-        <ApplicationForm jwt={jwt} />
+        <ApplicationForm token={token} />
       </Section>
     </Container>
   )

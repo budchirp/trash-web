@@ -4,18 +4,17 @@ import type React from 'react'
 
 import { signUpSchema, type SignUpValues } from '@/service/user/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { UserService } from '@/service/user'
 import { useForm } from 'react-hook-form'
 import { SessionService } from '@/service/session'
 import { useCookies } from 'next-client-cookies'
-import { Link } from '@/lib/i18n/routing'
-import { AccountSession } from '@/lib/account-session'
+import { Link, useRouter } from '@/lib/i18n/navigation'
+import { save } from '@/lib/session'
 import { CaptchaService } from '@/service/captcha'
 import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
-import { getRedirectQuery, getSignInPath } from '@/lib/redirects'
+import { withRedirect } from '@/lib/redirect'
 import { LINKS } from '@/lib/link'
-import { handle } from '@/lib/handle-service'
 import { useRef } from 'react'
 
 import {
@@ -29,7 +28,8 @@ import {
   Label,
   Row,
   Section,
-  Text
+  Text,
+  toast
 } from '@trash-kit/ui'
 
 type SignUpClientPageProps = {
@@ -39,10 +39,9 @@ type SignUpClientPageProps = {
 export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
   redirectTo
 }: SignUpClientPageProps): React.ReactNode => {
-  const locale = useLocale()
-
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
+  const router = useRouter()
 
   const {
     register,
@@ -54,42 +53,38 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
   })
 
   const cookies = useCookies()
-  const session = new AccountSession(cookies)
   const turnstileRef = useRef<TurnstileWidgetRef>(null)
 
   const onSubmit = async (values: SignUpValues) => {
     const captcha = await CaptchaService.verify(values.captcha, 'signup')
-    if (handle(captcha)) {
+    if (captcha.error) {
       turnstileRef.current?.reset()
+      toast(captcha.message)
       return
     }
 
-    const payload = {
+    const user = await UserService.create({
       email: values.email,
       username: values.username,
       password: values.password
-    }
-
-    const user = await UserService.create(payload, { locale })
-    if (handle(user)) {
+    })
+    if (user.error) {
       turnstileRef.current?.reset()
+      toast(user.message)
       return
     }
 
-    const response = await SessionService.create(
-      { email: values.email, password: values.password },
-      { locale }
-    )
-
-    if (handle(response)) {
+    const response = await SessionService.create({ email: values.email, password: values.password })
+    if (response.error) {
       turnstileRef.current?.reset()
+      toast(response.message)
+      router.replace(withRedirect(LINKS.auth.signIn, redirectTo))
       return
     }
 
-    session.set(response.data.token)
-    session.add(response.data.token)
+    save(cookies, response.data.token)
 
-    window.location.replace(`/${locale}${LINKS.onboarding}${getRedirectQuery(redirectTo)}`)
+    window.location.replace(withRedirect(LINKS.onboarding, redirectTo))
   }
 
   return (
@@ -98,7 +93,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
         <Section
           title={t('sign_up.title')}
           description={
-            <Link href={getSignInPath(redirectTo)}>
+            <Link href={withRedirect(LINKS.auth.signIn, redirectTo)}>
               <Heading className='text-content-tertiary' size='h4'>
                 {t('sign_up.sign_in_link')}
               </Heading>

@@ -1,19 +1,18 @@
 import { getRequestConfig } from 'next-intl/server'
-import { hasLocale } from 'next-intl'
 import { routing } from '@/lib/i18n/routing'
-import enMessages from '@/messages/en.json'
+import { locale } from 'next/root-params'
+import { hasLocale } from 'next-intl'
 
-const messagesByLocale: Record<string, any> = {
-  en: enMessages
-}
+import en from '@/messages/en.json'
 
-export default getRequestConfig(async ({ requestLocale }) => {
-  const requested = await requestLocale
-  const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
+const messagesByLocale = { en } as const
+
+export default getRequestConfig(async ({ locale: requested }) => {
+  const value = requested ?? (await locale().catch(() => null))
+  const localeValue = hasLocale(routing.locales, value) ? value : routing.defaultLocale
 
   return {
-    locale,
-    messages: messagesByLocale[locale] ?? enMessages
+    locale: localeValue,
+    messages: messagesByLocale[localeValue]
   }
 })
-

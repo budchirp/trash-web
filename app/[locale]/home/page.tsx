@@ -1,22 +1,15 @@
 import type React from 'react'
 
 import { getTranslations } from 'next-intl/server'
-import { _authenticate } from '@/lib/auth'
+import { requireSession } from '@/lib/auth'
+import { LINKS } from '@/lib/link'
 
 import { Container, Section } from '@trash-kit/ui'
 
-import type { DynamicPageProps } from '@/types/app/page'
+const Page: React.FC = async (): Promise<React.ReactNode> => {
+  await requireSession(LINKS.dashboard)
 
-const Page: React.FC<DynamicPageProps> = async ({
-  params
-}: DynamicPageProps): Promise<React.ReactNode> => {
-  const { locale } = await params
-  await _authenticate(locale, `/${locale}/home`)
-
-  const t = await getTranslations({
-    namespace: 'dashboard',
-    locale
-  })
+  const t = await getTranslations('dashboard')
 
   return (
     <Section>

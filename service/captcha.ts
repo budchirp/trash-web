@@ -1,11 +1,9 @@
+import type { ApiServiceResponse } from '@/service/api'
+
 export type CaptchaAction = 'signup' | 'signin'
 
-type CaptchaResponse =
-  | { error: false; message: string }
-  | { error: true; message: string; status: number }
-
-export class CaptchaService {
-  public static async verify(token: string, action: CaptchaAction): Promise<CaptchaResponse> {
+export const CaptchaService = {
+  async verify(token: string, action: CaptchaAction): Promise<ApiServiceResponse<null>> {
     try {
       const response = await fetch('/api/captcha', {
         method: 'POST',
@@ -23,16 +21,22 @@ export class CaptchaService {
         return {
           error: true,
           message: result?.message || 'Captcha verification failed',
-          status: response.status
+          status: response.status,
+          code: null,
+          details: null,
+          data: null
         }
       }
 
-      return { error: false, message: result?.message || '' }
+      return { error: false, message: result?.message || '', data: null }
     } catch {
       return {
         error: true,
         message: "We couldn't verify the captcha. Check your connection and try again.",
-        status: 500
+        status: 500,
+        code: null,
+        details: null,
+        data: null
       }
     }
   }

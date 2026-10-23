@@ -9,17 +9,17 @@ import { Avatar } from '@/components/app/user/avatar'
 import type { User } from '@/types/api/user'
 
 type ProfileEditClientPageProps = {
-  jwt: string
+  token: string
 
   user: User
 }
 
 export const ProfileEditClientPage: React.FC<ProfileEditClientPageProps> = ({
-  jwt
+  token
 }): React.ReactNode => {
   return (
-    <ProfileView avatar={<Avatar jwt={jwt} className='size-32 md:size-48' />}>
-      <ProfileForm jwt={jwt} />
+    <ProfileView avatar={<Avatar token={token} className='size-32 md:size-48' />}>
+      <ProfileForm token={token} />
     </ProfileView>
   )
 }

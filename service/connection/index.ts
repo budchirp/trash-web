@@ -1,50 +1,35 @@
-import { apiRequest } from '@/service/api'
+import { request, type ApiServiceResponse } from '@/service/api'
 
-import type { AuthenticatedHeaders } from '@/types/api'
 import { mapConnection, type ConnectionDto } from '@/service/connection/mapper'
 
-import type { ServiceResponse } from '@trash-kit/core'
 import type { Connection } from '@/types/api/connection'
 
-export class ConnectionService {
-  public static async connect<
-    T = {
-      token: string
-    }
-  >(
+export const ConnectionService = {
+  connect(
     applicationId: string,
     permissions: string[],
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<T>> {
-    return await apiRequest<T>({
+    token: string
+  ): Promise<ApiServiceResponse<{ token: string }>> {
+    return request<{ token: string }>({
       method: 'POST',
       path: '/connection/connect',
       body: { applicationId, permissions },
-      headers
+      token
     })
-  }
+  },
 
-  public static async getAll(
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<Connection[]>> {
-    const response = await apiRequest<ConnectionDto[]>({ path: '/connection/all', headers })
+  async getAll(token: string): Promise<ApiServiceResponse<Connection[]>> {
+    const response = await request<ConnectionDto[]>({ path: '/connection/all', token })
     if (response.error) return response
 
-    return {
-      error: false,
-      message: response.message,
-      data: response.data.map(mapConnection)
-    }
-  }
+    return { error: false, message: response.message, data: response.data.map(mapConnection) }
+  },
 
-  public static async delete(
-    tokenId: string,
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse> {
-    return await apiRequest({
+  delete(id: string, token: string): Promise<ApiServiceResponse> {
+    return request({
       method: 'DELETE',
-      path: `/connection/${encodeURIComponent(tokenId)}`,
-      headers,
+      path: `/connection/${encodeURIComponent(id)}`,
+      token,
       empty: true
     })
   }

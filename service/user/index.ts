@@ -1,34 +1,25 @@
-import { apiRequest } from '@/service/api'
+import { request, type ApiServiceResponse } from '@/service/api'
 
 import type { NewUserValues, ProfileValues } from '@/service/user/schema'
-import type { AuthenticatedHeaders, Headers } from '@/types/api'
 import type { Profile, PublicUser, User } from '@/types/api/user'
 
-import type { ServiceResponse } from '@trash-kit/core'
+export const UserService = {
+  create(values: NewUserValues): Promise<ApiServiceResponse> {
+    return request({ method: 'POST', path: '/user', body: values, empty: true })
+  },
 
-export class UserService {
-  public static async create(values: NewUserValues, headers: Headers): Promise<ServiceResponse> {
-    return await apiRequest({ method: 'POST', path: '/user', body: values, headers, empty: true })
-  }
+  get(token: string): Promise<ApiServiceResponse<User>> {
+    return request<User>({ path: '/user', token })
+  },
 
-  public static async get<T = User>(headers: AuthenticatedHeaders): Promise<ServiceResponse<T>> {
-    return await apiRequest<T>({ path: '/user', headers })
-  }
+  getByUsername(username: string, token: string): Promise<ApiServiceResponse<PublicUser>> {
+    return request<PublicUser>({ path: `/user/${encodeURIComponent(username)}`, token })
+  },
 
-  public static async getByUsername(
-    username: string,
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<PublicUser>> {
-    return await apiRequest<PublicUser>({
-      path: `/user/${encodeURIComponent(username)}`,
-      headers
-    })
-  }
-
-  public static async updateProfile<T = Profile>(
+  updateProfile(
     values: Partial<ProfileValues>,
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<T>> {
-    return await apiRequest<T>({ method: 'PATCH', path: '/user/profile', body: values, headers })
+    token: string
+  ): Promise<ApiServiceResponse<Profile>> {
+    return request<Profile>({ method: 'PATCH', path: '/user/profile', body: values, token })
   }
 }

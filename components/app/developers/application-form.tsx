@@ -3,15 +3,15 @@
 import type React from 'react'
 import { useState } from 'react'
 
-import { FileUtil } from '@/lib/file-util'
-import { handle } from '@/lib/handle-service'
+import { IMAGE_TYPES, size, validate } from '@/lib/file'
+import { handle } from '@/lib/handle'
 import { useObjectUrl } from '@/lib/hooks/use-object-url'
 import { LINKS } from '@/lib/link'
 import { ApplicationService } from '@/service/application'
 import { applicationSchema, type ApplicationValues } from '@/service/application/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, Loader2, Trash2 } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 
 import {
@@ -28,7 +28,7 @@ import {
 } from '@trash-kit/ui'
 
 type ApplicationFormProps = {
-  jwt: string
+  token: string
 }
 
 type SubmitStep = 'idle' | 'creating' | 'uploading'
@@ -61,10 +61,8 @@ const StepItem: React.FC<StepItemProps> = ({
 )
 
 export const ApplicationForm: React.FC<ApplicationFormProps> = ({
-  jwt
+  token
 }: ApplicationFormProps): React.ReactNode => {
-  const locale = useLocale()
-
   const t = useTranslations('developers.applications.new')
   const t_common = useTranslations('common')
 
@@ -93,7 +91,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const isPending = isSubmitting || isRedirecting
 
   const redirectToApplications = () => {
-    window.location.replace(`/${locale}${LINKS.developers.applications}`)
+    window.location.replace(LINKS.developers.applications)
   }
 
   const selectIcon = (file: File | null) => {
@@ -105,11 +103,9 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       return
     }
 
-    const validation = FileUtil.validatePicture(file)
-    if (!validation.valid) {
-      setIconError(
-        validation.error === 'too_large' ? t('errors.too_large') : t('errors.invalid_type')
-      )
+    const error = validate(file)
+    if (error) {
+      setIconError(error === 'too_large' ? t('errors.too_large') : t('errors.invalid_type'))
       return
     }
 
@@ -126,13 +122,13 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const onSubmit = async (values: ApplicationValues) => {
     setStep('creating')
 
-    const created = await ApplicationService.create(values, { jwt, locale })
+    const created = await ApplicationService.create(values, token)
 
     if (created.error) {
       setStep('idle')
 
       if (created.code === 'developer_program_required') {
-        window.location.replace(`/${locale}${LINKS.developers.root}`)
+        window.location.replace(LINKS.developers.root)
         return
       }
 
@@ -158,7 +154,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       const uploaded = await ApplicationService.uploadIcon(
         created.data.id,
         iconFile,
-        { jwt, locale },
+        token,
         setProgress
       )
 
@@ -222,9 +218,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 </div>
                 <Column className='grow'>
                   <Text>{iconFile.name}</Text>
-                  <Text className='text-sm text-content-tertiary'>
-                    {FileUtil.formatSize(iconFile.size)}
-                  </Text>
+                  <Text className='text-sm text-content-tertiary'>{size(iconFile.size)}</Text>
                 </Column>
                 <Button color='secondary' disabled={isPending} onClick={removeIcon} type='button'>
                   <Trash2 className='size-4' />
@@ -233,7 +227,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
               </Row>
             ) : (
               <DragAndDropFileField
-                accept={FileUtil.ALLOWED_IMAGE_TYPES.join(',')}
+                accept={IMAGE_TYPES.join(',')}
                 aria-label={t('icon')}
                 description={t('dropzone_description')}
                 disabled={isPending}

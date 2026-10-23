@@ -14,4 +14,3 @@ export const applicationSchema = z.object({
 })
 
 export type ApplicationValues = z.infer<typeof applicationSchema>
-export type ApplicationInputValues = z.input<typeof applicationSchema>

@@ -1,100 +1,77 @@
-import { uploadFile } from '@/lib/file-upload'
-import { apiRequest, type ApiServiceResponse } from '@/service/api'
-
-import type { AuthenticatedHeaders } from '@/types/api'
-import type { PresignedUploadRequest, PresignedUploadResponse } from '@/types/api/upload'
+import { upload } from '@/lib/file'
+import { request, type ApiServiceResponse } from '@/service/api'
 import { mapApplication, type ApplicationDto } from '@/service/application/mapper'
-import type { ApplicationValues } from '@/service/application/schema'
 
-import type { ServiceResponse } from '@trash-kit/core'
+import type { ApplicationValues } from '@/service/application/schema'
+import type { PresignedUploadRequest, PresignedUploadResponse } from '@/types/api/upload'
 import type { Application } from '@/types/api/application'
 
-export class ApplicationService {
-  public static async create(
-    values: ApplicationValues,
-    headers: AuthenticatedHeaders
-  ): Promise<ApiServiceResponse<Application>> {
-    const response = await apiRequest<ApplicationDto>({
+export const ApplicationService = {
+  async create(values: ApplicationValues, token: string): Promise<ApiServiceResponse<Application>> {
+    const response = await request<ApplicationDto>({
       method: 'POST',
       path: '/application',
       body: values,
-      headers
+      token
     })
     if (response.error) return response
 
-    return {
-      error: false,
-      message: response.message,
-      data: mapApplication(response.data)
-    }
-  }
+    return { error: false, message: response.message, data: mapApplication(response.data) }
+  },
 
-  public static async requestIconUpload(
+  requestIconUpload(
     id: string,
     values: PresignedUploadRequest,
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<PresignedUploadResponse>> {
-    return await apiRequest<PresignedUploadResponse>({
+    token: string
+  ): Promise<ApiServiceResponse<PresignedUploadResponse>> {
+    return request<PresignedUploadResponse>({
       method: 'POST',
       path: `/application/${encodeURIComponent(id)}/icon`,
       body: values,
-      headers
+      token
     })
-  }
+  },
 
-  public static async uploadIcon(
+  uploadIcon(
     id: string,
     file: File,
-    headers: AuthenticatedHeaders,
+    token: string,
     onProgress?: (progress: number) => void
-  ): Promise<ServiceResponse<null>> {
-    return await uploadFile(
+  ): Promise<ApiServiceResponse<null>> {
+    return upload(
       file,
       () =>
         ApplicationService.requestIconUpload(
           id,
           { content_type: file.type, content_length: file.size },
-          headers
+          token
         ),
       onProgress
     )
-  }
+  },
 
-  public static async get(
-    id: string,
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<Application>> {
-    const response = await apiRequest<ApplicationDto>({
+  async get(id: string, token: string): Promise<ApiServiceResponse<Application>> {
+    const response = await request<ApplicationDto>({
       path: `/application/${encodeURIComponent(id)}`,
-      headers
+      token
     })
     if (response.error) return response
 
-    return {
-      error: false,
-      message: response.message,
-      data: mapApplication(response.data)
-    }
-  }
+    return { error: false, message: response.message, data: mapApplication(response.data) }
+  },
 
-  public static async getAll(
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<Application[]>> {
-    const response = await apiRequest<ApplicationDto[]>({ path: '/application/all', headers })
+  async getAll(token: string): Promise<ApiServiceResponse<Application[]>> {
+    const response = await request<ApplicationDto[]>({ path: '/application/all', token })
     if (response.error) return response
 
-    return {
-      error: false,
-      message: response.message,
-      data: response.data.map(mapApplication)
-    }
-  }
+    return { error: false, message: response.message, data: response.data.map(mapApplication) }
+  },
 
-  public static async delete(id: string, headers: AuthenticatedHeaders): Promise<ServiceResponse> {
-    return await apiRequest({
+  delete(id: string, token: string): Promise<ApiServiceResponse> {
+    return request({
       method: 'DELETE',
       path: `/application/${encodeURIComponent(id)}`,
-      headers,
+      token,
       empty: true
     })
   }

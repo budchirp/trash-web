@@ -1,36 +1,45 @@
 'use client'
 
 import type React from 'react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 
-import { UserContext } from '@/context/user'
-import { handle } from '@/lib/handle-service'
+import { useUser } from '@/context/user'
+import { handle } from '@/lib/handle'
 import { ArrowRight } from 'lucide-react'
-import { Link } from '@/lib/i18n/routing'
+import { Link } from '@/lib/i18n/navigation'
 import { LINKS } from '@/lib/link'
 import { UserService } from '@/service/user'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 
-import { Box, BoxContent, Button, Column, Container, Heading, Row, Section, Text, toast } from '@trash-kit/ui'
+import {
+  Box,
+  BoxContent,
+  Button,
+  Column,
+  Container,
+  Heading,
+  Row,
+  Section,
+  Text,
+  toast
+} from '@trash-kit/ui'
 
 import type { User } from '@/types/api/user'
 
 type DevelopersClientPageProps = {
-  jwt: string
+  token: string
 
   user: User
 }
 
 export const DevelopersClientPage: React.FC<DevelopersClientPageProps> = ({
-  jwt,
+  token,
   user
 }: DevelopersClientPageProps): React.ReactNode => {
-  const locale = useLocale()
-
   const t = useTranslations('developers')
   const t_common = useTranslations('common')
 
-  const { user: currentUser, setUser } = useContext(UserContext)
+  const { user: currentUser, setUser } = useUser()
   const [isJoining, setIsJoining] = useState(false)
 
   const isDev = (currentUser ?? user).profile?.dev ?? false
@@ -40,7 +49,7 @@ export const DevelopersClientPage: React.FC<DevelopersClientPageProps> = ({
 
     setIsJoining(true)
 
-    const response = await UserService.updateProfile({ dev: true }, { jwt, locale })
+    const response = await UserService.updateProfile({ dev: true }, token)
 
     setIsJoining(false)
 
@@ -72,11 +81,7 @@ export const DevelopersClientPage: React.FC<DevelopersClientPageProps> = ({
                 <Text className='text-content-tertiary'>{t('gate.description')}</Text>
 
                 <Row className='w-full justify-end'>
-                  <Button
-                    disabled={isJoining}
-                    loading={isJoining}
-                    onClick={() => void join()}
-                  >
+                  <Button disabled={isJoining} loading={isJoining} onClick={() => void join()}>
                     {isJoining ? t_common('loading') : t_common('submit')}
                   </Button>
                 </Row>

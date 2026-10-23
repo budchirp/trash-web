@@ -1,50 +1,25 @@
-import { apiRequest } from '@/service/api'
+import { request, type ApiServiceResponse } from '@/service/api'
 
 import type { NewSessionValues } from '@/service/session/schemas'
 import { mapSession, type SessionDto } from '@/service/session/mapper'
-import type { AuthenticatedHeaders, Headers } from '@/types/api'
-import type { ServiceResponse } from '@trash-kit/core'
 import type { Session } from '@/types/api/session'
 
-export class SessionService {
-  public static async create<T = { token: string }>(
-    values: NewSessionValues,
-    headers: Headers
-  ): Promise<ServiceResponse<T>> {
-    return await apiRequest<T>({ method: 'POST', path: '/session', body: values, headers })
-  }
+type CreateSessionResponse = { token: string }
 
-  public static async get(
-    token: string | null,
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse> {
-    return await apiRequest({
-      path: token ? `/session/${encodeURIComponent(token)}` : '/session',
-      headers,
-      empty: true
-    })
-  }
+export const SessionService = {
+  create(values: NewSessionValues): Promise<ApiServiceResponse<CreateSessionResponse>> {
+    return request<CreateSessionResponse>({ method: 'POST', path: '/session', body: values })
+  },
 
-  public static async getAll(headers: AuthenticatedHeaders): Promise<ServiceResponse<Session[]>> {
-    const response = await apiRequest<SessionDto[]>({ path: '/session/all', headers })
+  async getAll(token: string): Promise<ApiServiceResponse<Session[]>> {
+    const response = await request<SessionDto[]>({ path: '/session/all', token })
     if (response.error) return response
 
-    return {
-      error: false,
-      message: response.message,
-      data: response.data.map(mapSession)
-    }
-  }
+    return { error: false, message: response.message, data: response.data.map(mapSession) }
+  },
 
-  public static async delete(
-    token: string | null,
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse> {
-    return await apiRequest({
-      method: 'DELETE',
-      path: token ? `/session/${encodeURIComponent(token)}` : '/session',
-      headers,
-      empty: true
-    })
+  delete(id: string | null, token: string): Promise<ApiServiceResponse> {
+    const path = id ? `/session/${encodeURIComponent(id)}` : '/session'
+    return request({ method: 'DELETE', path, token, empty: true })
   }
 }

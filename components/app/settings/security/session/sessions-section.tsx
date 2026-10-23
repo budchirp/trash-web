@@ -4,7 +4,7 @@ import type React from 'react'
 import { useEffect, useState } from 'react'
 
 import { SessionService } from '@/service/session'
-import { handle } from '@/lib/handle-service'
+import { handle } from '@/lib/handle'
 import { ServiceError } from '@/components/service-error'
 import { Column, Section, Text, toast } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
@@ -18,25 +18,25 @@ type DecodedToken = {
 }
 
 type SessionsSectionProps = {
-  jwt: string
+  token: string
 
   initialSessions: Session[]
   initialError?: string | null
 }
 
 export const SessionsSection: React.FC<SessionsSectionProps> = ({
-  jwt,
+  token,
   initialSessions,
   initialError
 }: SessionsSectionProps): React.ReactNode => {
   const [sessions, setSessions] = useState(initialSessions)
   const [error, setError] = useState(initialError ?? null)
 
-  const decoded = jsonwebtoken.decode(jwt)
+  const decoded = jsonwebtoken.decode(token)
   const tokenId = decoded && typeof decoded === 'object' ? (decoded as DecodedToken).id : undefined
 
   const fetchSessions = async () => {
-    const response = await SessionService.getAll({ jwt })
+    const response = await SessionService.getAll(token)
     if (handle(response, setError)) return
 
     setError(null)
@@ -62,7 +62,7 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
             onRevoke={async (session) => {
               if (session.token.id === tokenId) return
 
-              const response = await SessionService.delete(session.token.id, { jwt })
+              const response = await SessionService.delete(session.token.id, token)
               if (handle(response)) return
 
               toast(t('security.revoked'))

@@ -9,13 +9,13 @@ import { AccountSection } from '@/components/app/authorize/account-section'
 import { ConnectionService } from '@/service/connection'
 import { useTranslations } from 'next-intl'
 
-import { Button, Column, Container, Row, Section, toast, BoxContent, Box } from '@trash-kit/ui'
+import { Button, Column, Container, Section, toast } from '@trash-kit/ui'
 
 import type { Application } from '@/types/api/application'
 import type { User } from '@/types/api/user'
 
 type AuthorizeClientPageProps = {
-  jwt: string
+  token: string
   user: User
 
   callback: string
@@ -24,7 +24,7 @@ type AuthorizeClientPageProps = {
 }
 
 export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
-  jwt,
+  token,
   user,
   callback,
   application,
@@ -40,9 +40,11 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
 
     setLoading(true)
 
-    const { error, message, data } = await ConnectionService.connect(application.id, permissions, {
-      jwt
-    })
+    const { error, message, data } = await ConnectionService.connect(
+      application.id,
+      permissions,
+      token
+    )
 
     if (error) {
       toast(message)

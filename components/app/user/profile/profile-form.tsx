@@ -1,14 +1,12 @@
 'use client'
 
 import type React from 'react'
-import { useContext } from 'react'
-
-import { UserContext } from '@/context/user'
-import { handle } from '@/lib/handle-service'
+import { useUser } from '@/context/user'
+import { handle } from '@/lib/handle'
 import { UserService } from '@/service/user'
 import { profileSchema, type ProfileInputValues, type ProfileValues } from '@/service/user/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 
 import {
@@ -27,19 +25,17 @@ import {
 import type { User } from '@/types/api/user'
 
 type ProfileFormProps = {
-  jwt: string
+  token: string
   submitLabel?: string
   onSuccess?: (user: User) => void
 }
 
 export const ProfileForm: React.FC<ProfileFormProps> = ({
-  jwt,
+  token,
   submitLabel,
   onSuccess
 }: ProfileFormProps): React.ReactNode => {
-  const { user, setUser } = useContext(UserContext)
-
-  const locale = useLocale()
+  const { user, setUser } = useUser()
 
   const t = useTranslations('profile')
   const t_common = useTranslations('common')
@@ -65,7 +61,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
         gender: values.gender,
         public: values.public
       },
-      { jwt, locale }
+      token
     )
 
     if (handle(response)) return

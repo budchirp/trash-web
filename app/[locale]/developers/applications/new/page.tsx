@@ -1,20 +1,20 @@
 import type React from 'react'
 
-import { _authenticate } from '@/lib/auth'
-import { redirect } from 'next/navigation'
+import { requireSession } from '@/lib/auth'
+import { redirect } from '@/lib/i18n/navigation'
+import { getLocale } from 'next-intl/server'
 
-import type { DynamicPageProps } from '@/types/app/page'
+import { LINKS } from '@/lib/link'
 import { NewApplicationClientPage } from './page.client'
 
-const Page: React.FC<DynamicPageProps> = async ({
-  params
-}: DynamicPageProps): Promise<React.ReactNode> => {
-  const { locale } = await params
-  const { jwt, user } = await _authenticate(locale, `/${locale}/developers/applications/new`)
+const Page: React.FC = async (): Promise<React.ReactNode> => {
+  const { token, user } = await requireSession(LINKS.developers.newApplication)
 
-  if (!user.profile?.dev) redirect(`/${locale}/developers`)
+  if (!user.profile?.dev) {
+    redirect({ href: LINKS.developers.root, locale: await getLocale() })
+  }
 
-  return <NewApplicationClientPage jwt={jwt} />
+  return <NewApplicationClientPage token={token} />
 }
 
 export default Page

@@ -5,7 +5,7 @@ import type React from 'react'
 import { PermissionsSection } from '@/components/app/settings/security/permissions-section'
 import { ApplicationSection } from '@/components/app/authorize/application-section'
 import { useLocale, useTranslations } from 'next-intl'
-import { DateUtil } from '@/lib/date-util'
+import { format } from '@/lib/date'
 
 import { Box, BoxContent, Button, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
 
@@ -38,12 +38,12 @@ export const ConnectionBox: React.FC<ConnectionBoxProps> = ({
         <Column>
           <Row className='gap-1'>
             <Heading size='h4'>{t('security.created_at')}:</Heading>
-            <Text>{DateUtil.format(connection.createdAt, locale)}</Text>
+            <Text>{format(connection.createdAt, locale)}</Text>
           </Row>
 
           <Row className='gap-1'>
             <Heading size='h4'>{t('security.expires_at')}:</Heading>
-            <Text>{DateUtil.format(connection.token.expiresAt, locale)}</Text>
+            <Text>{format(connection.token.expiresAt, locale)}</Text>
           </Row>
         </Column>
       </BoxContent>

@@ -1,20 +1,16 @@
 import type React from 'react'
 
-import { _authenticate } from '@/lib/auth'
+import { requireSession } from '@/lib/auth'
 
-import type { DynamicPageProps } from '@/types/app/page'
 import { DevelopersClientPage } from './page.client'
 import { Section } from '@trash-kit/ui'
 
-const Page: React.FC<DynamicPageProps> = async ({
-  params
-}: DynamicPageProps): Promise<React.ReactNode> => {
-  const { locale } = await params
-  const { jwt, user } = await _authenticate(locale, `/${locale}/developers`)
+const Page: React.FC = async (): Promise<React.ReactNode> => {
+  const { token, user } = await requireSession('/developers')
 
   return (
     <Section>
-      <DevelopersClientPage jwt={jwt} user={user} />
+      <DevelopersClientPage token={token} user={user} />
     </Section>
   )
 }

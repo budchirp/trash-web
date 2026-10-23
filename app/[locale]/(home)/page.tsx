@@ -1,9 +1,9 @@
 import type React from 'react'
 
 import { getTranslations } from 'next-intl/server'
-import { Link } from '@/lib/i18n/routing'
+import { Link } from '@/lib/i18n/navigation'
 import { LINKS } from '@/lib/link'
-import { _public } from '@/lib/auth'
+import { requireAnonymous } from '@/lib/auth'
 
 import { ArrowRight, CheckCircle2, Database, KeyRound, ShieldCheck, UserRound } from 'lucide-react'
 
@@ -21,8 +21,6 @@ import {
   Tag,
   Grid
 } from '@trash-kit/ui'
-
-import type { DynamicPageProps } from '@/types/app/page'
 
 type Translate = Awaited<ReturnType<typeof getTranslations>>
 
@@ -301,12 +299,10 @@ const Cta: React.FC<{ t: Translate }> = ({ t }) => (
   </Section>
 )
 
-const Page: React.FC<DynamicPageProps> = async ({ params }) => {
-  const { locale } = await params
+const Page: React.FC = async () => {
+  await requireAnonymous()
 
-  await _public(locale)
-
-  const t = await getTranslations({ locale })
+  const t = await getTranslations()
 
   return (
     <Column>

@@ -5,7 +5,7 @@ import type React from 'react'
 import { Download, Globe, Laptop, Smartphone, Tablet } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { IconBox } from '@/components/icon-box'
-import { DateUtil } from '@/lib/date-util'
+import { format } from '@/lib/date'
 
 import { Box, BoxContent, Button, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
 
@@ -76,12 +76,12 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
         <Column>
           <Row className='gap-1'>
             <Heading size='h4'>{t('security.created_at')}:</Heading>
-            <Text>{DateUtil.format(session.createdAt, locale)}</Text>
+            <Text>{format(session.createdAt, locale)}</Text>
           </Row>
 
           <Row className='gap-1'>
             <Heading size='h4'>{t('security.expires_at')}:</Heading>
-            <Text>{DateUtil.format(session.token.expiresAt, locale)}</Text>
+            <Text>{format(session.token.expiresAt, locale)}</Text>
           </Row>
         </Column>
       </BoxContent>

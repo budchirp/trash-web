@@ -1,10 +1,10 @@
 'use client'
 
-import { use, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
-import { UserContext } from '@/context/user'
-import { FileUtil } from '@/lib/file-util'
-import { handle } from '@/lib/handle-service'
+import { useUser } from '@/context/user'
+import { handle } from '@/lib/handle'
+import { validate } from '@/lib/file'
 import { useObjectUrl } from '@/lib/hooks/use-object-url'
 import { ProfilePictureService } from '@/service/user/profile-picture'
 import { useTranslations } from 'next-intl'
@@ -12,20 +12,14 @@ import { useTranslations } from 'next-intl'
 import { toast } from '@trash-kit/ui'
 
 type UseProfilePictureProps = {
-  jwt?: string
-  locale?: string
+  token?: string
   src?: string | null
   onPictureChange?: (url: string | null) => void
 }
 
-export const useProfilePicture = ({
-  jwt,
-  locale,
-  src,
-  onPictureChange
-}: UseProfilePictureProps) => {
+export const useProfilePicture = ({ token, src, onPictureChange }: UseProfilePictureProps) => {
   const t = useTranslations('profile')
-  const { user, setUser } = use(UserContext)
+  const { user, setUser } = useUser()
 
   const ref = useRef<HTMLInputElement>(null)
   const { url: localPicture, setFile: setLocalFile } = useObjectUrl()
@@ -43,16 +37,16 @@ export const useProfilePicture = ({
   const upload = async (file: File | null) => {
     if (!file || isLoading) return
 
-    const validation = FileUtil.validatePicture(file)
-    if (!validation.valid) {
-      toast(validation.error === 'too_large' ? t('errors.too_large') : t('errors.invalid_type'))
+    const error = validate(file)
+    if (error) {
+      toast(error === 'too_large' ? t('errors.too_large') : t('errors.invalid_type'))
       if (ref.current) ref.current.value = ''
       return
     }
 
     const objectUrl = setLocalFile(file)
 
-    if (!jwt) {
+    if (!token) {
       onPictureChange?.(objectUrl)
       return
     }
@@ -60,7 +54,7 @@ export const useProfilePicture = ({
     setIsLoading(true)
     setProgress(0)
 
-    const response = await ProfilePictureService.upload(file, { jwt, locale }, setProgress)
+    const response = await ProfilePictureService.upload(file, token, setProgress)
 
     reset()
     setIsLoading(false)
@@ -78,10 +72,10 @@ export const useProfilePicture = ({
   const remove = async () => {
     if (picture == null || isLoading) return
 
-    if (jwt) {
+    if (token) {
       setIsLoading(true)
 
-      const response = await ProfilePictureService.delete({ jwt, locale })
+      const response = await ProfilePictureService.delete(token)
 
       setIsLoading(false)
 

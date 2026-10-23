@@ -5,7 +5,7 @@ import type React from 'react'
 import { ProfileView } from '@/components/app/user/profile/profile-view'
 import { Avatar } from '@/components/app/user/avatar'
 import { useTranslations } from 'next-intl'
-import { Link } from '@/lib/i18n/routing'
+import { Link } from '@/lib/i18n/navigation'
 import { LINKS } from '@/lib/link'
 
 import { Button, Row, Heading } from '@trash-kit/ui'

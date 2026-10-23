@@ -1,7 +1,6 @@
 import type React from 'react'
 
-import { usePathname } from '@/lib/i18n/routing'
-import Link from 'next/link'
+import { Link, usePathname } from '@/lib/i18n/navigation'
 
 import { Box, BoxContent, cn, Column, Row } from '@trash-kit/ui'
 

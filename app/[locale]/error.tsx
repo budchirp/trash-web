@@ -3,7 +3,7 @@
 import type React from 'react'
 
 import { CenteredPage } from '@/components/vertical-page'
-import { MetadataManager } from '@/lib/metadata-manager'
+import { createMetadata } from '@/lib/metadata'
 import { useTranslations } from 'next-intl'
 
 import { Button } from '@trash-kit/ui'
@@ -21,6 +21,6 @@ const ErrorPage: React.FC<ErrorProps> = ({ error, reset }: ErrorProps): React.Re
   )
 }
 
-export const metadata: Metadata = MetadataManager.generate('Error', '500')
+export const metadata: Metadata = createMetadata('Error', '500')
 
 export default ErrorPage

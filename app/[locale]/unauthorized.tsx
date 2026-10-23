@@ -1,8 +1,8 @@
 import type React from 'react'
 
 import { CenteredPage } from '@/components/vertical-page'
-import { MetadataManager } from '@/lib/metadata-manager'
-import { Link } from '@/lib/i18n/routing'
+import { createMetadata } from '@/lib/metadata'
+import { Link } from '@/lib/i18n/navigation'
 import { LINKS } from '@/lib/link'
 
 import { Button } from '@trash-kit/ui'
@@ -20,6 +20,6 @@ const UnauthorizedPage: React.FC<ErrorProps> = (): React.ReactNode => {
   )
 }
 
-export const metadata: Metadata = MetadataManager.generate('Unauthorized', '401')
+export const metadata: Metadata = createMetadata('Unauthorized', '401')
 
 export default UnauthorizedPage

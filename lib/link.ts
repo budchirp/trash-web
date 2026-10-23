@@ -1,5 +1,3 @@
-import type { _Translator as Translator } from 'next-intl'
-
 import type { User } from '@/types/api/user'
 
 export const LINKS = {
@@ -35,7 +33,9 @@ export type NavLink = {
   url: string
 }
 
-export const getUserMenuLinks = (t: Translator, user: User): NavLink[] => [
+type Translate = (...args: any[]) => string
+
+export const getUserMenuLinks = (t: Translate, user: User): NavLink[] => [
   {
     label: t('profile.title'),
     url: LINKS.user.profile(user.username)
@@ -46,11 +46,7 @@ export const getUserMenuLinks = (t: Translator, user: User): NavLink[] => [
   }
 ]
 
-export const getDesktopNavLinks = (
-  t: Translator,
-  user: User | null,
-  isHome: boolean
-): NavLink[] => {
+export const getDesktopNavLinks = (t: Translate, user: User | null, isHome: boolean): NavLink[] => {
   if (user) {
     return [
       {
@@ -70,7 +66,7 @@ export const getDesktopNavLinks = (
   ]
 }
 
-export const getDrawerNavLinks = (t: Translator, user: User | null, isHome: boolean): NavLink[] => {
+export const getDrawerNavLinks = (t: Translate, user: User | null, isHome: boolean): NavLink[] => {
   if (!user) return getDesktopNavLinks(t, null, isHome)
 
   return [
@@ -82,7 +78,7 @@ export const getDrawerNavLinks = (t: Translator, user: User | null, isHome: bool
   ]
 }
 
-export const getSettingsLinks = (t: Translator): NavLink[] => [
+export const getSettingsLinks = (t: Translate): NavLink[] => [
   {
     label: t('settings.account.title'),
     url: LINKS.settings.account

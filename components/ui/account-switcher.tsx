@@ -8,10 +8,10 @@ import { Transition } from '@headlessui/react'
 import { useCookies } from 'next-client-cookies'
 import { useTranslations } from 'next-intl'
 
-import { AccountSession } from '@/lib/account-session'
+import { Link, usePathname } from '@/lib/i18n/navigation'
+import { withRedirect } from '@/lib/redirect'
+import { save } from '@/lib/session'
 import { LINKS } from '@/lib/link'
-import { getSignInPath } from '@/lib/redirects'
-import { Link, usePathname } from '@/lib/i18n/routing'
 
 import { Avatar } from '@/components/app/user/avatar'
 
@@ -54,11 +54,9 @@ type AccountSwitcherProps = {
 
 const AccountSwitcher: React.FC<AccountSwitcherProps> = ({ accounts, user }) => {
   const cookies = useCookies()
-  const accountSession = new AccountSession(cookies)
 
   const switchAccount = (account: SavedAccount): void => {
-    accountSession.set(account.token)
-    accountSession.add(account.token)
+    save(cookies, account.token)
     window.location.reload()
   }
 
@@ -103,7 +101,7 @@ const AddAccountButton: React.FC = (): React.ReactNode => {
   const pathname = usePathname()
 
   return (
-    <Link href={getSignInPath(pathname)} className='block w-full'>
+    <Link href={withRedirect(LINKS.auth.signIn, pathname)} className='block w-full'>
       <Button color='secondary' className='w-full justify-center'>
         {t('account.add_account')}
       </Button>

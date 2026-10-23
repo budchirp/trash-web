@@ -4,7 +4,8 @@ import type React from 'react'
 
 import { AccountCard } from '../settings/account/account-card'
 import { useTranslations } from 'next-intl'
-import { getCurrentRedirect, getSignInPath } from '@/lib/redirects'
+import { currentPath, withRedirect } from '@/lib/redirect'
+import { LINKS } from '@/lib/link'
 
 import { Button, Column, Row, Section } from '@trash-kit/ui'
 
@@ -30,7 +31,7 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
           <Button
             color='primary'
             onClick={() => {
-              window.location.replace(getSignInPath(getCurrentRedirect()))
+              window.location.replace(withRedirect(LINKS.auth.signIn, currentPath()))
             }}
           >
             {t('use_another_account')}

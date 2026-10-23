@@ -1,50 +1,48 @@
-import { uploadFile } from '@/lib/file-upload'
-import { apiRequest } from '@/service/api'
+import { upload } from '@/lib/file'
+import { request, type ApiServiceResponse } from '@/service/api'
 import { UserService } from '@/service/user'
 
-import type { AuthenticatedHeaders } from '@/types/api'
 import type { PresignedUploadRequest, PresignedUploadResponse } from '@/types/api/upload'
-import type { ServiceResponse } from '@trash-kit/core'
 import type { User } from '@/types/api/user'
 
-export class ProfilePictureService {
-  public static async requestUpload(
+export const ProfilePictureService = {
+  requestUpload(
     values: PresignedUploadRequest,
-    headers: AuthenticatedHeaders
-  ): Promise<ServiceResponse<PresignedUploadResponse>> {
-    return await apiRequest<PresignedUploadResponse>({
+    token: string
+  ): Promise<ApiServiceResponse<PresignedUploadResponse>> {
+    return request<PresignedUploadResponse>({
       method: 'POST',
       path: '/user/profile/picture',
       body: values,
-      headers
+      token
     })
-  }
+  },
 
-  public static async delete(headers: AuthenticatedHeaders): Promise<ServiceResponse<null>> {
-    return await apiRequest<null>({
+  delete(token: string): Promise<ApiServiceResponse<null>> {
+    return request<null>({
       method: 'DELETE',
       path: '/user/profile/picture',
-      headers,
+      token,
       empty: true
     })
-  }
+  },
 
-  public static async upload(
+  async upload(
     file: File,
-    headers: AuthenticatedHeaders,
+    token: string,
     onProgress?: (progress: number) => void
-  ): Promise<ServiceResponse<User>> {
-    const uploaded = await uploadFile(
+  ): Promise<ApiServiceResponse<User>> {
+    const result = await upload(
       file,
       () =>
         ProfilePictureService.requestUpload(
           { content_type: file.type, content_length: file.size },
-          headers
+          token
         ),
       onProgress
     )
-    if (uploaded.error) return uploaded
+    if (result.error) return result
 
-    return await UserService.get<User>(headers)
+    return UserService.get(token)
   }
 }

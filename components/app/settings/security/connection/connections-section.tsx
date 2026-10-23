@@ -4,7 +4,7 @@ import type React from 'react'
 import { useEffect, useState } from 'react'
 
 import { ConnectionService } from '@/service/connection'
-import { handle } from '@/lib/handle-service'
+import { handle } from '@/lib/handle'
 import { ServiceError } from '@/components/service-error'
 import { Box, BoxContent, Column, Section, Text, toast } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
@@ -13,14 +13,14 @@ import { ConnectionBox } from './connection-box'
 import type { Connection } from '@/types/api/connection'
 
 type ConnectionsSectionProps = {
-  jwt: string
+  token: string
 
   initialConnections: Connection[]
   initialError?: string | null
 }
 
 export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
-  jwt,
+  token,
   initialConnections,
   initialError
 }: ConnectionsSectionProps): React.ReactNode => {
@@ -28,7 +28,7 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
   const [error, setError] = useState(initialError ?? null)
 
   const fetchConnections = async () => {
-    const response = await ConnectionService.getAll({ jwt })
+    const response = await ConnectionService.getAll(token)
     if (handle(response, setError)) return
 
     setError(null)
@@ -51,9 +51,7 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
             key={connection.token.id}
             connection={connection}
             onRevoke={async (connection) => {
-              const response = await ConnectionService.delete(connection.token.id, {
-                jwt
-              })
+              const response = await ConnectionService.delete(connection.token.id, token)
               if (handle(response)) return
 
               toast(t('security.revoked'))

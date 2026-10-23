@@ -1,6 +1,5 @@
 import { CONSTANTS } from '@/lib/constants'
-
-import type { Headers } from '@/types/api'
+import { routing } from '@/lib/i18n/routing'
 
 export type ApiServiceResponse<T = null> =
   | { error: false; message: string; data: T }
@@ -13,76 +12,39 @@ export type ApiServiceResponse<T = null> =
       data: null
     }
 
-type ApiResponse<T> = {
-  error?: boolean
-  code?: string
-  message?: string
-  data?: T
-}
-
-type RequestHeaders = Headers & {
-  jwt?: string
-}
-
 type ApiRequestOptions = {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   path: string
-  headers?: RequestHeaders
+  token?: string
   body?: object | FormData
   empty?: boolean
 }
 
-const requestHeaders = (headers?: RequestHeaders, body?: object | FormData): HeadersInit => ({
-  ...(body && !(body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
-  ...(headers?.jwt ? { Authorization: `Bearer ${headers.jwt}` } : {}),
-  ...(headers?.locale ? { 'Accept-Language': headers.locale } : {})
-})
-
-const parseResponse = async <T>(response: Response): Promise<ApiResponse<T> | null> => {
-  const text = await response.text()
-  if (!text) return null
-
-  return JSON.parse(text) as ApiResponse<T>
-}
-
-const parseErrorDetails = (data: unknown): Record<string, string> | null => {
-  if (typeof data !== 'object' || data === null || Array.isArray(data)) return null
-
-  const details: Record<string, string> = {}
-  for (const [key, value] of Object.entries(data)) {
-    if (typeof value !== 'string') return null
-
-    details[key] = value
-  }
-
-  return details
-}
-
-const parseErrorResponse = <T>(json: ApiResponse<T> | null, status: number) => ({
-  error: true as const,
-  message: json?.message || 'Request failed',
-  status,
-  code: json?.code ?? null,
-  details: json?.code === 'validation_failed' ? parseErrorDetails(json?.data) : null,
-  data: null
-})
-
-export const apiRequest = async <T = null>({
+export const request = async <T = null>({
   method = 'GET',
   path,
-  headers,
+  token,
   body,
   empty = false
 }: ApiRequestOptions): Promise<ApiServiceResponse<T>> => {
   try {
     const response = await fetch(`${CONSTANTS.API_URL}${path}`, {
       method,
-      headers: requestHeaders(headers, body),
+      headers: {
+        ...(body && !(body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        'Accept-Language': routing.defaultLocale
+      },
       body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
       cache: 'no-store'
     })
 
-    const json = await parseResponse<T>(response)
+    const json = (await response.json().catch(() => null)) as {
+      error?: boolean
+      code?: string
+      message?: string
+      data?: T
+    } | null
 
     if (response.ok && !json?.error) {
       if (!empty && json?.data === undefined) {
@@ -103,7 +65,24 @@ export const apiRequest = async <T = null>({
       }
     }
 
-    return parseErrorResponse(json, response.status)
+    const data = json?.data
+    const details =
+      json?.code === 'validation_failed' &&
+      typeof data === 'object' &&
+      data !== null &&
+      !Array.isArray(data) &&
+      Object.values(data).every((value) => typeof value === 'string')
+        ? (data as Record<string, string>)
+        : null
+
+    return {
+      error: true,
+      message: json?.message || 'Request failed',
+      status: response.status,
+      code: json?.code ?? null,
+      details,
+      data: null
+    }
   } catch {
     return {
       error: true,
