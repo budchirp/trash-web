@@ -37,7 +37,7 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
         )}
       >
         <BoxContent
-          padding={box ? 'default' : 'none'}
+          padding={box ? 'md' : 'none'}
           className={cn(
             'text-lg text-content-primary',
             !box && 'text-content-tertiary hover:text-content-primary',

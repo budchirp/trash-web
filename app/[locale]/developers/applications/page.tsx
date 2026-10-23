@@ -1,7 +1,6 @@
 import type React from 'react'
 
 import { ApplicationIcon } from '@/components/app/developers/application-icon'
-import { ServiceError } from '@/components/service-error'
 import { requireSession } from '@/lib/auth'
 import { Link, redirect } from '@/lib/i18n/navigation'
 import { getLocale, getTranslations } from 'next-intl/server'
@@ -10,6 +9,7 @@ import { ApplicationService } from '@/service/application'
 import { LINKS } from '@/lib/link'
 
 import {
+  Alert,
   Box,
   BoxContent,
   Button,
@@ -55,7 +55,7 @@ const Page: React.FC = async (): Promise<React.ReactNode> => {
           }
         >
           {applications.error ? (
-            <ServiceError message={applications.message} />
+            <Alert color='danger' description={applications.message} />
           ) : (
             <Grid className='gap-4'>
               {applications.data.length === 0 ? (

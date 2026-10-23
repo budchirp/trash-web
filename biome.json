@@ -10,6 +10,11 @@
   "files": {
     "includes": ["**", "!**/node_modules/", "!**/.next/"]
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {

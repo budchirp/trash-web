@@ -13,9 +13,18 @@ import { withRedirect } from '@/lib/redirect'
 import { save } from '@/lib/session'
 import { LINKS } from '@/lib/link'
 
-import { Avatar } from '@/components/app/user/avatar'
-
-import { Box, BoxContent, Button, cn, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
+import {
+  Avatar,
+  Box,
+  BoxContent,
+  Button,
+  cn,
+  Column,
+  Divider,
+  Heading,
+  Row,
+  Text
+} from '@trash-kit/ui'
 
 import type { SavedAccount } from '@/types/app/account'
 import type { User } from '@/types/api/user'
@@ -23,19 +32,23 @@ import type { User } from '@/types/api/user'
 const PANEL_WIDTH = 288
 const PANEL_GAP = 8
 
-const AccountSummary: React.FC<{ user: User }> = ({ user }) => (
-  <Row className='min-w-0 items-start gap-3'>
-    <Avatar user={user} className='size-12 shrink-0' />
+const AccountSummary: React.FC<{ user: User }> = ({ user }) => {
+  const name = user.profile?.name?.trim() || user.username
 
-    <Column className='min-w-0'>
-      <Heading size='h3' className='truncate font-semibold'>
-        {user.profile?.name?.trim() || user.username}
-      </Heading>
+  return (
+    <Row className='min-w-0 items-start gap-3'>
+      <Avatar className='shrink-0' name={name} size='lg' src={user.profile?.picture ?? undefined} />
 
-      <Text className='truncate text-content-tertiary'>@{user.username}</Text>
-    </Column>
-  </Row>
-)
+      <Column className='min-w-0'>
+        <Heading size='h3' className='truncate font-semibold'>
+          {name}
+        </Heading>
+
+        <Text className='truncate text-content-tertiary'>@{user.username}</Text>
+      </Column>
+    </Row>
+  )
+}
 
 const AccountInfo: React.FC<{ user: User; current: boolean }> = ({ user, current }) => (
   <Row className='min-w-0 items-center justify-between gap-3'>

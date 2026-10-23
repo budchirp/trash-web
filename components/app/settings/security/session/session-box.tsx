@@ -4,10 +4,19 @@ import type React from 'react'
 
 import { Download, Globe, Laptop, Smartphone, Tablet } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
-import { IconBox } from '@/components/icon-box'
 import { format } from '@/lib/date'
 
-import { Box, BoxContent, Button, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
+import {
+  Box,
+  BoxContent,
+  Button,
+  Column,
+  Divider,
+  Heading,
+  IconBox,
+  Row,
+  Text
+} from '@trash-kit/ui'
 
 import type { Session } from '@/types/api/session'
 
@@ -30,15 +39,11 @@ export const SessionBox: React.FC<SessionBoxProps> = ({
     <Box color='secondary'>
       <BoxContent>
         <Row className='gap-3 w-full'>
-          <IconBox
-            className='size-12'
-            color='accent'
-            icon={
-              (session.device.platform === 'MOBILE' && <Smartphone />) ||
+          <IconBox color='accent' size='lg'>
+            {(session.device.platform === 'MOBILE' && <Smartphone />) ||
               (session.device.platform === 'DESKTOP' && <Laptop />) ||
-              (session.device.platform === 'TABLET' && <Tablet />)
-            }
-          />
+              (session.device.platform === 'TABLET' && <Tablet />)}
+          </IconBox>
 
           <Row className='gap-2 w-full grow items-start md:items-center'>
             <Column className='grow gap-1'>

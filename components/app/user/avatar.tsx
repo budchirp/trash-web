@@ -2,13 +2,21 @@
 
 import type React from 'react'
 
-import { IconBox, type IconBoxProps } from '@/components/icon-box'
 import { useUser } from '@/context/user'
 import { useProfilePicture } from '@/lib/hooks/use-profile-picture'
 import { IMAGE_TYPES } from '@/lib/file'
-import { Camera, Loader2, Trash, UserIcon } from 'lucide-react'
+import { Camera, Trash } from 'lucide-react'
 
-import { Button, Center, Heading, Row, Text, cn } from '@trash-kit/ui'
+import {
+  Avatar as UiAvatar,
+  Button,
+  Center,
+  Heading,
+  Row,
+  Spinner,
+  Text,
+  cn
+} from '@trash-kit/ui'
 
 import type { User } from '@/types/api/user'
 
@@ -18,15 +26,13 @@ type AvatarProps = {
   showUsername?: boolean
 
   className?: string
-  color?: IconBoxProps['color']
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
   user,
   token,
   showUsername = false,
-  className = 'size-24',
-  color = 'secondary'
+  className = 'size-24'
 }): React.ReactNode => {
   const { user: _user } = useUser()
 
@@ -38,8 +44,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   })
 
   const name = user?.profile?.name ?? user?.username
-
-  const initials = getInitials(name)
 
   const handleUpload = (): void => {
     ref.current?.click()
@@ -66,25 +70,17 @@ export const Avatar: React.FC<AvatarProps> = ({
       )}
 
       <div className='relative'>
-        <IconBox
-          className={cn(picture ? 'p-0' : 'p-1', className)}
-          color={picture != null ? 'primary' : color}
-          icon={
-            picture ? (
-              <img src={picture} alt={name ?? ''} className='size-full rounded-full object-cover' />
-            ) : initials ? (
-              <span className='font-bold uppercase select-none text-content-primary tracking-wider text-sm md:text-base'>
-                {initials}
-              </span>
-            ) : (
-              <UserIcon className='size-1/2 text-content-tertiary' />
-            )
-          }
+        <UiAvatar
+          className={cn(className, '[&>div]:size-full')}
+          size='xl'
+          src={picture ?? undefined}
+          alt={name}
+          name={name}
         />
 
         {isLoading && (
           <Center className='absolute inset-0 z-10 size-full rounded-full bg-surface-accent/10 backdrop-blur-sm'>
-            <Loader2 className='size-6 animate-spin text-content-primary' />
+            <Spinner className='size-6 text-content-primary' />
 
             <Text className='absolute bottom-4 text-sm font-semibold tabular-nums text-content-tertiary'>
               {progress}%
@@ -112,18 +108,4 @@ export const Avatar: React.FC<AvatarProps> = ({
       {showUsername && <Heading size='h3'>{name}</Heading>}
     </Center>
   )
-}
-
-const getInitials = (str?: string | null): string => {
-  if (!str?.trim()) return ''
-
-  str = str.trim()
-
-  const parts = str.split(/\s+/)
-
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-  }
-
-  return str.slice(0, 2).toUpperCase()
 }

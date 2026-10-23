@@ -5,8 +5,7 @@ import { useEffect, useState } from 'react'
 
 import { SessionService } from '@/service/session'
 import { handle } from '@/lib/handle'
-import { ServiceError } from '@/components/service-error'
-import { Column, Section, Text, toast } from '@trash-kit/ui'
+import { Alert, Column, Section, Text, toast } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
 import { SessionBox } from './session-box'
 import jsonwebtoken from 'jsonwebtoken'
@@ -52,7 +51,7 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
   return (
     <Section title={t('session.title')}>
       <Column className='gap-4'>
-        {error && <ServiceError message={error} />}
+        {error && <Alert color='danger' description={error} />}
 
         {sessions?.map((session) => (
           <SessionBox

@@ -10,7 +10,7 @@ import { LINKS } from '@/lib/link'
 import { ApplicationService } from '@/service/application'
 import { applicationSchema, type ApplicationValues } from '@/service/application/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, Loader2, Trash2 } from 'lucide-react'
+import { Check, Trash2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 
@@ -21,7 +21,9 @@ import {
   Field,
   Input,
   Label,
+  Progress,
   Row,
+  Spinner,
   Text,
   cn,
   toast
@@ -52,7 +54,7 @@ const StepItem: React.FC<StepItemProps> = ({
     {done ? (
       <Check className='size-4 text-content-tertiary' />
     ) : active ? (
-      <Loader2 className='size-4 animate-spin' />
+      <Spinner size='sm' />
     ) : (
       <span aria-hidden='true' className='size-4 rounded-full border-2 border-outline' />
     )}
@@ -161,7 +163,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       setProgress(null)
 
       if (uploaded.error) {
-        toast(`${t('icon_failed')} ${uploaded.message}`)
+        toast(t('icon_failed'), { description: uploaded.message, color: 'danger' })
         setStep('idle')
         setIsRedirecting(true)
         setTimeout(redirectToApplications, REDIRECT_DELAY)
@@ -248,7 +250,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
             />
             {iconFile && <StepItem active={step === 'uploading'} label={t('steps.uploading')} />}
             {step === 'uploading' && progress != null && (
-              <Text className='text-sm tabular-nums text-content-tertiary'>{progress}%</Text>
+              <Progress className='w-24' value={progress} size='sm' showValue />
             )}
           </Row>
         )}

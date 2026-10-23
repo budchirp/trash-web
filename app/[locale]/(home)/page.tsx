@@ -15,6 +15,7 @@ import {
   Column,
   Container,
   Heading,
+  IconBox,
   Row,
   Text,
   Divider,
@@ -51,14 +52,6 @@ const Part: React.FC<{
   </Column>
 )
 
-const IconBox: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <Box className='w-fit shrink-0 rounded-xl'>
-    <BoxContent padding='sm' className='text-content-tertiary *:size-6'>
-      {children}
-    </BoxContent>
-  </Box>
-)
-
 const PermissionRow: React.FC<{
   label: string
   description: string
@@ -66,7 +59,9 @@ const PermissionRow: React.FC<{
 }> = ({ label, description, status }) => (
   <Row className='items-center justify-between gap-4 border-outline border-b py-2 last:border-0'>
     <Column>
-      <Heading size='h5'>{label}</Heading>
+      <Heading size='h5' className='text-content-secondary'>
+        {label}
+      </Heading>
       <Text className='text-sm text-content-tertiary'>{description}</Text>
     </Column>
 
@@ -115,7 +110,7 @@ const PermissionPreview: React.FC<{ t: Translate }> = ({ t }) => (
       <Box className='rounded-2xl'>
         <BoxContent>
           <Row className='gap-3'>
-            <IconBox>
+            <IconBox className='text-content-tertiary' color='primary' size='lg'>
               <ShieldCheck />
             </IconBox>
 
@@ -191,7 +186,7 @@ const Features: React.FC<{ t: Translate }> = ({ t }) => {
               <Box key={title} color='secondary'>
                 <BoxContent padding='md'>
                   <Column className='gap-4'>
-                    <IconBox>
+                    <IconBox className='text-content-tertiary' color='primary' size='lg'>
                       <Icon />
                     </IconBox>
 
@@ -240,7 +235,7 @@ const DataSection: React.FC<{ t: Translate }> = ({ t }) => {
             {groups.map(([Icon, title, items]) => (
               <Column key={title} className='gap-4'>
                 <Row className='items-start gap-3'>
-                  <IconBox>
+                  <IconBox className='text-content-tertiary' color='primary' size='lg'>
                     <Icon />
                   </IconBox>
 

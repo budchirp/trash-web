@@ -14,10 +14,19 @@ import { getDesktopNavLinks, getDrawerNavLinks, getUserMenuLinks, type NavLink }
 import { usePathname } from '@/lib/i18n/navigation'
 
 import { Logo } from '@/components/logo'
-import { Avatar } from '@/components/app/user/avatar'
 import { AccountBox, AuthButtons } from '@/components/ui/account-switcher'
 
-import { Box, BoxContent, Button, cn, Column, Container, Divider, Row } from '@trash-kit/ui'
+import {
+  Avatar,
+  Box,
+  BoxContent,
+  Button,
+  cn,
+  Column,
+  Container,
+  Divider,
+  Row
+} from '@trash-kit/ui'
 
 import type { SavedAccount } from '@/types/app/account'
 import type { User } from '@/types/api/user'
@@ -32,6 +41,8 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, accounts, onLogout }) => {
   const t = useTranslations()
   const pathname = usePathname()
 
+  const name = user.profile?.name?.trim() || user.username
+
   return (
     <Menu key={pathname} as='div' className='relative'>
       <MenuButton
@@ -40,7 +51,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, accounts, onLogout }) => {
         color='secondary'
         className='border-0 bg-transparent p-0'
       >
-        <Avatar user={user} className='size-12' />
+        <Avatar name={name} size='lg' src={user.profile?.picture ?? undefined} />
       </MenuButton>
 
       <MenuItems

@@ -19,7 +19,7 @@ export const handle = <T>(
   }
 
   if (onError) onError(response.message)
-  else toast(response.message)
+  else toast(response.message, { color: 'danger' })
 
   return true
 }

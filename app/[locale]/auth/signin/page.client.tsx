@@ -65,7 +65,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     const captcha = await CaptchaService.verify(values.captcha, 'signin')
     if (captcha.error) {
       turnstileRef.current?.reset()
-      toast(captcha.message)
+      toast(t_common('error'), { description: captcha.message, color: 'danger' })
       return
     }
 
@@ -75,7 +75,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     })
     if (response.error) {
       turnstileRef.current?.reset()
-      toast(response.message)
+      toast(t_common('error'), { description: response.message, color: 'danger' })
       return
     }
 
@@ -84,7 +84,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     const user = await UserService.get(token)
     if (user.error) {
       turnstileRef.current?.reset()
-      toast(user.message)
+      toast(t_common('error'), { description: user.message, color: 'danger' })
       await SessionService.delete(null, token).catch(() => null)
       return
     }

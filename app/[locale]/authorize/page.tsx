@@ -5,9 +5,8 @@ import { getTranslations } from 'next-intl/server'
 import { AuthorizeClientPage } from './page.client'
 import { ApplicationService } from '@/service/application'
 import { requireSession } from '@/lib/auth'
-import { ServiceError } from '@/components/service-error'
 
-import { Container, Section } from '@trash-kit/ui'
+import { Alert, Container, Section } from '@trash-kit/ui'
 
 import type { DynamicPageProps } from '@/types/app/page'
 
@@ -28,7 +27,7 @@ const Page: React.FC<DynamicPageProps> = async ({
   const error = (message: string): React.ReactNode => (
     <Container className='max-w-lg!'>
       <Section title={t('title')}>
-        <ServiceError message={message} />
+        <Alert color='danger' description={message} />
       </Section>
     </Container>
   )

@@ -5,8 +5,7 @@ import { useEffect, useState } from 'react'
 
 import { ConnectionService } from '@/service/connection'
 import { handle } from '@/lib/handle'
-import { ServiceError } from '@/components/service-error'
-import { Box, BoxContent, Column, Section, Text, toast } from '@trash-kit/ui'
+import { Alert, Box, BoxContent, Column, Section, Text, toast } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
 import { ConnectionBox } from './connection-box'
 
@@ -44,7 +43,7 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
   return (
     <Section title={t('connection.title')}>
       <Column className='gap-4'>
-        {error && <ServiceError message={error} />}
+        {error && <Alert color='danger' description={error} />}
 
         {connections?.map((connection) => (
           <ConnectionBox

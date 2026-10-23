@@ -3,9 +3,8 @@
 import type React from 'react'
 
 import { useTranslations } from 'next-intl'
-import { Avatar } from '@/components/app/user/avatar'
 
-import { Box, BoxContent, Button, Column, Heading, Row } from '@trash-kit/ui'
+import { Avatar, Box, BoxContent, Button, Column, Heading, Row } from '@trash-kit/ui'
 
 import type { User } from '@/types/api/user'
 
@@ -22,15 +21,17 @@ export const AccountCard: React.FC<AccountCardProps> = ({
 }: AccountCardProps): React.ReactNode => {
   const t = useTranslations()
 
+  const name = user.profile?.name?.trim() || user.username
+
   return (
     <Box>
       <BoxContent className='flex-row justify-between gap-4'>
         <Row className='gap-3'>
-          <Avatar showUsername={false} user={user} className='size-12' />
+          <Avatar name={name} size='lg' src={user.profile?.picture ?? undefined} />
 
           <Column>
             <Heading className='truncate' size='h3'>
-              {user.profile?.name?.trim() || user.username}
+              {name}
             </Heading>
             <Heading size='h4' className='text-content-tertiary truncate'>
               {user.email}

@@ -47,7 +47,7 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
     )
 
     if (error) {
-      toast(message)
+      toast(t_common('error'), { description: message, color: 'danger' })
 
       setLoading(false)
     } else {

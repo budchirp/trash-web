@@ -39,7 +39,9 @@ export const useProfilePicture = ({ token, src, onPictureChange }: UseProfilePic
 
     const error = validate(file)
     if (error) {
-      toast(error === 'too_large' ? t('errors.too_large') : t('errors.invalid_type'))
+      toast(error === 'too_large' ? t('errors.too_large') : t('errors.invalid_type'), {
+        color: 'danger'
+      })
       if (ref.current) ref.current.value = ''
       return
     }

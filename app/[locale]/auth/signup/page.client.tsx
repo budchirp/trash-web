@@ -59,7 +59,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     const captcha = await CaptchaService.verify(values.captcha, 'signup')
     if (captcha.error) {
       turnstileRef.current?.reset()
-      toast(captcha.message)
+      toast(t_common('error'), { description: captcha.message, color: 'danger' })
       return
     }
 
@@ -70,14 +70,14 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     })
     if (user.error) {
       turnstileRef.current?.reset()
-      toast(user.message)
+      toast(t_common('error'), { description: user.message, color: 'danger' })
       return
     }
 
     const response = await SessionService.create({ email: values.email, password: values.password })
     if (response.error) {
       turnstileRef.current?.reset()
-      toast(response.message)
+      toast(t_common('error'), { description: response.message, color: 'danger' })
       router.replace(withRedirect(LINKS.auth.signIn, redirectTo))
       return
     }
