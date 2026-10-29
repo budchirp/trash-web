@@ -23,7 +23,7 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
 }: SelectableLinkProps) => {
   const pathname = usePathname()
 
-  const isSelected = url.length > 1 ? pathname.includes(url) : pathname === url
+  const isSelected = pathname === url || pathname.startsWith(`${url}/`)
 
   return (
     <Link href={url}>

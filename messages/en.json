@@ -1,5 +1,8 @@
 {
   "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "edit": "Edit",
     "save": "Save",
     "submit": "Submit",
     "loading": "Loading...",
@@ -35,6 +38,7 @@
     "*": "All"
   },
   "auth": {
+    "logout_description": "Sign out of your current account on this device?",
     "logout": "Logout",
     "form": {
       "email": "Email",
@@ -147,7 +151,10 @@
   },
   "developers": {
     "title": "Developers",
-    "go_to_applications": "Go to applications",
+    "overview": {
+      "title": "Overview",
+      "application_count": "Applications: {count}"
+    },
     "gate": {
       "title": "Join the developer program",
       "description": "Creating applications requires developer enrollment. Join the developer program to create and manage applications.",
@@ -155,6 +162,14 @@
     },
     "applications": {
       "title": "Applications",
+      "edit_title": "Edit application",
+      "saving": "Saving application…",
+      "icon_failed": "The application was saved, but the icon upload failed.",
+      "delete_title": "Delete application?",
+      "delete_description": "Delete {name}? This cannot be undone and integrations using it will stop working.",
+      "deleted": "Application deleted",
+      "detail_title": "Application",
+      "created_at": "Created at",
       "empty": "You haven't created any applications yet.",
       "new": {
         "title": "New application",
@@ -168,7 +183,6 @@
           "creating": "Creating application…",
           "uploading": "Uploading icon…"
         },
-        "icon_failed": "The application was created, but the icon upload failed.",
         "errors": {
           "invalid_type": "Only JPEG, PNG, and WebP images are allowed.",
           "too_large": "Image size must be less than 5 MB."
@@ -178,6 +192,9 @@
   },
   "profile": {
     "title": "Profile",
+    "upload_picture": "Update picture",
+    "remove_picture": "Remove picture",
+    "remove_picture_description": "Remove your profile picture?",
     "setup_title": "Set up your profile",
     "setup_description": "Add the public details apps will use to recognize you.",
     "name": "Name",
@@ -206,6 +223,10 @@
     },
     "security": {
       "title": "Security",
+      "revoke_session": "Revoke session?",
+      "revoke_session_description": "The device using this session will be signed out.",
+      "revoke_connection": "Revoke connection?",
+      "revoke_connection_description": "This application will lose access to your account.",
       "revoke": "Revoke",
       "revoked": "Revoked",
       "expires_at": "Expires at",

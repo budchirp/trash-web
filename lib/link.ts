@@ -19,8 +19,11 @@ export const LINKS = {
   dashboard: '/home',
   developers: {
     root: '/developers',
+    overview: '/developers/overview',
     applications: '/developers/applications',
-    newApplication: '/developers/applications/new'
+    newApplication: '/developers/applications/new',
+    application: (id: string): string => `/developers/applications/${encodeURIComponent(id)}`,
+    editApplication: (id: string): string => `/developers/applications/${encodeURIComponent(id)}/edit`
   },
   user: {
     profile: (username: string): string => `/user/${encodeURIComponent(username)}`,
@@ -52,6 +55,10 @@ export const getDesktopNavLinks = (t: Translate, user: User | null, isHome: bool
       {
         label: t('dashboard.title'),
         url: LINKS.dashboard
+      },
+      {
+        label: t('developers.title'),
+        url: LINKS.developers.root
       }
     ]
   }
@@ -74,6 +81,10 @@ export const getDrawerNavLinks = (t: Translate, user: User | null, isHome: boole
       label: t('dashboard.title'),
       url: LINKS.dashboard
     },
+    {
+      label: t('developers.title'),
+      url: LINKS.developers.root
+    },
     ...getUserMenuLinks(t, user)
   ]
 }
@@ -86,5 +97,16 @@ export const getSettingsLinks = (t: Translate): NavLink[] => [
   {
     label: t('settings.security.title'),
     url: LINKS.settings.security
+  }
+]
+
+export const getDevelopersLinks = (t: Translate): NavLink[] => [
+  {
+    label: t('developers.overview.title'),
+    url: LINKS.developers.overview
+  },
+  {
+    label: t('developers.applications.title'),
+    url: LINKS.developers.applications
   }
 ]

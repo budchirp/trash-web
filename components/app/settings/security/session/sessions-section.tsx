@@ -9,6 +9,7 @@ import { Alert, Column, Section, Text, toast } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
 import { SessionBox } from './session-box'
 import jsonwebtoken from 'jsonwebtoken'
+import { ConfirmationDialog } from '@/components/dialogs/confirmation-dialog'
 
 import type { Session } from '@/types/api/session'
 
@@ -30,6 +31,7 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
 }: SessionsSectionProps): React.ReactNode => {
   const [sessions, setSessions] = useState(initialSessions)
   const [error, setError] = useState(initialError ?? null)
+  const [selected, setSelected] = useState<Session | null>(null)
 
   const decoded = jsonwebtoken.decode(token)
   const tokenId = decoded && typeof decoded === 'object' ? (decoded as DecodedToken).id : undefined
@@ -58,19 +60,28 @@ export const SessionsSection: React.FC<SessionsSectionProps> = ({
             key={session.token.id}
             session={session}
             tokenId={tokenId}
-            onRevoke={async (session) => {
-              if (session.token.id === tokenId) return
-
-              const response = await SessionService.delete(session.token.id, token)
-              if (handle(response)) return
-
-              toast(t('security.revoked'))
-              setSessions((previous) => previous.filter((s) => s.token.id !== session.token.id))
+            onRevoke={(session) => {
+              if (session.token.id !== tokenId) setSelected(session)
             }}
           />
         ))}
 
         {sessions.length === 0 && !error && <Text>{t('session.no_sessions')}</Text>}
+        <ConfirmationDialog
+          open={selected != null}
+          onClose={() => setSelected(null)}
+          title={t('security.revoke_session')}
+          description={t('security.revoke_session_description')}
+          confirmLabel={t('security.revoke')}
+          onConfirm={async () => {
+            if (!selected) return false
+            const response = await SessionService.delete(selected.token.id, token)
+            if (handle(response)) return false
+            setSessions((previous) => previous.filter((s) => s.token.id !== selected.token.id))
+            toast(t('security.revoked'))
+            return true
+          }}
+        />
       </Column>
     </Section>
   )

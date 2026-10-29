@@ -3,7 +3,7 @@
 import type React from 'react'
 
 import { PermissionsSection } from '@/components/app/settings/security/permissions-section'
-import { ApplicationSection } from '@/components/app/authorize/application-section'
+import { ApplicationSummary } from '@/components/app/developers/applications/summary'
 import { useLocale, useTranslations } from 'next-intl'
 import { format } from '@/lib/date'
 
@@ -27,9 +27,9 @@ export const ConnectionBox: React.FC<ConnectionBoxProps> = ({
   return (
     <Box color='secondary'>
       <BoxContent>
-        <ApplicationSection application={connection.application}>
+        <ApplicationSummary application={connection.application}>
           <Button onClick={() => onRevoke(connection)}>{t('security.revoke')}</Button>
-        </ApplicationSection>
+        </ApplicationSummary>
       </BoxContent>
 
       <Divider />

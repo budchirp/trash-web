@@ -1,18 +1,7 @@
-import type React from 'react'
+import { getLocale } from 'next-intl/server'
+import { redirect } from '@/lib/i18n/navigation'
+import { LINKS } from '@/lib/link'
 
-import { requireSession } from '@/lib/auth'
-
-import { DevelopersClientPage } from './page.client'
-import { Section } from '@trash-kit/ui'
-
-const Page: React.FC = async (): Promise<React.ReactNode> => {
-  const { token, user } = await requireSession('/developers')
-
-  return (
-    <Section>
-      <DevelopersClientPage token={token} user={user} />
-    </Section>
-  )
+export default async function Page() {
+  return redirect({ href: LINKS.developers.overview, locale: await getLocale() })
 }
-
-export default Page

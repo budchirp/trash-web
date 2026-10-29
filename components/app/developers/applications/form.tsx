@@ -13,6 +13,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, Trash2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
+import type { Application } from '@/types/api/application'
+import { ApplicationSummary } from './summary'
 
 import {
   Button,
@@ -31,6 +33,7 @@ import {
 
 type ApplicationFormProps = {
   token: string
+  application?: Application
 }
 
 type SubmitStep = 'idle' | 'creating' | 'uploading'
@@ -63,10 +66,12 @@ const StepItem: React.FC<StepItemProps> = ({
 )
 
 export const ApplicationForm: React.FC<ApplicationFormProps> = ({
-  token
+  token,
+  application
 }: ApplicationFormProps): React.ReactNode => {
   const t = useTranslations('developers.applications.new')
   const t_common = useTranslations('common')
+  const t_application = useTranslations('developers.applications')
 
   const {
     register,
@@ -76,7 +81,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
     formState: { errors, isSubmitting }
   } = useForm<ApplicationValues>({
     resolver: zodResolver(applicationSchema),
-    defaultValues: { name: '', description: '' }
+    defaultValues: { name: application?.name ?? '', description: application?.description ?? '' }
   })
 
   const name = watch('name')
@@ -92,8 +97,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
   const isPending = isSubmitting || isRedirecting
 
-  const redirectToApplications = () => {
-    window.location.replace(LINKS.developers.applications)
+  const redirectToApplication = (id: string) => {
+    window.location.replace(LINKS.developers.application(id))
   }
 
   const selectIcon = (file: File | null) => {
@@ -124,7 +129,9 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const onSubmit = async (values: ApplicationValues) => {
     setStep('creating')
 
-    const created = await ApplicationService.create(values, token)
+    const created = application
+      ? await ApplicationService.update(application.id, values, token)
+      : await ApplicationService.create(values, token)
 
     if (created.error) {
       setStep('idle')
@@ -163,20 +170,21 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       setProgress(null)
 
       if (uploaded.error) {
-        toast(t('icon_failed'), { description: uploaded.message, color: 'danger' })
+        toast(t_application('icon_failed'), { description: uploaded.message, color: 'danger' })
         setStep('idle')
         setIsRedirecting(true)
-        setTimeout(redirectToApplications, REDIRECT_DELAY)
+        setTimeout(() => redirectToApplication(created.data.id), REDIRECT_DELAY)
         return
       }
     }
 
-    redirectToApplications()
+    redirectToApplication(created.data.id)
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Column className='gap-4'>
+        {application && <ApplicationSummary application={application} />}
         <Column className='gap-2'>
           <Field name='name' error={errors.name?.message}>
             <Row className='w-full justify-between'>
@@ -246,7 +254,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
             <StepItem
               active={step === 'creating'}
               done={step === 'uploading'}
-              label={t('steps.creating')}
+              label={application ? t_application('saving') : t('steps.creating')}
             />
             {iconFile && <StepItem active={step === 'uploading'} label={t('steps.uploading')} />}
             {step === 'uploading' && progress != null && (
@@ -257,7 +265,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
         <Row className='w-full justify-end'>
           <Button disabled={isPending} loading={isSubmitting} type='submit'>
-            {isPending ? t_common('loading') : t_common('submit')}
+            {isPending ? t_common('loading') : t_common(application ? 'save' : 'submit')}
           </Button>
         </Row>
       </Column>

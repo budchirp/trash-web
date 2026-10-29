@@ -5,14 +5,11 @@ import type React from 'react'
 import { signInSchema, type SignInValues } from '@/service/session/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
-import { SessionService } from '@/service/session'
-import { useCookies } from 'next-client-cookies'
 import { useForm } from 'react-hook-form'
 import { Link } from '@/lib/i18n/navigation'
-import { UserService } from '@/service/user'
-import { save } from '@/lib/session'
-import { CaptchaService } from '@/service/captcha'
-import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
+import { TurnstileWidget } from '@/components/turnstile'
+import { useAuthentication } from '@/lib/hooks/use-authentication'
+import { CredentialsFields } from '@/components/app/auth/credentials-fields'
 import { withRedirect } from '@/lib/redirect'
 import { LINKS } from '@/lib/link'
 
@@ -22,17 +19,13 @@ import {
   Container,
   Field,
   Heading,
-  Input,
-  Label,
   Row,
-  Section,
-  toast
+  Section
 } from '@trash-kit/ui'
 
 import { AccountSwitcher } from '@/components/app/settings/account/account-switcher'
 
 import type { SavedAccount } from '@/types/app/account'
-import { useRef } from 'react'
 
 type SignInClientPageProps = {
   redirectTo: string | null
@@ -45,7 +38,7 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
   accounts,
   token
 }: SignInClientPageProps): React.ReactNode => {
-  const cookies = useCookies()
+  const { turnstileRef, verifyCaptcha, signIn } = useAuthentication(redirectTo)
 
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
@@ -59,44 +52,9 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
     resolver: zodResolver(signInSchema)
   })
 
-  const turnstileRef = useRef<TurnstileWidgetRef>(null)
-
   const onSubmit = async (values: SignInValues) => {
-    const captcha = await CaptchaService.verify(values.captcha, 'signin')
-    if (captcha.error) {
-      turnstileRef.current?.reset()
-      toast(t_common('error'), { description: captcha.message, color: 'danger' })
-      return
-    }
-
-    const response = await SessionService.create({
-      email: values.email,
-      password: values.password
-    })
-    if (response.error) {
-      turnstileRef.current?.reset()
-      toast(t_common('error'), { description: response.message, color: 'danger' })
-      return
-    }
-
-    const token = response.data.token
-
-    const user = await UserService.get(token)
-    if (user.error) {
-      turnstileRef.current?.reset()
-      toast(t_common('error'), { description: user.message, color: 'danger' })
-      await SessionService.delete(null, token).catch(() => null)
-      return
-    }
-
-    save(cookies, token)
-
-    if (!user.data?.profile?.name?.trim()) {
-      window.location.replace(withRedirect(LINKS.onboarding, redirectTo))
-      return
-    }
-
-    window.location.replace(redirectTo ?? LINKS.dashboard)
+    if (!(await verifyCaptcha(values.captcha, 'signin'))) return
+    await signIn({ email: values.email, password: values.password })
   }
 
   return (
@@ -122,27 +80,13 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
           }
         >
           <Column className='gap-4'>
-            <Column className='gap-2'>
-              <Field name='email' error={errors.email?.message}>
-                <Label>{t('form.email')}:</Label>
-
-                <Input
-                  placeholder={t_common('enter_field', { field: t('form.email') })}
-                  type='email'
-                  {...register('email')}
-                />
-              </Field>
-
-              <Field name='password' error={errors.password?.message}>
-                <Label>{t('form.password')}:</Label>
-
-                <Input
-                  placeholder={t_common('enter_field', { field: t('form.password') })}
-                  type='password'
-                  {...register('password')}
-                />
-              </Field>
-            </Column>
+            <CredentialsFields
+              disabled={isSubmitting}
+              fields={[
+                { name: 'email', registration: register('email'), error: errors.email?.message },
+                { name: 'password', registration: register('password'), error: errors.password?.message }
+              ]}
+            />
 
             <Field name='captcha' error={errors.captcha?.message}>
               <input type='hidden' {...register('captcha')} />

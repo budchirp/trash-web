@@ -8,6 +8,7 @@ import { handle } from '@/lib/handle'
 import { Alert, Box, BoxContent, Column, Section, Text, toast } from '@trash-kit/ui'
 import { useTranslations } from 'next-intl'
 import { ConnectionBox } from './connection-box'
+import { ConfirmationDialog } from '@/components/dialogs/confirmation-dialog'
 
 import type { Connection } from '@/types/api/connection'
 
@@ -25,6 +26,7 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
 }: ConnectionsSectionProps): React.ReactNode => {
   const [connections, setConnections] = useState(initialConnections)
   const [error, setError] = useState(initialError ?? null)
+  const [selected, setSelected] = useState<Connection | null>(null)
 
   const fetchConnections = async () => {
     const response = await ConnectionService.getAll(token)
@@ -49,15 +51,7 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
           <ConnectionBox
             key={connection.token.id}
             connection={connection}
-            onRevoke={async (connection) => {
-              const response = await ConnectionService.delete(connection.token.id, token)
-              if (handle(response)) return
-
-              toast(t('security.revoked'))
-              setConnections((previous) =>
-                previous.filter((s) => s.token.id !== connection.token.id)
-              )
-            }}
+            onRevoke={setSelected}
           />
         ))}
 
@@ -68,6 +62,21 @@ export const ConnectionsSection: React.FC<ConnectionsSectionProps> = ({
             </BoxContent>
           </Box>
         )}
+        <ConfirmationDialog
+          open={selected != null}
+          onClose={() => setSelected(null)}
+          title={t('security.revoke_connection')}
+          description={t('security.revoke_connection_description')}
+          confirmLabel={t('security.revoke')}
+          onConfirm={async () => {
+            if (!selected) return false
+            const response = await ConnectionService.delete(selected.token.id, token)
+            if (handle(response)) return false
+            setConnections((previous) => previous.filter((c) => c.token.id !== selected.token.id))
+            toast(t('security.revoked'))
+            return true
+          }}
+        />
       </Column>
     </Section>
   )

@@ -12,9 +12,9 @@ import { Link, usePathname } from '@/lib/i18n/navigation'
 import { withRedirect } from '@/lib/redirect'
 import { save } from '@/lib/session'
 import { LINKS } from '@/lib/link'
+import { ProfileAvatar } from '@/components/app/user/profile-avatar'
 
 import {
-  Avatar,
   Box,
   BoxContent,
   Button,
@@ -37,7 +37,7 @@ const AccountSummary: React.FC<{ user: User }> = ({ user }) => {
 
   return (
     <Row className='min-w-0 items-start gap-3'>
-      <Avatar className='shrink-0' name={name} size='lg' src={user.profile?.picture ?? undefined} />
+      <ProfileAvatar name={name} src={user.profile?.picture} />
 
       <Column className='min-w-0'>
         <Heading size='h3' className='truncate font-semibold'>

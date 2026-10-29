@@ -7,6 +7,20 @@ import type { PresignedUploadRequest, PresignedUploadResponse } from '@/types/ap
 import type { Application } from '@/types/api/application'
 
 export const ApplicationService = {
+  async update(
+    id: string,
+    values: ApplicationValues,
+    token: string
+  ): Promise<ApiServiceResponse<Application>> {
+    const response = await request<ApplicationDto>({
+      method: 'PATCH',
+      path: `/application/${encodeURIComponent(id)}`,
+      body: values,
+      token
+    })
+    if (response.error) return response
+    return { error: false, message: response.message, data: mapApplication(response.data) }
+  },
   async create(values: ApplicationValues, token: string): Promise<ApiServiceResponse<Application>> {
     const response = await request<ApplicationDto>({
       method: 'POST',

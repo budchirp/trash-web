@@ -4,7 +4,7 @@ import type React from 'react'
 import { useState } from 'react'
 
 import { PermissionsSection } from '@/components/app/settings/security/permissions-section'
-import { ApplicationSection } from '@/components/app/authorize/application-section'
+import { ApplicationSummary } from '@/components/app/developers/applications/summary'
 import { AccountSection } from '@/components/app/authorize/account-section'
 import { ConnectionService } from '@/service/connection'
 import { useTranslations } from 'next-intl'
@@ -62,7 +62,7 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
     <Container className='max-w-lg!'>
       <Section title={t('title')}>
         <Column className='gap-4'>
-          <ApplicationSection application={application} />
+          <ApplicationSummary application={application} />
 
           <PermissionsSection permissions={permissions} />
 

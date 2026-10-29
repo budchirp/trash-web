@@ -7,17 +7,17 @@ import { Menu as MenuIcon, X } from 'lucide-react'
 import { Menu, MenuButton, MenuItems, Transition } from '@headlessui/react'
 import { useTranslations } from 'next-intl'
 
-import { useLogout } from '@/lib/hooks/use-logout'
 import { SelectableLinks } from '@/components/link'
 import { useUser } from '@/context/user'
 import { getDesktopNavLinks, getDrawerNavLinks, getUserMenuLinks, type NavLink } from '@/lib/link'
 import { usePathname } from '@/lib/i18n/navigation'
 
 import { Logo } from '@/components/logo'
+import { ProfileAvatar } from '@/components/app/user/profile-avatar'
+import { LogoutDialog } from '@/components/dialogs/logout-dialog'
 import { AccountBox, AuthButtons } from '@/components/ui/account-switcher'
 
 import {
-  Avatar,
   Box,
   BoxContent,
   Button,
@@ -51,7 +51,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, accounts, onLogout }) => {
         color='secondary'
         className='border-0 bg-transparent p-0'
       >
-        <Avatar name={name} size='lg' src={user.profile?.picture ?? undefined} />
+        <ProfileAvatar name={name} src={user.profile?.picture} />
       </MenuButton>
 
       <MenuItems
@@ -179,10 +179,10 @@ type HeaderProps = {
 export const Header: React.FC<HeaderProps> = ({ accounts }) => {
   const t = useTranslations()
   const { user } = useUser()
-  const logout = useLogout()
   const pathname = usePathname()
 
   const [open, setOpen] = useState(false)
+  const [confirmLogout, setConfirmLogout] = useState(false)
 
   const isHome = pathname === '/'
 
@@ -221,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({ accounts }) => {
                   user={user}
                   accounts={accounts}
                   links={desktopLinks}
-                  onLogout={logout}
+                  onLogout={() => setConfirmLogout(true)}
                 />
 
                 <Button
@@ -247,11 +247,12 @@ export const Header: React.FC<HeaderProps> = ({ accounts }) => {
           user={user}
           accounts={accounts}
           links={drawerLinks}
-          onLogout={logout}
+          onLogout={() => setConfirmLogout(true)}
         />
       )}
 
       <div className='h-16' />
+      <LogoutDialog open={confirmLogout} onClose={() => setConfirmLogout(false)} />
     </>
   )
 }

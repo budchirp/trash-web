@@ -81,7 +81,7 @@ export const useProfilePicture = ({ token, src, onPictureChange }: UseProfilePic
 
       setIsLoading(false)
 
-      if (handle(response)) return
+      if (handle(response)) return false
 
       if (user) {
         setUser({ ...user, profile: { ...user.profile, picture: null } })
@@ -91,6 +91,7 @@ export const useProfilePicture = ({ token, src, onPictureChange }: UseProfilePic
 
     reset()
     onPictureChange?.(null)
+    return true
   }
 
   return {

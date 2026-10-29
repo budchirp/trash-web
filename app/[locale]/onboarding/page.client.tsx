@@ -10,7 +10,7 @@ import {
 } from '@/components/app/onboarding/onboarding-left-panel'
 import { OnboardingRightPanel } from '@/components/app/onboarding/onboarding-right-panel'
 import { ProfileForm } from '@/components/app/user/profile/profile-form'
-import { useLogout } from '@/lib/hooks/use-logout'
+import { LogoutDialog } from '@/components/dialogs/logout-dialog'
 import { LINKS } from '@/lib/link'
 import { useRouter } from '@/lib/i18n/navigation'
 import { useTranslations } from 'next-intl'
@@ -27,7 +27,7 @@ export const OnboardingClientPage = ({
   redirectTo
 }: OnboardingClientPageProps): React.ReactNode => {
   const router = useRouter()
-  const logout = useLogout()
+  const [confirmLogout, setConfirmLogout] = useState(false)
 
   const t = useTranslations('profile')
   const tCommon = useTranslations('common')
@@ -56,7 +56,7 @@ export const OnboardingClientPage = ({
     } else if (typeof window !== 'undefined' && window.history.length > 1) {
       router.back()
     } else {
-      void logout()
+      setConfirmLogout(true)
     }
   }
 
@@ -93,6 +93,7 @@ export const OnboardingClientPage = ({
       <OnboardingRightPanel>
         {activeStep.render({ next, back, isLast: isLastStep })}
       </OnboardingRightPanel>
+      <LogoutDialog open={confirmLogout} onClose={() => setConfirmLogout(false)} />
     </div>
   )
 }

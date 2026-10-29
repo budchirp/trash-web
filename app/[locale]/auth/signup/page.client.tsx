@@ -7,15 +7,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { UserService } from '@/service/user'
 import { useForm } from 'react-hook-form'
-import { SessionService } from '@/service/session'
-import { useCookies } from 'next-client-cookies'
 import { Link, useRouter } from '@/lib/i18n/navigation'
-import { save } from '@/lib/session'
-import { CaptchaService } from '@/service/captcha'
-import { TurnstileWidget, type TurnstileWidgetRef } from '@/components/turnstile'
+import { TurnstileWidget } from '@/components/turnstile'
+import { useAuthentication } from '@/lib/hooks/use-authentication'
+import { CredentialsFields } from '@/components/app/auth/credentials-fields'
 import { withRedirect } from '@/lib/redirect'
 import { LINKS } from '@/lib/link'
-import { useRef } from 'react'
 
 import {
   Button,
@@ -24,12 +21,9 @@ import {
   Container,
   Field,
   Heading,
-  Input,
-  Label,
   Row,
   Section,
-  Text,
-  toast
+  Text
 } from '@trash-kit/ui'
 
 type SignUpClientPageProps = {
@@ -52,16 +46,10 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     resolver: zodResolver(signUpSchema)
   })
 
-  const cookies = useCookies()
-  const turnstileRef = useRef<TurnstileWidgetRef>(null)
+  const { turnstileRef, verifyCaptcha, reportError, signIn } = useAuthentication(redirectTo)
 
   const onSubmit = async (values: SignUpValues) => {
-    const captcha = await CaptchaService.verify(values.captcha, 'signup')
-    if (captcha.error) {
-      turnstileRef.current?.reset()
-      toast(t_common('error'), { description: captcha.message, color: 'danger' })
-      return
-    }
+    if (!(await verifyCaptcha(values.captcha, 'signup'))) return
 
     const user = await UserService.create({
       email: values.email,
@@ -69,22 +57,13 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
       password: values.password
     })
     if (user.error) {
-      turnstileRef.current?.reset()
-      toast(t_common('error'), { description: user.message, color: 'danger' })
+      reportError(user.message)
       return
     }
 
-    const response = await SessionService.create({ email: values.email, password: values.password })
-    if (response.error) {
-      turnstileRef.current?.reset()
-      toast(t_common('error'), { description: response.message, color: 'danger' })
+    if (!(await signIn({ email: values.email, password: values.password }))) {
       router.replace(withRedirect(LINKS.auth.signIn, redirectTo))
-      return
     }
-
-    save(cookies, response.data.token)
-
-    window.location.replace(withRedirect(LINKS.onboarding, redirectTo))
   }
 
   return (
@@ -101,37 +80,14 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
           }
         >
           <Column className='gap-4'>
-            <Column className='gap-2'>
-              <Field name='email' error={errors.email?.message}>
-                <Label>{t('form.email')}:</Label>
-
-                <Input
-                  placeholder={t_common('enter_field', { field: t('form.email') })}
-                  type='email'
-                  {...register('email')}
-                />
-              </Field>
-
-              <Field name='username' error={errors.username?.message}>
-                <Label>{t('form.username')}:</Label>
-
-                <Input
-                  placeholder={t_common('enter_field', { field: t('form.username') })}
-                  type='text'
-                  {...register('username')}
-                />
-              </Field>
-
-              <Field name='password' error={errors.password?.message}>
-                <Label>{t('form.password')}:</Label>
-
-                <Input
-                  placeholder={t_common('enter_field', { field: t('form.password') })}
-                  type='password'
-                  {...register('password')}
-                />
-              </Field>
-            </Column>
+            <CredentialsFields
+              disabled={isSubmitting}
+              fields={[
+                { name: 'email', registration: register('email'), error: errors.email?.message },
+                { name: 'username', registration: register('username'), error: errors.username?.message },
+                { name: 'password', registration: register('password'), error: errors.password?.message }
+              ]}
+            />
 
             <Field name='accept_terms' error={errors.accept_terms?.message}>
               <Checkbox {...register('accept_terms')}>
