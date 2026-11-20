@@ -17,16 +17,7 @@ import { ProfileAvatar } from '@/components/app/user/profile-avatar'
 import { LogoutDialog } from '@/components/dialogs/logout-dialog'
 import { AccountBox, AuthButtons } from '@/components/ui/account-switcher'
 
-import {
-  Box,
-  BoxContent,
-  Button,
-  cn,
-  Column,
-  Container,
-  Divider,
-  Row
-} from '@trash-kit/ui'
+import { Box, BoxContent, Button, cn, Column, Container, Divider, Row } from '@trash-kit/ui'
 
 import type { SavedAccount } from '@/types/app/account'
 import type { User } from '@/types/api/user'
@@ -51,7 +42,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, accounts, onLogout }) => {
         color='secondary'
         className='border-0 bg-transparent p-0'
       >
-        <ProfileAvatar name={name} src={user.profile?.picture} />
+        <ProfileAvatar name={name} src={user.profile?.picture?.url} />
       </MenuButton>
 
       <MenuItems

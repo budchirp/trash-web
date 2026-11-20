@@ -1,48 +1,47 @@
-import { upload } from '@/lib/file'
-import { request, type ApiServiceResponse } from '@/service/api'
-import { UserService } from '@/service/user'
+import { ImageUploads, upload } from '@/lib/file'
+import { request } from '@/service/api'
+import type { Image, PresignedUploadRequest, PresignedUploadResponse } from '@/types/api/upload'
 
-import type { PresignedUploadRequest, PresignedUploadResponse } from '@/types/api/upload'
-import type { User } from '@/types/api/user'
+const uploads = new ImageUploads()
 
 export const ProfilePictureService = {
-  requestUpload(
-    values: PresignedUploadRequest,
-    token: string
-  ): Promise<ApiServiceResponse<PresignedUploadResponse>> {
+  requestUpload(values: PresignedUploadRequest, token: string, signal?: AbortSignal) {
     return request<PresignedUploadResponse>({
       method: 'POST',
-      path: '/user/profile/picture',
+      path: '/user/profile/picture/uploads',
       body: values,
-      token
-    })
-  },
-
-  delete(token: string): Promise<ApiServiceResponse<null>> {
-    return request<null>({
-      method: 'DELETE',
-      path: '/user/profile/picture',
       token,
-      empty: true
+      signal
     })
   },
 
-  async upload(
-    file: File,
-    token: string,
-    onProgress?: (progress: number) => void
-  ): Promise<ApiServiceResponse<User>> {
-    const result = await upload(
-      file,
-      () =>
-        ProfilePictureService.requestUpload(
-          { content_type: file.type, content_length: file.size },
-          token
-        ),
-      onProgress
-    )
-    if (result.error) return result
+  completeUpload(uploadId: string, token: string, signal?: AbortSignal) {
+    return request<Image>({
+      method: 'POST',
+      path: `/user/profile/picture/uploads/${encodeURIComponent(uploadId)}/complete`,
+      token,
+      signal
+    })
+  },
 
-    return UserService.get(token)
+  cancel(token: string) {
+    uploads.cancel(token)
+  },
+
+  delete(token: string) {
+    uploads.cancel(token)
+    return request({ method: 'DELETE', path: '/user/profile/picture', token, empty: true })
+  },
+
+  upload(file: File, token: string, onProgress?: (progress: number) => void) {
+    return uploads.run(token, (signal) =>
+      upload(file, {
+        initiate: (metadata, signal) =>
+          ProfilePictureService.requestUpload(metadata, token, signal),
+        complete: (id, signal) => ProfilePictureService.completeUpload(id, token, signal),
+        signal,
+        onProgress
+      })
+    )
   }
 }

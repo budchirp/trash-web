@@ -1,10 +1,12 @@
+import type { Image } from '@/types/api/upload'
+
 import type { Application } from '@/types/api/application'
 
 export type ApplicationDto = {
   id: string
   name: string
   description: string
-  icon: string | null
+  icon: Image | null
   created_at: string | null
 }
 

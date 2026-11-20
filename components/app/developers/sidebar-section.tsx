@@ -12,7 +12,7 @@ export const DevelopersSidebarSection: React.FC = (): React.ReactNode => {
   const t = useTranslations()
 
   return (
-    <Section divider={false} title={t('developers.title')}>
+    <Section title={t('developers.title')}>
       <SelectableLinks box links={getDevelopersLinks(t)} />
     </Section>
   )

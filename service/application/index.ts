@@ -1,10 +1,13 @@
-import { upload } from '@/lib/file'
+import { ImageUploads, upload } from '@/lib/file'
 import { request, type ApiServiceResponse } from '@/service/api'
 import { mapApplication, type ApplicationDto } from '@/service/application/mapper'
 
 import type { ApplicationValues } from '@/service/application/schema'
-import type { PresignedUploadRequest, PresignedUploadResponse } from '@/types/api/upload'
+import type { Image, PresignedUploadRequest, PresignedUploadResponse } from '@/types/api/upload'
 import type { Application } from '@/types/api/application'
+
+const uploads = new ImageUploads()
+const uploadKey = (id: string, token: string) => JSON.stringify([token, id])
 
 export const ApplicationService = {
   async update(
@@ -36,31 +39,51 @@ export const ApplicationService = {
   requestIconUpload(
     id: string,
     values: PresignedUploadRequest,
-    token: string
+    token: string,
+    signal?: AbortSignal
   ): Promise<ApiServiceResponse<PresignedUploadResponse>> {
     return request<PresignedUploadResponse>({
       method: 'POST',
-      path: `/application/${encodeURIComponent(id)}/icon`,
+      path: `/application/${encodeURIComponent(id)}/icon/uploads`,
       body: values,
-      token
+      token,
+      signal
     })
   },
 
-  uploadIcon(
-    id: string,
-    file: File,
-    token: string,
-    onProgress?: (progress: number) => void
-  ): Promise<ApiServiceResponse<null>> {
-    return upload(
-      file,
-      () =>
-        ApplicationService.requestIconUpload(
-          id,
-          { content_type: file.type, content_length: file.size },
-          token
-        ),
-      onProgress
+  completeIconUpload(id: string, uploadId: string, token: string, signal?: AbortSignal) {
+    return request<Image>({
+      method: 'POST',
+      path: `/application/${encodeURIComponent(id)}/icon/uploads/${encodeURIComponent(uploadId)}/complete`,
+      token,
+      signal
+    })
+  },
+
+  cancelIconUpload(id: string, token: string) {
+    uploads.cancel(uploadKey(id, token))
+  },
+
+  deleteIcon(id: string, token: string) {
+    uploads.cancel(uploadKey(id, token))
+    return request({
+      method: 'DELETE',
+      path: `/application/${encodeURIComponent(id)}/icon`,
+      token,
+      empty: true
+    })
+  },
+
+  uploadIcon(id: string, file: File, token: string, onProgress?: (progress: number) => void) {
+    return uploads.run(uploadKey(id, token), (signal) =>
+      upload(file, {
+        initiate: (metadata, signal) =>
+          ApplicationService.requestIconUpload(id, metadata, token, signal),
+        complete: (uploadId, signal) =>
+          ApplicationService.completeIconUpload(id, uploadId, token, signal),
+        signal,
+        onProgress
+      })
     )
   },
 
@@ -82,6 +105,7 @@ export const ApplicationService = {
   },
 
   delete(id: string, token: string): Promise<ApiServiceResponse> {
+    uploads.cancel(uploadKey(id, token))
     return request({
       method: 'DELETE',
       path: `/application/${encodeURIComponent(id)}`,

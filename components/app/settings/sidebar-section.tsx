@@ -1,22 +1,24 @@
 'use client'
 
-import type React from 'react'
-
+import { Center, Column, Heading, Section } from '@trash-kit/ui'
+import { useUser } from '@/context/user'
+import { ProfileAvatar } from '@/components/app/user/profile-avatar'
 import { SettingsLinksSection } from './links-section'
-import { Avatar } from '../user/avatar'
 
-import { Column, Section } from '@trash-kit/ui'
+export const SidebarSection = () => {
+  const { user } = useUser()
+  const name = user?.profile?.name ?? user?.username
 
-type SidebarSectionProps = {
-  token: string
-}
-
-export const SidebarSection: React.FC<SidebarSectionProps> = ({
-  token
-}: SidebarSectionProps): React.ReactNode => {
   return (
     <Column className='gap-4'>
-      <Section divider={false} title={<Avatar showUsername token={token} className='size-24' />}>
+      <Section
+        title={
+          <Center className='w-full gap-1'>
+            <ProfileAvatar name={name} src={user?.profile?.picture?.url} className='size-24' />
+            <Heading size='h3'>{name}</Heading>
+          </Center>
+        }
+      >
         <SettingsLinksSection />
       </Section>
     </Column>

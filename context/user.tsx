@@ -1,12 +1,12 @@
 'use client'
 
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, type Dispatch, type SetStateAction } from 'react'
 
 import type { User } from '@/types/api/user'
 
 type UserContextValue = {
   user: User | null
-  setUser: (user: User | null) => void
+  setUser: Dispatch<SetStateAction<User | null>>
 }
 
 export const UserContext = createContext<UserContextValue | null>(null)

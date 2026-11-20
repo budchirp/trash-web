@@ -49,7 +49,6 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     defaultValues: {
       name: user?.profile?.name ?? '',
       gender: user?.profile?.gender ?? '',
-      picture: user?.profile?.picture ?? '',
       public: user?.profile?.public ?? false
     }
   })

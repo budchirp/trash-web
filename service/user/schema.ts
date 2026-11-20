@@ -21,7 +21,6 @@ export const profileSchema = z.object({
     (value) => (value === '' ? undefined : value),
     z.enum(['male', 'female']).optional()
   ),
-  picture: z.string().nullable().optional(),
   public: z.boolean().optional(),
   dev: z.boolean().optional()
 })

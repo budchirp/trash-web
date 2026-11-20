@@ -14,16 +14,18 @@ export const LINKS = {
   settings: {
     root: '/settings',
     account: '/settings/account',
-    security: '/settings/security'
+    security: '/settings/security',
+    sessions: '/settings/security/sessions',
+    connections: '/settings/security/connections'
   },
   dashboard: '/home',
   developers: {
     root: '/developers',
-    overview: '/developers/overview',
     applications: '/developers/applications',
     newApplication: '/developers/applications/new',
     application: (id: string): string => `/developers/applications/${encodeURIComponent(id)}`,
-    editApplication: (id: string): string => `/developers/applications/${encodeURIComponent(id)}/edit`
+    editApplication: (id: string): string =>
+      `/developers/applications/${encodeURIComponent(id)}/edit`
   },
   user: {
     profile: (username: string): string => `/user/${encodeURIComponent(username)}`,
@@ -102,11 +104,12 @@ export const getSettingsLinks = (t: Translate): NavLink[] => [
 
 export const getDevelopersLinks = (t: Translate): NavLink[] => [
   {
-    label: t('developers.overview.title'),
-    url: LINKS.developers.overview
-  },
-  {
     label: t('developers.applications.title'),
     url: LINKS.developers.applications
   }
+]
+
+export const getSecurityLinks = (t: Translate): NavLink[] => [
+  { label: t('settings.session.title'), url: LINKS.settings.sessions },
+  { label: t('settings.connection.title'), url: LINKS.settings.connections }
 ]

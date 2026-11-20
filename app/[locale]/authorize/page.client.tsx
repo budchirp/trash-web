@@ -4,7 +4,7 @@ import type React from 'react'
 import { useState } from 'react'
 
 import { PermissionsSection } from '@/components/app/settings/security/permissions-section'
-import { ApplicationSummary } from '@/components/app/developers/applications/summary'
+import { ApplicationSummary } from '@/components/app/developers/applications/application'
 import { AccountSection } from '@/components/app/authorize/account-section'
 import { ConnectionService } from '@/service/connection'
 import { useTranslations } from 'next-intl'

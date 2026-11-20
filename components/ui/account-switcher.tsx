@@ -14,30 +14,20 @@ import { save } from '@/lib/session'
 import { LINKS } from '@/lib/link'
 import { ProfileAvatar } from '@/components/app/user/profile-avatar'
 
-import {
-  Box,
-  BoxContent,
-  Button,
-  cn,
-  Column,
-  Divider,
-  Heading,
-  Row,
-  Text
-} from '@trash-kit/ui'
+import { Box, BoxContent, Button, cn, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
 
 import type { SavedAccount } from '@/types/app/account'
 import type { User } from '@/types/api/user'
 
 const PANEL_WIDTH = 288
-const PANEL_GAP = 8
+const PANEL_GAP = 4
 
 const AccountSummary: React.FC<{ user: User }> = ({ user }) => {
   const name = user.profile?.name?.trim() || user.username
 
   return (
     <Row className='min-w-0 items-start gap-3'>
-      <ProfileAvatar name={name} src={user.profile?.picture} />
+      <ProfileAvatar name={name} src={user.profile?.picture?.url} />
 
       <Column className='min-w-0'>
         <Heading size='h3' className='truncate font-semibold'>

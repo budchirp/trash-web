@@ -3,11 +3,11 @@
 import type React from 'react'
 
 import { PermissionsSection } from '@/components/app/settings/security/permissions-section'
-import { ApplicationSummary } from '@/components/app/developers/applications/summary'
+import { ApplicationCard } from '@/components/app/developers/applications/application'
 import { useLocale, useTranslations } from 'next-intl'
 import { format } from '@/lib/date'
 
-import { Box, BoxContent, Button, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
+import { BoxContent, Button, Column, Divider, Heading, Row, Text } from '@trash-kit/ui'
 
 import type { Connection } from '@/types/api/connection'
 
@@ -25,13 +25,10 @@ export const ConnectionBox: React.FC<ConnectionBoxProps> = ({
   const t = useTranslations('settings')
 
   return (
-    <Box color='secondary'>
-      <BoxContent>
-        <ApplicationSummary application={connection.application}>
-          <Button onClick={() => onRevoke(connection)}>{t('security.revoke')}</Button>
-        </ApplicationSummary>
-      </BoxContent>
-
+    <ApplicationCard
+      application={connection.application}
+      actions={<Button onClick={() => onRevoke(connection)}>{t('security.revoke')}</Button>}
+    >
       <Divider />
 
       <BoxContent>
@@ -53,6 +50,6 @@ export const ConnectionBox: React.FC<ConnectionBoxProps> = ({
       <BoxContent>
         <PermissionsSection permissions={connection.token.permissions} />
       </BoxContent>
-    </Box>
+    </ApplicationCard>
   )
 }

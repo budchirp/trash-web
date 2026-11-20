@@ -16,7 +16,8 @@ type ApiRequestOptions = {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   path: string
   token?: string
-  body?: object | FormData
+  body?: object
+  signal?: AbortSignal
   empty?: boolean
 }
 
@@ -25,17 +26,19 @@ export const request = async <T = null>({
   path,
   token,
   body,
+  signal,
   empty = false
 }: ApiRequestOptions): Promise<ApiServiceResponse<T>> => {
   try {
     const response = await fetch(`${CONSTANTS.API_URL}${path}`, {
       method,
       headers: {
-        ...(body && !(body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         'Accept-Language': routing.defaultLocale
       },
-      body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+      signal,
       cache: 'no-store'
     })
 

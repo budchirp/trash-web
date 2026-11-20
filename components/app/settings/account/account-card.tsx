@@ -28,14 +28,11 @@ export const AccountCard: React.FC<AccountCardProps> = ({
     <Box>
       <BoxContent className='flex-row justify-between gap-4'>
         <Row className='gap-3'>
-          <ProfileAvatar name={name} src={user.profile?.picture} />
+          <ProfileAvatar name={name} src={user.profile?.picture?.url} />
 
           <Column>
             <Heading className='truncate' size='h3'>
               {name}
-            </Heading>
-            <Heading size='h4' className='text-content-tertiary truncate'>
-              {user.email}
             </Heading>
           </Column>
         </Row>

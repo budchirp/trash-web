@@ -9,7 +9,7 @@ import { ConfirmationDialog } from '@/components/dialogs/confirmation-dialog'
 import { useUser } from '@/context/user'
 import { useProfilePicture } from '@/lib/hooks/use-profile-picture'
 import { IMAGE_TYPES } from '@/lib/file'
-import { Camera, Trash } from 'lucide-react'
+import { Camera, RotateCcw, Trash } from 'lucide-react'
 
 import { Button, Center, Heading, Row, Spinner, Text, cn } from '@trash-kit/ui'
 
@@ -35,10 +35,11 @@ export const Avatar: React.FC<AvatarProps> = ({
   const t = useTranslations('profile')
   const [confirmRemove, setConfirmRemove] = useState(false)
 
-  const { ref, picture, isLoading, progress, upload, remove } = useProfilePicture({
-    token,
-    src: user?.profile?.picture ?? null
-  })
+  const { ref, picture, isLoading, isDeleting, progress, upload, remove, canRetry, retry } =
+    useProfilePicture({
+      token,
+      src: user?.profile?.picture ?? null
+    })
 
   const name = user?.profile?.name ?? user?.username
 
@@ -55,7 +56,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   }
 
   return (
-    <Center className={cn('gap-2', showUsername && 'w-full')}>
+    <Center className={cn('gap-1', showUsername && 'w-full')}>
       {token && (
         <input
           ref={ref}
@@ -66,50 +67,11 @@ export const Avatar: React.FC<AvatarProps> = ({
         />
       )}
 
-      <div className='group/avatar relative'>
+      <div className='relative'>
         <ProfileAvatar className={className} src={picture} name={name} />
 
-        {token && (
-          <Center
-            className={cn(
-              'absolute inset-0 rounded-full bg-surface-primary/30 transition-opacity',
-              '[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:pointer-events-none',
-              'group-hover/avatar:opacity-100 group-hover/avatar:pointer-events-auto',
-              'group-focus-within/avatar:opacity-100 group-focus-within/avatar:pointer-events-auto'
-            )}
-          >
-            <Row className='absolute bottom-3 inset-x-0 justify-center gap-2'>
-              <Button
-                type='button'
-                shape='circle'
-                className='size-8 p-0'
-                aria-label={t('upload_picture')}
-                title={t('upload_picture')}
-                disabled={isLoading}
-                onClick={handleUpload}
-              >
-                <Camera className='size-4' />
-              </Button>
-              {picture && (
-                <Button
-                  type='button'
-                  shape='circle'
-                  color='secondary'
-                  className='size-8 p-0'
-                  aria-label={t('remove_picture')}
-                  title={t('remove_picture')}
-                  disabled={isLoading}
-                  onClick={() => setConfirmRemove(true)}
-                >
-                  <Trash className='size-4' />
-                </Button>
-              )}
-            </Row>
-          </Center>
-        )}
-
         {isLoading && (
-          <Center className='absolute inset-0 z-10 size-full rounded-full bg-surface-accent/10 backdrop-blur-sm'>
+          <Center className='pointer-events-none absolute inset-0 z-10 size-full rounded-full bg-surface-accent/10 backdrop-blur-sm'>
             <Spinner className='size-6 text-content-primary' />
 
             {progress != null && (
@@ -122,6 +84,47 @@ export const Avatar: React.FC<AvatarProps> = ({
       </div>
 
       {showUsername && <Heading size='h3'>{name}</Heading>}
+
+      {token && (
+        <Row className='justify-center gap-2'>
+          <Button
+            type='button'
+            shape='circle'
+            className='size-9 p-0'
+            title={t('upload_picture')}
+            aria-label={t('upload_picture')}
+            disabled={isDeleting}
+            onClick={handleUpload}
+          >
+            <Camera className='size-4' />
+          </Button>
+          <Button
+            type='button'
+            color='secondary'
+            shape='circle'
+            className='size-9 p-0'
+            title={t('remove_picture')}
+            aria-label={t('remove_picture')}
+            disabled={isDeleting || (!picture && !isLoading)}
+            onClick={() => setConfirmRemove(true)}
+          >
+            <Trash className='size-4' />
+          </Button>
+        </Row>
+      )}
+
+      {canRetry && (
+        <Button
+          type='button'
+          shape='circle'
+          aria-label={t('retry_upload')}
+          title={t('retry_upload')}
+          onClick={() => void retry()}
+          disabled={isLoading}
+        >
+          <RotateCcw className='size-4' />
+        </Button>
+      )}
       <ConfirmationDialog
         open={confirmRemove}
         onClose={() => setConfirmRemove(false)}

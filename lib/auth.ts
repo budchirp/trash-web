@@ -45,7 +45,7 @@ export const requireAnonymous = async (redirectTo?: string | null): Promise<void
 export const requireDeveloper = async (redirectTo: string): Promise<CurrentSession> => {
   const session = await requireSession(redirectTo)
   if (!session.user.profile?.dev) {
-    redirect({ href: LINKS.developers.overview, locale: await getLocale() })
+    redirect({ href: LINKS.developers.applications, locale: await getLocale() })
   }
   return session
 }

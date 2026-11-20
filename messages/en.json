@@ -20,7 +20,8 @@
       "back": "Go to home"
     },
     "new": "New",
-    "delete": "Delete"
+    "delete": "Delete",
+    "upload": "Upload"
   },
   "permissions": {
     "title": "Permissions",
@@ -151,10 +152,6 @@
   },
   "developers": {
     "title": "Developers",
-    "overview": {
-      "title": "Overview",
-      "application_count": "Applications: {count}"
-    },
     "gate": {
       "title": "Join the developer program",
       "description": "Creating applications requires developer enrollment. Join the developer program to create and manage applications.",
@@ -163,6 +160,11 @@
     "applications": {
       "title": "Applications",
       "edit_title": "Edit application",
+      "application_id": "Application ID",
+      "upload_icon": "Upload application icon",
+      "delete_icon": "Remove application icon",
+      "delete_icon_description": "Remove this application's saved icon?",
+      "icon_updated": "Application icon updated",
       "saving": "Saving application…",
       "icon_failed": "The application was saved, but the icon upload failed.",
       "delete_title": "Delete application?",
@@ -173,19 +175,18 @@
       "empty": "You haven't created any applications yet.",
       "new": {
         "title": "New application",
-        "description": "Create a new application to integrate with Trash.",
         "name": "Name",
         "description_field": "Description",
         "icon": "Icon",
         "choose_icon": "Choose an icon",
-        "dropzone_description": "Drag and drop an image here, or click to browse. JPEG, PNG, or WebP, up to 5 MB.",
         "steps": {
           "creating": "Creating application…",
           "uploading": "Uploading icon…"
         },
         "errors": {
           "invalid_type": "Only JPEG, PNG, and WebP images are allowed.",
-          "too_large": "Image size must be less than 5 MB."
+          "too_large": "Image size must be at most 5 MB.",
+          "empty": "Choose a non-empty image."
         }
       }
     }
@@ -207,11 +208,13 @@
     "public": "Make profile public",
     "private_title": "Private profile",
     "edit": "Edit profile",
+    "retry_upload": "Retry upload",
     "upload_success": "Profile picture updated",
     "delete_success": "Profile picture removed",
     "errors": {
       "invalid_type": "Only JPEG, PNG, and WebP images are allowed.",
-      "too_large": "Image size must be less than 5 MB."
+      "too_large": "Image size must be at most 5 MB.",
+      "empty": "Choose a non-empty image."
     }
   },
   "settings": {

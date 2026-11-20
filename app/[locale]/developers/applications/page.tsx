@@ -1,6 +1,6 @@
 import type React from 'react'
 
-import { ApplicationList } from '@/components/app/developers/applications/list'
+import { ApplicationList } from '@/components/app/developers/applications/application'
 import { EnrollmentCard } from '@/components/app/developers/enrollment-card'
 import { requireSession } from '@/lib/auth'
 import { Link, redirect } from '@/lib/i18n/navigation'
@@ -36,7 +36,7 @@ const Page: React.FC = async (): Promise<React.ReactNode> => {
   return (
     <Section
       title={
-        <Row className='justify-between gap-2'>
+        <Row className='w-full flex-wrap justify-between gap-4'>
           <Heading size='h1'>{t('title')}</Heading>
 
           <Link href={LINKS.developers.newApplication}>

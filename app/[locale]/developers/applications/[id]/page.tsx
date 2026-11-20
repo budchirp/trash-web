@@ -1,71 +1,55 @@
-import type React from 'react'
-
-import { ApplicationSummary } from '@/components/app/developers/applications/summary'
-import { ApplicationActions } from '@/components/app/developers/applications/actions'
+import { getLocale, getTranslations } from 'next-intl/server'
+import { Alert, Column, Heading, Row, Section, Text } from '@trash-kit/ui'
 import { getDeveloperApplication } from '@/lib/developer-application'
 import { format } from '@/lib/date'
-import { Link } from '@/lib/i18n/navigation'
+import { ApplicationActions } from '@/components/app/developers/applications/application-actions'
 import { LINKS } from '@/lib/link'
-import { getLocale, getTranslations } from 'next-intl/server'
-
-import {
-  Alert,
-  Box,
-  BoxContent,
-  Button,
-  Divider,
-  Heading,
-  Row,
-  Section,
-  Text
-} from '@trash-kit/ui'
-
 import type { DynamicPageProps } from '@/types/app/page'
 
-const Page: React.FC<DynamicPageProps> = async ({
-  params
-}: DynamicPageProps): Promise<React.ReactNode> => {
+export default async function Page({ params }: DynamicPageProps) {
   const { id } = await params
-
-  const locale = await getLocale()
   const { token, application } = await getDeveloperApplication(id, LINKS.developers.application(id))
-
   const t = await getTranslations('developers.applications')
-  const t_common = await getTranslations('common')
+  const locale = await getLocale()
+
+  if (application.error) {
+    return (
+      <Section title={t('detail_title')}>
+        <Alert color='danger' description={application.message} />
+      </Section>
+    )
+  }
 
   return (
     <Section
       title={
-        <Row className='justify-between gap-2'>
-          <Heading size='h1'>{t('detail_title')}</Heading>
-
-          <Link href={LINKS.developers.applications}>
-            <Button color='secondary'>{t_common('back')}</Button>
-          </Link>
+        <Row className='w-full items-start justify-between gap-4'>
+          <Heading size='h1' className='min-w-0 break-words'>
+            {application.data.name}
+          </Heading>
+          <div className='shrink-0'>
+            <ApplicationActions application={application.data} token={token} />
+          </div>
         </Row>
       }
+      description={
+        <Text className='whitespace-pre-wrap break-words text-content-tertiary'>
+          {application.data.description}
+        </Text>
+      }
     >
-      {application.error ? (
-        <Alert color='danger' description={application.message} />
-      ) : (
-        <Box color='secondary'>
-          <BoxContent>
-            <ApplicationSummary application={application.data} />
-            <ApplicationActions application={application.data} token={token} />
-          </BoxContent>
-
-          <Divider />
-
-          <BoxContent>
-            <Row className='gap-1'>
-              <Heading size='h4'>{t('created_at')}:</Heading>
-              <Text>{format(application.data.createdAt, locale)}</Text>
-            </Row>
-          </BoxContent>
-        </Box>
-      )}
+      <Column className='gap-4'>
+        <Column className='gap-1'>
+          <Heading size='h4'>{t('application_id')}</Heading>
+          <Text className='break-all font-mono text-sm text-content-tertiary'>
+            {application.data.id}
+          </Text>
+        </Column>
+        <Row className='flex-wrap gap-2'>
+          <Heading size='h4'>{t('created_at')}:</Heading>
+          <Text>{format(application.data.createdAt, locale)}</Text>
+        </Row>
+      </Column>
     </Section>
   )
 }
-
-export default Page
