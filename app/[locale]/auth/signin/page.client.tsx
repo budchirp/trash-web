@@ -13,15 +13,7 @@ import { CredentialsFields } from '@/components/app/auth/credentials-fields'
 import { withRedirect } from '@/lib/redirect'
 import { LINKS } from '@/lib/link'
 
-import {
-  Button,
-  Column,
-  Container,
-  Field,
-  Heading,
-  Row,
-  Section
-} from '@trash-kit/ui'
+import { Button, Column, Container, Field, Heading, Row, Section } from '@trash-kit/ui'
 
 import { AccountSwitcher } from '@/components/app/settings/account/account-switcher'
 
@@ -84,7 +76,11 @@ export const SignInClientPage: React.FC<SignInClientPageProps> = ({
               disabled={isSubmitting}
               fields={[
                 { name: 'email', registration: register('email'), error: errors.email?.message },
-                { name: 'password', registration: register('password'), error: errors.password?.message }
+                {
+                  name: 'password',
+                  registration: register('password'),
+                  error: errors.password?.message
+                }
               ]}
             />
 

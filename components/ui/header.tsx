@@ -47,6 +47,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, accounts, onLogout }) => {
 
       <MenuItems
         as={Box}
+        color='primary'
         transition
         anchor='bottom end'
         className={cn(
@@ -62,7 +63,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, accounts, onLogout }) => {
         <Divider className='w-full' />
 
         <BoxContent>
-          <SelectableLinks box links={getUserMenuLinks(t, user)} />
+          <SelectableLinks box color='secondary' links={getUserMenuLinks(t, user)} />
         </BoxContent>
 
         <Divider className='w-full' />
@@ -103,7 +104,7 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({ user, accounts, links, open
           {links.length > 0 && (
             <>
               <BoxContent>
-                <SelectableLinks links={links} box />
+                <SelectableLinks links={links} box color='secondary' />
               </BoxContent>
 
               <Divider className='w-full' />

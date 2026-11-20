@@ -48,7 +48,7 @@ const AccountInfo: React.FC<{ user: User; current: boolean }> = ({ user, current
 )
 
 const accountRow =
-  'block w-full rounded-lg border-0 bg-transparent px-3 py-2 text-left hover:bg-surface-secondary'
+  'block w-full cursor-pointer rounded-none border-0 bg-transparent px-3 py-4 text-left hover:bg-surface-secondary'
 
 type AccountSwitcherProps = {
   accounts: SavedAccount[]
@@ -57,6 +57,8 @@ type AccountSwitcherProps = {
 
 const AccountSwitcher: React.FC<AccountSwitcherProps> = ({ accounts, user }) => {
   const cookies = useCookies()
+  const t = useTranslations('auth')
+  const pathname = usePathname()
 
   const switchAccount = (account: SavedAccount): void => {
     save(cookies, account.token)
@@ -69,7 +71,7 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({ accounts, user }) => 
   ]
 
   return (
-    <Box>
+    <Box color='primary'>
       {orderedAccounts.map((account, index) => {
         const isCurrent = account.user.id === user.id
 
@@ -92,23 +94,17 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({ accounts, user }) => 
 
       <Divider className='w-full' />
 
-      <BoxContent>
-        <AddAccountButton />
+      <BoxContent className='py-4'>
+        <Link
+          href={withRedirect(LINKS.auth.signIn, pathname)}
+          className='block w-full cursor-pointer'
+        >
+          <Button color='secondary' className='w-full cursor-pointer justify-center'>
+            {t('account.add_account')}
+          </Button>
+        </Link>
       </BoxContent>
     </Box>
-  )
-}
-
-const AddAccountButton: React.FC = (): React.ReactNode => {
-  const t = useTranslations('auth')
-  const pathname = usePathname()
-
-  return (
-    <Link href={withRedirect(LINKS.auth.signIn, pathname)} className='block w-full'>
-      <Button color='secondary' className='w-full justify-center'>
-        {t('account.add_account')}
-      </Button>
-    </Link>
   )
 }
 
@@ -208,7 +204,7 @@ export const AccountBox: React.FC<AccountBoxProps> = ({ user, accounts, menu = f
       <button
         ref={triggerRef}
         type='button'
-        className='block w-full border-0 bg-transparent p-0 text-left'
+        className='block w-full cursor-pointer border-0 bg-transparent p-0 text-left'
         onClick={togglePanel}
       >
         <AccountSummary user={user} />

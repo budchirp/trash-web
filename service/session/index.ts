@@ -13,6 +13,7 @@ export const SessionService = {
 
   async getAll(token: string): Promise<ApiServiceResponse<Session[]>> {
     const response = await request<SessionDto[]>({ path: '/session/all', token })
+
     if (response.error) return response
 
     return { error: false, message: response.message, data: response.data.map(mapSession) }

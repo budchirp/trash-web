@@ -7,8 +7,6 @@ export type SearchParams = {
 }
 
 export type DynamicPageProps = {
-  params: Promise<
-    Params
-  >
+  params: Promise<Params>
   searchParams: Promise<SearchParams>
 }

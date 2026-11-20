@@ -25,7 +25,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
   const name = user.profile?.name?.trim() || user.username
 
   return (
-    <Box>
+    <Box color='primary'>
       <BoxContent className='flex-row justify-between gap-4'>
         <Row className='gap-3'>
           <ProfileAvatar name={name} src={user.profile?.picture?.url} />
@@ -39,7 +39,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
 
         {onClick != null && (
           <Row className='items-center'>
-            <Button color={active ? 'accent' : 'secondary'} onClick={onClick as any}>
+            <Button color={active ? 'accent' : 'secondary'} onClick={onClick}>
               {t(active ? 'common.continue' : 'auth.account.switch_account')}
             </Button>
           </Row>

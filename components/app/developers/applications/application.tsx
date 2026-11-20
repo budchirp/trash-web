@@ -16,7 +16,7 @@ export const ApplicationImage = ({
 }) => (
   <div
     className={cn(
-      'flex shrink-0 items-center justify-center overflow-hidden border border-outline bg-surface-primary',
+      'flex shrink-0 items-center justify-center overflow-hidden border border-outline bg-surface-secondary',
       large ? 'size-16 rounded-2xl' : 'size-12 rounded-full'
     )}
   >
@@ -50,23 +50,6 @@ export const ApplicationSummary = ({
   </Row>
 )
 
-export const ApplicationCard = ({
-  application,
-  actions,
-  children
-}: {
-  application: ApplicationPreview
-  actions?: ReactNode
-  children?: ReactNode
-}) => (
-  <Box color='secondary'>
-    <BoxContent>
-      <ApplicationSummary application={application}>{actions}</ApplicationSummary>
-    </BoxContent>
-    {children}
-  </Box>
-)
-
 export const ApplicationList = ({
   applications,
   empty
@@ -76,7 +59,7 @@ export const ApplicationList = ({
 }) => {
   if (applications.length === 0) {
     return (
-      <Box color='secondary'>
+      <Box color='primary'>
         <BoxContent className='py-12'>
           <Column className='items-center gap-4 text-center'>
             <Boxes className='size-10 text-content-tertiary' />
@@ -91,7 +74,7 @@ export const ApplicationList = ({
     <Grid className='grid-cols-1 gap-4 xl:grid-cols-2'>
       {applications.map((application) => (
         <Link href={LINKS.developers.application(application.id)} key={application.id}>
-          <Box clickable className='h-full'>
+          <Box color='primary' clickable className='h-full'>
             <BoxContent>
               <ApplicationSummary application={application} />
             </BoxContent>

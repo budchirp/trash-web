@@ -8,14 +8,13 @@ import {
   OnboardingLeftPanel,
   type OnboardingStep
 } from '@/components/app/onboarding/onboarding-left-panel'
-import { OnboardingRightPanel } from '@/components/app/onboarding/onboarding-right-panel'
 import { ProfileForm } from '@/components/app/user/profile/profile-form'
 import { LogoutDialog } from '@/components/dialogs/logout-dialog'
 import { LINKS } from '@/lib/link'
 import { useRouter } from '@/lib/i18n/navigation'
 import { useTranslations } from 'next-intl'
 
-import { Column } from '@trash-kit/ui'
+import { Column, Container } from '@trash-kit/ui'
 
 type OnboardingClientPageProps = {
   token: string
@@ -90,9 +89,14 @@ export const OnboardingClientPage = ({
     <div className='relative isolate grid h-screen grid-rows-[auto_1fr] lg:grid-cols-2 lg:grid-rows-1'>
       <OnboardingLeftPanel steps={steps} active={step} onBack={handleBack} />
 
-      <OnboardingRightPanel>
-        {activeStep.render({ next, back, isLast: isLastStep })}
-      </OnboardingRightPanel>
+      <section className='flex size-full items-center py-8 lg:px-4'>
+        <Container className='flex justify-center lg:justify-start'>
+          <Column className='w-full max-w-sm gap-8'>
+            {activeStep.render({ next, back, isLast: isLastStep })}
+          </Column>
+        </Container>
+      </section>
+
       <LogoutDialog open={confirmLogout} onClose={() => setConfirmLogout(false)} />
     </div>
   )

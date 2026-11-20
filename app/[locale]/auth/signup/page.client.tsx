@@ -84,8 +84,16 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
               disabled={isSubmitting}
               fields={[
                 { name: 'email', registration: register('email'), error: errors.email?.message },
-                { name: 'username', registration: register('username'), error: errors.username?.message },
-                { name: 'password', registration: register('password'), error: errors.password?.message }
+                {
+                  name: 'username',
+                  registration: register('username'),
+                  error: errors.username?.message
+                },
+                {
+                  name: 'password',
+                  registration: register('password'),
+                  error: errors.password?.message
+                }
               ]}
             />
 

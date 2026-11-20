@@ -70,7 +70,7 @@ const PermissionRow: React.FC<{
 )
 
 const PermissionPreview: React.FC<{ t: Translate }> = ({ t }) => (
-  <Box color='secondary'>
+  <Box color='primary'>
     <BoxContent padding='md'>
       <Row className='items-center justify-between gap-4'>
         <Column>
@@ -107,10 +107,10 @@ const PermissionPreview: React.FC<{ t: Translate }> = ({ t }) => (
     <Divider />
 
     <BoxContent padding='md'>
-      <Box className='rounded-2xl'>
+      <Box color='secondary' className='rounded-2xl'>
         <BoxContent>
           <Row className='gap-3'>
-            <IconBox className='text-content-tertiary' color='primary' size='lg'>
+            <IconBox className='text-content-tertiary' color='secondary' size='lg'>
               <ShieldCheck />
             </IconBox>
 
@@ -183,10 +183,10 @@ const Features: React.FC<{ t: Translate }> = ({ t }) => {
         >
           <Grid className='gap-4 md:grid-cols-3'>
             {features.map(([Icon, title, description]) => (
-              <Box key={title} color='secondary'>
+              <Box key={title} color='primary'>
                 <BoxContent padding='md'>
                   <Column className='gap-4'>
-                    <IconBox className='text-content-tertiary' color='primary' size='lg'>
+                    <IconBox className='text-content-tertiary' color='secondary' size='lg'>
                       <Icon />
                     </IconBox>
 
@@ -235,7 +235,7 @@ const DataSection: React.FC<{ t: Translate }> = ({ t }) => {
             {groups.map(([Icon, title, items]) => (
               <Column key={title} className='gap-4'>
                 <Row className='items-start gap-3'>
-                  <IconBox className='text-content-tertiary' color='primary' size='lg'>
+                  <IconBox className='text-content-tertiary' color='secondary' size='lg'>
                     <Icon />
                   </IconBox>
 
@@ -265,7 +265,7 @@ const Cta: React.FC<{ t: Translate }> = ({ t }) => (
   <Section className='py-16'>
     <Container>
       <Part>
-        <Box color='secondary' className='rounded-4xl'>
+        <Box color='primary' className='rounded-4xl'>
           <BoxContent className='px-12 py-12'>
             <Column className='gap-8'>
               <Column className='gap-2'>

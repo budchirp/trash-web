@@ -37,7 +37,7 @@ export const LegalPage: React.FC<LegalPageProps> = ({
         >
           <Column className='gap-4'>
             {sections.map((section) => (
-              <Box key={section.title}>
+              <Box color='primary' key={section.title}>
                 <BoxContent>
                   <Column className='gap-2'>
                     <Heading size='h3'>{section.title}</Heading>

@@ -17,17 +17,17 @@
   --color-accent-950: oklch(0.271 0.105 12.094);
 
   --color-gray-50: oklch(0.97 0.001 295);
-  --color-gray-100: oklch(0.97 0.010 295);
+  --color-gray-100: oklch(0.97 0.01 295);
   --color-gray-200: oklch(0.85 0.001 295);
-  --color-gray-300: oklch(0.80 0.001 295);
+  --color-gray-300: oklch(0.8 0.001 295);
   --color-gray-400: oklch(0.7 0.001 295);
   --color-gray-500: oklch(0.5 0.001 295);
   --color-gray-600: oklch(0.4 0.02 295);
-  --color-gray-680: oklch(0.35 0.0200 295);
-  --color-gray-690: oklch(0.25 0.0200 295);
-  --color-gray-700: oklch(0.20 0.0200 295);
-  --color-gray-800: oklch(0.17 0.0200 295);
-  --color-gray-900: oklch(0.13 0.0200 295);
+  --color-gray-680: oklch(0.35 0.02 295);
+  --color-gray-690: oklch(0.25 0.02 295);
+  --color-gray-700: oklch(0.2 0.02 295);
+  --color-gray-800: oklch(0.17 0.02 295);
+  --color-gray-900: oklch(0.13 0.02 295);
 }
 
 * {

@@ -4,7 +4,9 @@ import { requireSession } from '@/lib/auth'
 import { forbidden } from 'next/navigation'
 
 import type { DynamicPageProps } from '@/types/app/page'
-import { ProfileEditClientPage } from './page.client'
+import { Avatar } from '@/components/app/user/avatar'
+import { ProfileForm } from '@/components/app/user/profile/profile-form'
+import { ProfileView } from '@/components/app/user/profile/profile-view'
 
 const Page: React.FC<DynamicPageProps> = async ({
   params
@@ -14,7 +16,11 @@ const Page: React.FC<DynamicPageProps> = async ({
 
   if (user.username !== username) forbidden()
 
-  return <ProfileEditClientPage token={token} user={user} />
+  return (
+    <ProfileView avatar={<Avatar token={token} className='size-32 md:size-48' />}>
+      <ProfileForm token={token} />
+    </ProfileView>
+  )
 }
 
 export default Page

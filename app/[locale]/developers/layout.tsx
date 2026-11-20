@@ -1,12 +1,24 @@
-import type React from 'react'
+import { getTranslations } from 'next-intl/server'
 
-import { DevelopersSidebarSection } from '@/components/app/developers/sidebar-section'
+import { Section } from '@trash-kit/ui'
+import { SelectableLinks } from '@/components/link'
 import { SplitLayout } from '@/components/split-layout'
+import { getDevelopersLinks } from '@/lib/link'
 
 import type { LayoutProps } from '@/types/app/layout'
 
-const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNode => (
-  <SplitLayout sidebar={<DevelopersSidebarSection />}>{children}</SplitLayout>
-)
+export default async function Layout({ children }: LayoutProps) {
+  const t = await getTranslations()
 
-export default Layout
+  return (
+    <SplitLayout
+      sidebar={
+        <Section title={t('developers.title')}>
+          <SelectableLinks box links={getDevelopersLinks(t)} />
+        </Section>
+      }
+    >
+      {children}
+    </SplitLayout>
+  )
+}

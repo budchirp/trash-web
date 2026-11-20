@@ -21,9 +21,12 @@ export const ApplicationService = {
       body: values,
       token
     })
+
     if (response.error) return response
+
     return { error: false, message: response.message, data: mapApplication(response.data) }
   },
+
   async create(values: ApplicationValues, token: string): Promise<ApiServiceResponse<Application>> {
     const response = await request<ApplicationDto>({
       method: 'POST',
@@ -31,6 +34,7 @@ export const ApplicationService = {
       body: values,
       token
     })
+
     if (response.error) return response
 
     return { error: false, message: response.message, data: mapApplication(response.data) }
@@ -92,6 +96,7 @@ export const ApplicationService = {
       path: `/application/${encodeURIComponent(id)}`,
       token
     })
+
     if (response.error) return response
 
     return { error: false, message: response.message, data: mapApplication(response.data) }
@@ -99,6 +104,7 @@ export const ApplicationService = {
 
   async getAll(token: string): Promise<ApiServiceResponse<Application[]>> {
     const response = await request<ApplicationDto[]>({ path: '/application/all', token })
+
     if (response.error) return response
 
     return { error: false, message: response.message, data: response.data.map(mapApplication) }

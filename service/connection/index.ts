@@ -20,6 +20,7 @@ export const ConnectionService = {
 
   async getAll(token: string): Promise<ApiServiceResponse<Connection[]>> {
     const response = await request<ConnectionDto[]>({ path: '/connection/all', token })
+
     if (response.error) return response
 
     return { error: false, message: response.message, data: response.data.map(mapConnection) }

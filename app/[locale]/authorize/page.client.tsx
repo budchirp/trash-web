@@ -5,11 +5,13 @@ import { useState } from 'react'
 
 import { PermissionsSection } from '@/components/app/settings/security/permissions-section'
 import { ApplicationSummary } from '@/components/app/developers/applications/application'
-import { AccountSection } from '@/components/app/authorize/account-section'
+import { AccountCard } from '@/components/app/settings/account/account-card'
+import { currentPath, withRedirect } from '@/lib/redirect'
+import { LINKS } from '@/lib/link'
 import { ConnectionService } from '@/service/connection'
 import { useTranslations } from 'next-intl'
 
-import { Button, Column, Container, Section, toast } from '@trash-kit/ui'
+import { Button, Column, Container, Row, Section, toast } from '@trash-kit/ui'
 
 import type { Application } from '@/types/api/application'
 import type { User } from '@/types/api/user'
@@ -32,6 +34,7 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
 }): React.ReactNode => {
   const t = useTranslations('auth.authorize')
   const t_common = useTranslations('common')
+  const account = useTranslations('auth.account')
 
   const [loading, setLoading] = useState(false)
 
@@ -66,14 +69,26 @@ export const AuthorizeClientPage: React.FC<AuthorizeClientPageProps> = ({
 
           <PermissionsSection permissions={permissions} />
 
-          <AccountSection
-            user={user}
-            action={
-              <Button disabled={loading} loading={loading} onClick={authorize}>
-                {loading ? t_common('loading') : t('authorize')}
-              </Button>
-            }
-          />
+          <Section subsection description={account('this_account')}>
+            <Column className='gap-4'>
+              <AccountCard user={user} />
+
+              <Row className='w-full justify-end gap-2'>
+                <Button
+                  color='secondary'
+                  onClick={() =>
+                    window.location.replace(withRedirect(LINKS.auth.signIn, currentPath()))
+                  }
+                >
+                  {account('use_another_account')}
+                </Button>
+
+                <Button disabled={loading} loading={loading} onClick={authorize}>
+                  {loading ? t_common('loading') : t('authorize')}
+                </Button>
+              </Row>
+            </Column>
+          </Section>
         </Column>
       </Section>
     </Container>

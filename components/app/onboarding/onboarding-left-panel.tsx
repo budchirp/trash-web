@@ -66,16 +66,17 @@ export const OnboardingLeftPanel: React.FC<OnboardingLeftPanelProps> = ({
             <Column className='hidden gap-2 lg:flex'>
               {steps.map((step, index) => (
                 <Box
+                  color='primary'
                   className={cn(
                     'transition-none flex flex-row gap-2',
-                    active === index && 'border-accent-700/50 bg-accent-500/10'
+                    active === index && 'border-outline-hover bg-surface-secondary'
                   )}
                   key={step.id}
                 >
                   <Center
                     className={cn(
                       'aspect-square border-r p-2',
-                      active === index ? 'border-accent-700/50' : 'border-outline'
+                      active === index ? 'border-outline-hover' : 'border-outline'
                     )}
                   >
                     <Text

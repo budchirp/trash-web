@@ -47,7 +47,7 @@ export const EnrollmentCard: React.FC<EnrollmentCardProps> = ({
   }
 
   return (
-    <Box color='secondary'>
+    <Box color='primary'>
       <BoxContent>
         <Column className='gap-4'>
           <Heading size='h3'>{t('title')}</Heading>

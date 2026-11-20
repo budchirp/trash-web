@@ -1,27 +1,22 @@
-import type React from 'react'
-
-import { AccountClientPage } from './page.client'
-import { requireSession } from '@/lib/auth'
 import { getTranslations } from 'next-intl/server'
 
-import { Column, Section } from '@trash-kit/ui'
-
+import { Section } from '@trash-kit/ui'
+import { DetailsTable } from '@/components/ui/details-table'
+import { requireSession } from '@/lib/auth'
 import { LINKS } from '@/lib/link'
 
-const Page: React.FC = async (): Promise<React.ReactNode> => {
+export default async function Page() {
   const t = await getTranslations('settings.account')
-
   const { user } = await requireSession(LINKS.settings.account)
 
   return (
-    <Column>
-      <Section title={t('title')}>
-        <form>
-          <AccountClientPage email={user.email} username={user.username} />
-        </form>
-      </Section>
-    </Column>
+    <Section title={t('title')}>
+      <DetailsTable
+        rows={[
+          { label: t('username'), value: user.username },
+          { label: t('email'), value: user.email }
+        ]}
+      />
+    </Section>
   )
 }
-
-export default Page

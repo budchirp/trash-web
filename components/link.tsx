@@ -1,3 +1,5 @@
+'use client'
+
 import type React from 'react'
 
 import { Link, usePathname } from '@/lib/i18n/navigation'
@@ -9,17 +11,20 @@ export type SelectableLinkProps = {
   url: string
 
   box?: boolean
+  color?: 'primary' | 'secondary'
 }
 
 type SelectableLinksProps = {
   links: SelectableLinkProps[]
   box?: boolean
+  color?: 'primary' | 'secondary'
 }
 
 export const SelectableLink: React.FC<SelectableLinkProps> = ({
   label,
   url,
-  box = false
+  box = false,
+  color = 'primary'
 }: SelectableLinkProps) => {
   const pathname = usePathname()
 
@@ -28,11 +33,11 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
   return (
     <Link href={url}>
       <Box
+        color={color}
         clickable={box}
         className={cn(
           'group cursor-pointer',
           !box && 'border-0 bg-transparent rounded-none',
-          box && 'bg-surface-primary',
           box && isSelected && 'bg-surface-secondary border-outline-hover'
         )}
       >
@@ -53,14 +58,18 @@ export const SelectableLink: React.FC<SelectableLinkProps> = ({
   )
 }
 
-export const SelectableLinks: React.FC<SelectableLinksProps> = ({ links, box = false }) => {
+export const SelectableLinks: React.FC<SelectableLinksProps> = ({
+  links,
+  box = false,
+  color = 'primary'
+}) => {
   if (!links.length) return null
 
   if (box) {
     return (
       <Column className='gap-2'>
         {links.map((link) => (
-          <SelectableLink key={link.url} {...link} box />
+          <SelectableLink key={link.url} {...link} box color={color} />
         ))}
       </Column>
     )
